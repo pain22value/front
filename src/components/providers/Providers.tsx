@@ -5,7 +5,7 @@ import { createContext } from "react";
 import { ThemeProvider } from "./ThemeProvider";
 import AuthProvider from "./AuthProvider";
 
-export const Context = createContext<{}>({});
+export const Context = createContext<Record<string, never>>({});
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (

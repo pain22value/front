@@ -7,7 +7,7 @@ import { useAuthQuery } from "@/hooks/useAuthQuery";
 export default function OAuthCallbackPage() {
   const router = useRouter();
   // useAuthQuery를 통해 로그인 상태 확인 (AuthProvider에서 이미 실행 중인 쿼리 상태를 공유받음)
-  const { isSuccess, isError, isLoading } = useAuthQuery();
+  const { isSuccess, isError } = useAuthQuery();
 
   useEffect(() => {
     if (isSuccess) {

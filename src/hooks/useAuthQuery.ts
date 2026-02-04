@@ -4,11 +4,11 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useEffect } from "react";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 
 export const useAuthQuery = () => {
   const { setAuth, signout } = useAuthStore();
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   const { data, isError, isSuccess, error, isLoading } = useQuery({
     queryKey: ["auth", "refresh"],

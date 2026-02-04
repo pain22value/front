@@ -16,6 +16,7 @@ interface AuthState {
 
 export const useAuthStore = create(
   persist<AuthState>(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (set, get) => ({
       accessToken: null,
       user: null,

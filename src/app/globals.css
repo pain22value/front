@@ -127,17 +127,24 @@
   body {
     @apply bg-background text-foreground;
 
-    > header > section {
-      @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-      @apply flex justify-center items-center;
-      @apply border border-dashed;
-    }
-
-    > main > section {
+    .signin-page > section,
+    .signup-page > section {
       @apply max-w-7xl h-screen mx-auto px-4 sm:px-6 lg:px-8;
       @apply flex flex-col justify-center items-center;
       @apply border border-dashed;
     }
+
+    /* header > section {
+      @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+      @apply flex justify-center items-center;
+      @apply border border-dashed;
+    } */
+
+    /* main > section {
+      @apply max-w-7xl h-screen mx-auto px-4 sm:px-6 lg:px-8;
+      @apply flex flex-col justify-center items-center;
+      @apply border border-dashed;
+    } */
   }
 
   a,

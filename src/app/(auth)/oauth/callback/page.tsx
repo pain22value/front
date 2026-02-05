@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthQuery } from "@/hooks/useAuthQuery";
+import { useAuthQuery } from "@/features/auth/hooks/useAuthQuery";
 
 export default function OAuthCallbackPage() {
   const router = useRouter();

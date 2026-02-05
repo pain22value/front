@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthQuery } from "@/hooks/useAuthQuery";
+import { useAuthQuery } from "@/features/auth/hooks/useAuthQuery";
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   useAuthQuery();

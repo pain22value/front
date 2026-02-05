@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { signupSchema, SignupSchema } from "@/lib/schemas";
-import { authService } from "@/services/authService";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { SignupSchema, signupSchema } from "@/shared/schemas/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 
 export default function SignupForm() {
   const router = useRouter();
+  const signup = useAuthStore((state) => state.signup);
   const [error, setError] = useState("");
   const {
     register,
@@ -23,7 +24,7 @@ export default function SignupForm() {
   const onSubmit = async (data: SignupSchema) => {
     try {
       const { email, password, name } = data;
-      await authService.signup({ email, password, name });
+      await signup({ email, password, name });
       router.push("/signin");
     } catch (err) {
       console.error(err);
@@ -33,7 +34,7 @@ export default function SignupForm() {
 
   return (
     <div className="w-full max-w-[350] mx-auto flex items-center justify-center">
-      <Card className="w-full border-none shadow-none bg-transparent!">
+      <Card className="w-full border-none shadow-none bg-transparent">
         <CardContent className="space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-2xl font-bold">회원가입</h1>

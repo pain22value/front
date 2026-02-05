@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { authService } from "@/services/authService";
-import { useAuthStore } from "@/store/useAuthStore";
+import { authService } from "@/features/auth/services/authService";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useEffect } from "react";
 import { AxiosError } from "axios";
 import { toast } from "sonner";

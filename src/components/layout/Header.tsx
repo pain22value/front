@@ -3,9 +3,9 @@
 import { Input } from "@/components/ui/input";
 import { Bell, Menu, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { UserMenu } from "../common/UserMenu";
+// import { Separator } from "@/components/ui/separator";
 // import { SearchForm } from "@/components/search-form"
 
 export default function Header() {

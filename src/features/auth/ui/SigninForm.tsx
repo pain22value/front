@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signinSchema } from "@/lib/schemas";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import SocialLogin from "./SocialLogin";
+import { signinSchema } from "@/shared/schemas/schemas";
 
 export default function SigninForm() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function SigninForm() {
     resolver: zodResolver(signinSchema),
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: SigninRequest) => {
     try {
       await signin(data);
       router.push("/");
@@ -36,7 +36,7 @@ export default function SigninForm() {
   };
 
   return (
-    <div className="w-full max-w-[350] mx-auto flex items-center justify-center">
+    <div className="w-full max-w-[400] mx-auto flex items-center justify-center">
       <Card className="w-full border-none shadow-none bg-transparent!">
         <CardContent className="space-y-6">
           <div className="text-center space-y-2">

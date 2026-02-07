@@ -15,7 +15,7 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <Button asChild size={"sm"} variant={"outline"}>
+      <Button asChild variant={"outline"}>
         <Link href="/signin">로그인</Link>
       </Button>
     );

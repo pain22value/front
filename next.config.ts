@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**", // 또는 특정 패턴: '**.domain.com'
+        pathname: "/**", // 전체 경로 허용
+      },
+    ],
+  },
 };
 
 export default nextConfig;

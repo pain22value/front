@@ -1,14 +1,19 @@
 "use client";
 
+// import { MusicalCarousel } from "@/components/MusicalCarousel";
+import { MusicalCarousel2 } from "@/components/MusicalCarousel2";
+import { PerformanceHero } from "@/components/PerformanceHero";
+
 export default function Home() {
   return (
-    <section className="flex">
-      <div className="flex-1">
-        <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Totam est aliquid quam facilis alias optio, debitis
-          nihil, voluptate illo dolore labore modi id illum facere quisquam distinctio harum sequi quia?
-        </p>
+    <div className="flex-1 min-h-screen">
+      <PerformanceHero />
+
+      <div className="pl-20">
+        <MusicalCarousel2 />
       </div>
-    </section>
+
+      <div className="h-[200vh]"></div>
+    </div>
   );
 }

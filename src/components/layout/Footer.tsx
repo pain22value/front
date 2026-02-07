@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Footer() {
   return (
-    <footer className="w-full">
+    <footer className="w-full pl-20">
       <div className="mx-auto py-10">
         <Separator className="my-8" />
 

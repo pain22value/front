@@ -8,12 +8,12 @@ interface AvatarItemProps {
 export function AvatarItem({ src, alt }: AvatarItemProps) {
   return (
     <Avatar
-      className="h-12 w-12 cursor-pointer 
-      rounded-[1px]!
-      hover:ring-2 hover:ring-primary transition"
+      className="size-8 cursor-pointer 
+      rounded-sm
+      "
     >
-      <AvatarImage src={src} alt={alt} className="rounded-[1px]!" />
-      <AvatarFallback className="rounded-[1px]!">U</AvatarFallback>
+      <AvatarImage src={src} alt={alt} />
+      <AvatarFallback>U</AvatarFallback>
     </Avatar>
   );
 }

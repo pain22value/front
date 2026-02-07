@@ -11,12 +11,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Header />
         <div className="flex flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-row!">
+          {/* <SidebarInset className="flex-row!">
             <InsetLeftSidebar />
-            <div>
+            <div className="w-full mx-auto relative">
               <div className="min-h-screen">{children}</div>
               <Footer />
             </div>
+          </SidebarInset> */}
+          <SidebarInset>
+            <InsetLeftSidebar />
+            {children}
+            <Footer />
           </SidebarInset>
         </div>
       </SidebarProvider>

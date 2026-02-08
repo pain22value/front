@@ -16,6 +16,8 @@ export default function Home() {
         <RecommendSection2 />
         <ActorsChatSection />
       </div>
-    </section>
+
+      <div className="h-[200vh]"></div>
+    </div>
   );
 }

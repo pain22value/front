@@ -18,6 +18,6 @@ export default function Home() {
       </div>
 
       <div className="h-[200vh]"></div>
-    </div>
+    </section>
   );
 }

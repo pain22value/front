@@ -62,17 +62,6 @@ export function BaseCarousel<T extends { id: string | number }>({
     };
   }, [api]); // 의존성 배열에 api 추가
 
-  // useEffect(() => {
-  //   if (!api) return;
-
-  //   setCount(api.scrollSnapList().length);
-  //   setCurrent(api.selectedScrollSnap());
-
-  //   api.on("select", () => {
-  //     setCurrent(api.selectedScrollSnap());
-  //   });
-  // }, [api]);
-
   // itemsPerView가 있으면 style로 flex-basis를 계산하여 적용
   const itemStyle = itemsPerView ? { flexBasis: `${100 / itemsPerView}%` } : undefined;
 
@@ -98,12 +87,12 @@ export function BaseCarousel<T extends { id: string | number }>({
         {/* 좌우 버튼 */}
         <CarouselPrevious
           className={cn(
-            showButtonsOnHover && "lg:left-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+            showButtonsOnHover && "left-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300",
           )}
         />
         <CarouselNext
           className={cn(
-            showButtonsOnHover && "lg:right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+            showButtonsOnHover && "right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300",
           )}
         />
       </Carousel>

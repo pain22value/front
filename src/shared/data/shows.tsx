@@ -1,4 +1,4 @@
-export const musicals = [
+export const shows = [
   {
     id: 1,
     title: "안나 카레니나",

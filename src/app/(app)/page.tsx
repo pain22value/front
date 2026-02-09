@@ -1,14 +1,23 @@
 "use client";
 
+import HeroSection from "@/features/show/ui/home/HeroSection";
+import RecommendSection1 from "@/features/show/ui/home/RecommendSection1";
+import RecommendSection2 from "@/features/show/ui/home/RecommendSection2";
+import TicketingAvailableSection from "@/features/show/ui/home/TicketingAvailableSection";
+import ActorsChatSection from "@/features/show/ui/home/ActorsChatSection";
+
 export default function Home() {
   return (
-    <section className="flex">
-      <div className="flex-1">
-        <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Totam est aliquid quam facilis alias optio, debitis
-          nihil, voluptate illo dolore labore modi id illum facere quisquam distinctio harum sequi quia?
-        </p>
+    <section>
+      <HeroSection />
+      <div className="pl-20 my-30 space-y-20">
+        <RecommendSection1 />
+        <TicketingAvailableSection />
+        <RecommendSection2 />
+        <ActorsChatSection />
       </div>
+
+      <div className="h-[200vh]"></div>
     </section>
   );
 }

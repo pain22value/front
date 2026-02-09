@@ -1,6 +1,6 @@
-import SigninForm from "@/components/auth/SigninForm";
+import SigninForm from "@/features/auth/ui/SigninForm";
 
-export default async function Page() {
+export default async function SigninPage() {
   return (
     <main className="signin-page">
       <section>

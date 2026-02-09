@@ -6,9 +6,18 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:8080/api/:path*', // 백엔드 서버 주소
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
       },
     ];
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**', // 또는 특정 패턴: '**.domain.com'
+        pathname: '/**', // 전체 경로 허용
+      },
+    ],
   },
 };
 

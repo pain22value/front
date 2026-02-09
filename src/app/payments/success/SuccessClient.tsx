@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { paymentService } from '@/services/paymentService';
+import { paymentService } from '@/features/payments/services/paymentService';
 
 type Props = {
   searchParams: { paymentKey?: string; orderId?: string; amount?: string };
@@ -38,7 +38,7 @@ export default function SuccessClient({ searchParams }: Props) {
       } catch (e) {
         console.error(e);
         setErrorMsg(
-          e instanceof Error ? e.message : '결제 승인 중 오류가 발생했습니다.'
+          e instanceof Error ? e.message : '결제 승인 중 오류가 발생했습니다.',
         );
       } finally {
         setConfirming(false);

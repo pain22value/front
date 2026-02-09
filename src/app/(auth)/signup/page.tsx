@@ -1,9 +1,9 @@
-import SignupForm from "@/components/auth/SignupForm";
+import SignupForm from "@/features/auth/ui/SignupForm";
 
-export default async function Page() {
+export default async function SignupPage() {
   return (
     <main className="signup-page">
-      <section>
+      <section className="flex flex-row items-center gap-8">
         <SignupForm />
       </section>
     </main>

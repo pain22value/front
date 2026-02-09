@@ -3,24 +3,53 @@
 import { Input } from "@/components/ui/input";
 import { Bell, Menu, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { UserMenu } from "../common/UserMenu";
+import { usePathname } from "next/navigation";
+import { cn } from "@/shared/utils/cn";
+import Link from "next/link";
+// import { Separator } from "@/components/ui/separator";
 // import { SearchForm } from "@/components/search-form"
 
 export default function Header() {
   const { toggleSidebar } = useSidebar();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   return (
-    <header className="bg-background sticky top-0 z-50 flex w-full items-center border-b">
+    <header
+      className={cn(
+        "sticky top-0 z-50 flex w-full items-center border-b transition-colors ",
+        isHome ? "dark bg-background text-foreground" : "bg-background",
+      )}
+    >
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
         {/* 좌측 */}
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={toggleSidebar}>
             <Menu className="w-5 h-5" />
           </Button>
-          <span className="text-xl font-bold tracking-tight">truve</span>
+          <Link href="/" className="text-xl font-bold tracking-tight">
+            truve
+          </Link>
         </div>
+
+        {/* 임시메뉴 */}
+        {/* <nav className="ml-8">
+          <ul className="flex items-center gap-6 text-sm font-medium text-gray-600">
+            <li>임시메뉴 {`->`}</li>
+            <li>
+              <Button asChild variant="ghost">
+                <Link href="/shows">뮤지컬 전체</Link>
+              </Button>
+            </li>
+            <li>
+              <Button asChild variant="ghost">
+                <Link href="/shows/1">뮤지컬 공연 1번 상세페이지</Link>
+              </Button>
+            </li>
+          </ul>
+        </nav> */}
 
         {/* <Separator orientation="vertical" className="mr-2 h-4" /> */}
 
@@ -32,10 +61,9 @@ export default function Header() {
 
         {/* 우측 버튼들 */}
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon">
+          <Button size="icon" variant="ghost">
             <Bell className="w-5 h-5" />
           </Button>
-
           <UserMenu />
         </div>
 

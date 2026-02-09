@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import Link from "next/link";
 
 export function UserMenu() {
@@ -15,7 +15,7 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <Button asChild size={"sm"} variant={"outline"}>
+      <Button asChild variant={"outline"}>
         <Link href="/signin">로그인</Link>
       </Button>
     );

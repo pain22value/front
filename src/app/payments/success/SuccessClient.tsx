@@ -26,14 +26,17 @@ export default function SuccessClient({ searchParams }: Props) {
 
   useEffect(() => {
     if (!isValid || confirmed) return;
+
     (async () => {
       try {
         setConfirming(true);
+        setErrorMsg(null);
 
         await paymentService.confirm(orderId, {
           paymentKey,
           amount,
         });
+
         setConfirmed(true);
       } catch (e) {
         console.error(e);
@@ -47,64 +50,64 @@ export default function SuccessClient({ searchParams }: Props) {
   }, [isValid, confirmed, orderId, paymentKey, amount]);
 
   return (
-    <main style={{ maxWidth: 560, margin: '48px auto', padding: 16 }}>
-      <div
-        style={{
-          border: '1px solid #e5e7eb',
-          borderRadius: 14,
-          padding: 20,
-          background: '#fff',
-        }}
-      >
-        <h1 style={{ fontSize: 22, fontWeight: 900 }}>결제 성공</h1>
+    <main className="mx-auto my-12 max-w-[560px] p-4">
+      <div className="rounded-[14px] border border-gray-200 bg-white p-5">
+        <h1 className="text-[22px] font-extrabold">결제 성공</h1>
 
-        <div style={{ marginTop: 12, fontSize: 13, color: '#6b7280' }}>
+        <div className="mt-3 text-[13px] text-gray-500">
           <div>paymentKey: {paymentKey || '-'}</div>
           <div>orderId: {orderId || '-'}</div>
           <div>amount: {amountStr || '-'}</div>
         </div>
 
-        <hr style={{ margin: '18px 0', borderColor: '#f3f4f6' }} />
+        <hr className="my-[18px] border-gray-100" />
 
         {isValid ? (
           <div>
-            <div style={{ color: '#10b981', fontWeight: 900 }}>
+            <div className="font-extrabold text-emerald-500">
               성공 리다이렉트 확인 완료 ✅
             </div>
-            <div style={{ marginTop: 8, color: '#6b7280', fontSize: 13 }}>
-              (다음주에 백엔드 confirm 붙이면 여기서 승인 API 호출하면 됩니다)
+
+            <div className="mt-2 text-[13px] text-gray-500">
+              {confirming
+                ? '승인 요청 중...'
+                : confirmed
+                  ? '(다음주에 백엔드 confirm 붙이면 여기서 승인 API 호출하면 됩니다)'
+                  : '(승인 요청 준비 중)'}
             </div>
+
+            {errorMsg && (
+              <div className="mt-3 whitespace-pre-wrap rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                {errorMsg}
+              </div>
+            )}
           </div>
         ) : (
           <div>
-            <div style={{ color: '#b91c1c', fontWeight: 800 }}>
-              잘못된 성공 URL
-            </div>
-            <div style={{ marginTop: 8, whiteSpace: 'pre-wrap' }}>
+            <div className="font-extrabold text-red-700">잘못된 성공 URL</div>
+            <div className="mt-2 whitespace-pre-wrap text-sm text-gray-700">
               필수 파라미터(paymentKey, orderId, amount)가 누락됐습니다.
             </div>
+
+            {errorMsg && (
+              <div className="mt-3 whitespace-pre-wrap rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                {errorMsg}
+              </div>
+            )}
           </div>
         )}
 
-        <div style={{ marginTop: 18, display: 'flex', gap: 8 }}>
+        <div className="mt-[18px] flex gap-2">
           <Link
             href="/payments/checkout"
-            style={{
-              padding: '10px 12px',
-              border: '1px solid #e5e7eb',
-              borderRadius: 10,
-            }}
+            className="rounded-[10px] border border-gray-200 px-3 py-2.5 text-sm hover:bg-gray-50"
           >
             다시 결제하기
           </Link>
 
           <Link
             href="/"
-            style={{
-              padding: '10px 12px',
-              border: '1px solid #e5e7eb',
-              borderRadius: 10,
-            }}
+            className="rounded-[10px] border border-gray-200 px-3 py-2.5 text-sm hover:bg-gray-50"
           >
             홈으로
           </Link>

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 type Props = {
   searchParams: { code?: string; message?: string; orderId?: string };
 };
@@ -6,40 +8,31 @@ export default function Page({ searchParams }: Props) {
   const { code, message, orderId } = searchParams;
 
   return (
-    <main style={{ maxWidth: 560, margin: '48px auto', padding: 16 }}>
-      <div
-        style={{
-          border: '1px solid #e5e7eb',
-          borderRadius: 14,
-          padding: 20,
-          background: '#fff',
-        }}
-      >
-        <h1 style={{ fontSize: 22, fontWeight: 900 }}>결제 실패</h1>
+    <main className="mx-auto my-12 max-w-[560px] p-4">
+      <div className="rounded-[14px] border border-gray-200 bg-white p-5">
+        <h1 className="text-[22px] font-extrabold">결제 실패</h1>
 
-        <div style={{ marginTop: 16, lineHeight: 1.8 }}>
+        <div className="mt-4 space-y-1 text-sm leading-relaxed text-gray-700">
           <div>
-            <b>code</b>: {code ?? '-'}
+            <b className="font-semibold text-gray-900">code</b>: {code ?? '-'}
           </div>
           <div>
-            <b>message</b>: {message ?? '-'}
+            <b className="font-semibold text-gray-900">message</b>:{' '}
+            {message ?? '-'}
           </div>
           <div>
-            <b>orderId</b>: {orderId ?? '-'}
+            <b className="font-semibold text-gray-900">orderId</b>:{' '}
+            {orderId ?? '-'}
           </div>
         </div>
 
-        <div style={{ marginTop: 18, display: 'flex', gap: 8 }}>
-          <a
+        <div className="mt-[18px] flex gap-2">
+          <Link
             href="/payments/checkout"
-            style={{
-              padding: '10px 12px',
-              border: '1px solid #e5e7eb',
-              borderRadius: 10,
-            }}
+            className="rounded-[10px] border border-gray-200 px-3 py-2.5 text-sm hover:bg-gray-50"
           >
             다시 시도하기
-          </a>
+          </Link>
         </div>
       </div>
     </main>

@@ -1,11 +1,11 @@
-import { useAuthStore } from '@/features/auth/store/useAuthStore';
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { ENDPOINTS } from './endpoints';
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { ENDPOINTS } from "./endpoints";
 
 // const api = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL, withCredentials: true });
 // const refreshApi = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL, withCredentials: true });
-const api = axios.create({ baseURL: '/api', withCredentials: true });
-const refreshApi = axios.create({ baseURL: '/api', withCredentials: true });
+const api = axios.create({ baseURL: "/api", withCredentials: true });
+const refreshApi = axios.create({ baseURL: "/api", withCredentials: true });
 
 let isRefreshing = false;
 let failedQueue: Array<{

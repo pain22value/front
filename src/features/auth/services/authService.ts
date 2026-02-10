@@ -5,7 +5,9 @@ const signup = async (signupRequest: SignupRequest): Promise<void> => {
   await api.post(ENDPOINTS.AUTH.SIGNUP, signupRequest);
 };
 
-const signin = async (signinRequest: SigninRequest): Promise<SigninResponse> => {
+const signin = async (
+  signinRequest: SigninRequest,
+): Promise<SigninResponse> => {
   const {
     data: { accessToken, user },
   } = await api.post<SigninResponse>(ENDPOINTS.AUTH.LOGIN, signinRequest);
@@ -31,4 +33,11 @@ const verifyEmail = async (email: string, code: string): Promise<void> => {
   await api.post(ENDPOINTS.EMAIL.VERIFY, { email, code });
 };
 
-export const authService = { signup, signin, signout, refresh, sendVerificationCode, verifyEmail };
+export const authService = {
+  signup,
+  signin,
+  signout,
+  refresh,
+  sendVerificationCode,
+  verifyEmail,
+};

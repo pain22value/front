@@ -1,4 +1,4 @@
-export const avatars = [
+export const actors = [
   {
     id: 1,
     name: "김호영",

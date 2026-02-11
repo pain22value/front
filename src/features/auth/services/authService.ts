@@ -6,10 +6,7 @@ const signup = async (signupRequest: SignupRequest): Promise<void> => {
 };
 
 const signin = async (signinRequest: SigninRequest): Promise<SigninResponse> => {
-  const {
-    data: { accessToken, user },
-  } = await api.post<SigninResponse>(ENDPOINTS.AUTH.LOGIN, signinRequest);
-  return { accessToken, user };
+  return api.post<SigninResponse>(ENDPOINTS.AUTH.LOGIN, signinRequest);
 };
 
 const signout = async (): Promise<void> => {
@@ -17,10 +14,7 @@ const signout = async (): Promise<void> => {
 };
 
 const refresh = async (): Promise<SigninResponse> => {
-  const {
-    data: { accessToken, user },
-  } = await api.post<SigninResponse>(ENDPOINTS.AUTH.REFRESH);
-  return { accessToken, user };
+  return api.post<SigninResponse>(ENDPOINTS.AUTH.REFRESH);
 };
 
 const sendVerificationCode = async (email: string): Promise<void> => {

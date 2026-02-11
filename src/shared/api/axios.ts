@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig, AxiosInstance, AxiosRequestConfig } from "axios";
 import { ENDPOINTS } from "./endpoints";
 
 // const api = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL, withCredentials: true });
@@ -33,7 +33,7 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => response.data.data,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
@@ -57,8 +57,9 @@ api.interceptors.response.use(
 
       try {
         // 1. 토큰 재발급 요청
-        const { data } = await refreshApi.post<{ accessToken: string }>(ENDPOINTS.AUTH.REFRESH);
-        const newAccessToken = data.accessToken;
+        const { data } = await refreshApi.post<ApiResponse<{ accessToken: string }>>(ENDPOINTS.AUTH.REFRESH);
+        if (!data.data) throw new Error("토큰 갱신 데이터가 없습니다.");
+        const newAccessToken = data.data.accessToken;
 
         // 2. 인증상태 업데이트
         useAuthStore.setState({ accessToken: newAccessToken });
@@ -82,4 +83,12 @@ api.interceptors.response.use(
   },
 );
 
-export default api;
+interface CustomAxiosInstance extends Omit<AxiosInstance, "get" | "post" | "put" | "delete" | "patch"> {
+  get<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
+  put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
+  delete<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
+}
+
+export default api as unknown as CustomAxiosInstance;

@@ -12,6 +12,7 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { SignupFormValues, signupSchema } from "@/shared/schemas/schemas";
 import { Label } from "@/components/ui/label";
 import { LoaderSpinner } from "@/components/ui/spinner";
+import { authService } from "../services/authService";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -81,7 +82,6 @@ export default function SignupForm() {
 
   const handleSendVerification = async (e: React.MouseEvent) => {
     e.preventDefault();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const email = getValues("email");
     const isEmailValid = await trigger("email");
 
@@ -89,8 +89,8 @@ export default function SignupForm() {
 
     try {
       setIsSendingVerification(true);
-      // await authService.sendVerificationCode(email);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await authService.sendVerificationCode(email);
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
       setIsVerificationSent(true);
       setIsVerified(false);
       setTimeLeft(180);
@@ -104,15 +104,14 @@ export default function SignupForm() {
   };
 
   const handleVerify = async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const email = getValues("email");
     const code = getValues("verificationCode");
     if (!code) return;
 
     setIsVerifying(true);
     try {
-      // await authService.verifyEmail(email, code);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await authService.verifyEmail(email, code);
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
       setIsVerified(true);
       toast.success("인증되었습니다.");
     } catch (err) {

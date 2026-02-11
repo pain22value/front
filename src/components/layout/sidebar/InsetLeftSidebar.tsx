@@ -2,14 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { AvatarItem } from "./AvatarItem";
 import { Separator } from "@/components/ui/separator";
-import { avatars } from "@/shared/data/avatars";
+import { actors } from "@/shared/data/actors";
 
 export function InsetLeftSidebar() {
   return (
     <aside
       className="z-30 
       sticky/ fixed top-(--header-height) h-[calc(100svh-var(--header-height))] 
-      flex w-20 flex-col items-center gap-4 border-r border-dashed bg-background/ py-4"
+      flex w-20 flex-col items-center gap-4 border-r/ border-dashed/ bg-background/ py-4"
     >
       {/* Top */}
       <div className="flex flex-col items-center gap-4">
@@ -18,7 +18,7 @@ export function InsetLeftSidebar() {
         </Button>
 
         <div className="mt-2 flex flex-col gap-4">
-          {avatars.map((avatar) => (
+          {actors.map((avatar) => (
             <AvatarItem key={avatar.id} src={avatar.image} alt={avatar.name} />
           ))}
         </div>

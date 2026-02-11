@@ -1,13 +1,13 @@
 import Image from "next/image";
-import { banners } from "@/shared/data/banners";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
+import { recommendShows2 } from "@/shared/data/shows";
 
-export default function RecommendSection2() {
+export default function HomeRecommendSection2() {
   return (
     <section className="max-w-[1200] mx-auto space-y-8">
       <h1 className="font-semibold text-2xl">이 뮤지컬 어떠세요?</h1>
       <BaseCarousel
-        items={banners}
+        items={recommendShows2}
         itemsPerView={2}
         loop
         align="start"

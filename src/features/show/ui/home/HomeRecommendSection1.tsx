@@ -2,16 +2,20 @@
 
 import Image from "next/image";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
-// import { shows } from "@/shared/data/shows";
 import { cn } from "@/shared/utils/cn";
-import { shows } from "@/shared/data/shows";
+import { recommendShows } from "@/shared/data/shows";
+import { useGetRecommendations } from "../../hooks/useGetRecommendations";
 
-export default function RecommendSection1() {
+export default function HomeRecommendSection1() {
+  const { data: shows } = useGetRecommendations();
+  const displayShows = shows || recommendShows;
+  console.log({ shows, displayShows });
+
   return (
     <section className="max-w-[1200] mx-auto space-y-8">
       <h1 className="font-semibold text-2xl">이 뮤지컬 어떠세요?</h1>
       <BaseCarousel
-        items={shows}
+        items={displayShows}
         className="max-w-7xl mx-auto"
         itemClassName="sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
         showPagination

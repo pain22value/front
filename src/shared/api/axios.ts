@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import axios, { AxiosError, InternalAxiosRequestConfig, AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { ENDPOINTS } from "./endpoints";
 
 // const api = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL, withCredentials: true });
@@ -33,7 +33,7 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => response.data.data,
+  (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
@@ -83,12 +83,4 @@ api.interceptors.response.use(
   },
 );
 
-interface CustomAxiosInstance extends Omit<AxiosInstance, "get" | "post" | "put" | "delete" | "patch"> {
-  get<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
-  post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
-  put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
-  delete<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
-  patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
-}
-
-export default api as unknown as CustomAxiosInstance;
+export default api;

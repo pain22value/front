@@ -2,10 +2,10 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { avatars } from "@/shared/data/avatars";
+import { actors } from "@/shared/data/actors";
 import { ChevronRight } from "lucide-react";
 
-export default function ActorsChatSection() {
+export default function HomeActorsSection() {
   return (
     <section className="w-full max-w-[1200] mx-auto space-y-8 rounded-2xl border bg-background p-6">
       {/* Header */}
@@ -18,7 +18,7 @@ export default function ActorsChatSection() {
 
       {/* Artist List */}
       <div className="flex gap-3 overflow-x-auto pb-2">
-        {avatars.map((avatar) => (
+        {actors.map((avatar) => (
           <button
             key={avatar.id}
             className="flex shrink-0 items-center gap-3 rounded-full border px-4 py-2 transition hover:bg-accent"

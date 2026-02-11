@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-export function DetailCard({
+export function ShowDetailCard({
   posterUrl,
   title,
   ranking,
@@ -28,7 +28,7 @@ export function DetailCard({
   benefit?: string;
 }) {
   return (
-    <Card className="border">
+    <Card className="w-8/10 py-0 bg-transparent! border-none! shadow-none!">
       <CardHeader>
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">{title}</h2>
@@ -42,11 +42,18 @@ export function DetailCard({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-2 xs:gap-4 sm:gap-6 md:gap-8 ">
-        <div className="relative /w-full aspect-[3/4]">
-          <Image src={posterUrl} alt={`${title} 포스터`} fill className="object-cover rounded-md" priority />
+      <CardContent className="flex gap-2 xs:gap-4 sm:gap-6 md:gap-8 px-0">
+        <div className="relative ">
+          <Image
+            src={posterUrl}
+            alt={`${title} 포스터`}
+            width={300}
+            height={400}
+            className="object-cover aspect-3/4 min-w-[200] rounded-md"
+            priority
+          />
         </div>
-        <div className="space-y-8">
+        <div className="space-y-8 whitespace-nowrap">
           <dl className="grid grid-cols-[6rem_1fr] gap-y-4 text-sm [&_dt]:font-medium [&_dt]:text-muted-foreground">
             <dt>장소</dt>
             <dd>{place}</dd>

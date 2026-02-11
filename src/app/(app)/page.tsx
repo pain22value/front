@@ -1,23 +1,21 @@
 "use client";
 
-import HeroSection from "@/features/show/ui/home/HeroSection";
-import RecommendSection1 from "@/features/show/ui/home/RecommendSection1";
-import RecommendSection2 from "@/features/show/ui/home/RecommendSection2";
-import TicketingAvailableSection from "@/features/show/ui/home/TicketingAvailableSection";
-import ActorsChatSection from "@/features/show/ui/home/ActorsChatSection";
+import HomeHeroSection from "@/features/show/ui/home/HomeHeroSection";
+import HomeRecommendSection1 from "@/features/show/ui/home/HomeRecommendSection1";
+import HomeRecommendSection2 from "@/features/show/ui/home/HomeRecommendSection2";
+import HomeRightNowSection from "@/features/show/ui/home/HomeRightNowSection";
+import HomeActorsSection from "@/features/show/ui/home/HomeActorsSection";
 
 export default function Home() {
   return (
     <section>
-      <HeroSection />
+      <HomeHeroSection />
       <div className="pl-20 my-30 space-y-20">
-        <RecommendSection1 />
-        <TicketingAvailableSection />
-        <RecommendSection2 />
-        <ActorsChatSection />
+        <HomeRecommendSection1 />
+        <HomeRightNowSection />
+        <HomeRecommendSection2 />
+        <HomeActorsSection />
       </div>
-
-      <div className="h-[200vh]"></div>
     </section>
   );
 }

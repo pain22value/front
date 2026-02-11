@@ -5,13 +5,10 @@ const signup = async (signupRequest: SignupRequest): Promise<void> => {
   await api.post(ENDPOINTS.AUTH.SIGNUP, signupRequest);
 };
 
-const signin = async (
-  signinRequest: SigninRequest,
-): Promise<SigninResponse> => {
-  const {
-    data: { accessToken, user },
-  } = await api.post<SigninResponse>(ENDPOINTS.AUTH.LOGIN, signinRequest);
-  return { accessToken, user };
+const signin = async (signinRequest: SigninRequest): Promise<SigninResponse> => {
+  const { data } = await api.post<ApiResponse<SigninResponse>>(ENDPOINTS.AUTH.LOGIN, signinRequest);
+  if (!data.data) throw new Error(data.message || "로그인 데이터가 없습니다.");
+  return data.data;
 };
 
 const signout = async (): Promise<void> => {
@@ -19,10 +16,9 @@ const signout = async (): Promise<void> => {
 };
 
 const refresh = async (): Promise<SigninResponse> => {
-  const {
-    data: { accessToken, user },
-  } = await api.post<SigninResponse>(ENDPOINTS.AUTH.REFRESH);
-  return { accessToken, user };
+  const { data } = await api.post<ApiResponse<SigninResponse>>(ENDPOINTS.AUTH.REFRESH);
+  if (!data.data) throw new Error(data.message || "토큰 갱신 데이터가 없습니다.");
+  return data.data;
 };
 
 const sendVerificationCode = async (email: string): Promise<void> => {

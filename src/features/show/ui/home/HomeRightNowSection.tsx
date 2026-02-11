@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { shows } from "@/shared/data/shows";
+import { rightNowShows } from "@/shared/data/shows";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
 import Link from "next/link";
 
-export default function TicketingAvailableSection() {
+export default function HomeRightNowSection() {
   return (
     <section className="max-w-[1200] mx-auto space-y-8">
       <div className="flex items-center justify-between">
@@ -39,7 +39,7 @@ export default function TicketingAvailableSection() {
       </div>
 
       <BaseCarousel
-        items={shows}
+        items={rightNowShows}
         itemsPerView={6}
         loop
         align="start"

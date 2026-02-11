@@ -57,8 +57,9 @@ api.interceptors.response.use(
 
       try {
         // 1. 토큰 재발급 요청
-        const { data } = await refreshApi.post<{ accessToken: string }>(ENDPOINTS.AUTH.REFRESH);
-        const newAccessToken = data.accessToken;
+        const { data } = await refreshApi.post<ApiResponse<{ accessToken: string }>>(ENDPOINTS.AUTH.REFRESH);
+        if (!data.data) throw new Error("토큰 갱신 데이터가 없습니다.");
+        const newAccessToken = data.data.accessToken;
 
         // 2. 인증상태 업데이트
         useAuthStore.setState({ accessToken: newAccessToken });

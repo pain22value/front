@@ -14,4 +14,10 @@ export const ENDPOINTS = {
     LIST: "/shows",
     DETAIL: "/shows", // 뒤에 /{showId}를 붙여서 사용
   },
+  PAYMENTS: {
+    SAVE: '/payments',
+    CONFIRM: '/payments/:orderId/confirm',
+    GET: '/payments/:orderId',
+    CANCEL: '/payments/:orderId/cancel',
+  },
 } as const;

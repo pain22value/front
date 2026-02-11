@@ -25,4 +25,11 @@ const verifyEmail = async (email: string, code: string): Promise<void> => {
   await api.post(ENDPOINTS.EMAIL.VERIFY, { email, code });
 };
 
-export const authService = { signup, signin, signout, refresh, sendVerificationCode, verifyEmail };
+export const authService = {
+  signup,
+  signin,
+  signout,
+  refresh,
+  sendVerificationCode,
+  verifyEmail,
+};

@@ -20,4 +20,8 @@ export const ENDPOINTS = {
     GET: '/payments/:orderId',
     CANCEL: '/payments/:orderId/cancel',
   },
+  SEATS: {
+    LIST: "/shows",        // /shows/{showId}/seats : 2/21/박영준
+    RESERVE: "/shows",     // /shows/{showId}/seats/{seatId}/reserve : 2/21/박영준
+  },
 } as const;

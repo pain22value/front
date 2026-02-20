@@ -66,7 +66,7 @@ export default function CheckoutPage() {
           // //결제수단
           // orderId,
           // amount: total,
-          // //예약자정보
+          // 예약자정보,
           // customerName: customerInfo.name,
           // customerBirth: customerInfo.birth,
           // customerEmail: customerInfo.email,

@@ -7,30 +7,30 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/shared/utils/cn";
 import { ko } from "date-fns/locale";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Separator } from "@/components/ui/separator";
-
-// 임시 목업 데이터 가져오기 함수
-const fetchSchedules = async (date: Date | undefined) => {
-  if (!date) return [];
-  // API 호출 시뮬레이션 (0.5초 딜레이)
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  return [
-    { id: "1", round: 1, time: "오후 7:00", cast: "이재환, 백형훈, 허윤슬, 신승환" },
-    { id: "2", round: 2, time: "오후 9:00", cast: "이재환, 백형훈, 허윤슬, 신승환" },
-  ];
-};
+import { useSchedules } from "../../hooks/useSchedules";
+import ShowTicketOpenNoticeModal from "./ShowTicketOpenNoticeModal";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import CaptchaModal from "./CaptchaModal";
 
 export function ShowTicketingCard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [round, setRound] = useState("1");
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(true);
+  const [isCaptchaModalOpen, setIsCaptchaModalOpen] = useState(false);
 
-  const { data: schedules, isLoading } = useQuery({
-    queryKey: ["schedules", date],
-    queryFn: () => fetchSchedules(date),
-    enabled: !!date,
-  });
+  const { data: schedules, isLoading } = useSchedules(date);
+  const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+
+  const handleTicketing = () => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    setIsCaptchaModalOpen(true);
+  };
 
   return (
     <div className="space-y-4 max-w-[300]">
@@ -90,7 +90,12 @@ export function ShowTicketingCard() {
         </RadioGroup>
       </div>
 
-      <Button className="w-full h-12 bg-red-500 hover:bg-red-600 text-white">예매하기</Button>
+      <Button onClick={handleTicketing} className="w-full h-12 bg-red-500 hover:bg-red-600 text-white">
+        예매하기
+      </Button>
+
+      <ShowTicketOpenNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} />
+      <CaptchaModal open={isCaptchaModalOpen} onOpenChange={setIsCaptchaModalOpen} />
     </div>
   );
 }

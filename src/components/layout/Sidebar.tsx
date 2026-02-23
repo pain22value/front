@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { AvatarItem } from "./AvatarItem";
+import { AvatarItem } from "../common/AvatarItem";
 import { Separator } from "@/components/ui/separator";
 import { actors } from "@/shared/data/actors";
 
-export function InsetLeftSidebar() {
+export default function Sidebar() {
   return (
     <aside
       className="z-30 

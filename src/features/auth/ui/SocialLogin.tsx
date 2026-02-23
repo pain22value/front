@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { ENDPOINTS } from "@/shared/api/endpoints";
 
 export default function SocialLogin() {
   return (
@@ -17,7 +18,7 @@ export default function SocialLogin() {
           font-semibold
         "
       >
-        <a href="/api/oauth2/authorization/kakao" className="flex items-center justify-center gap-2">
+        <a href={`/api${ENDPOINTS.OAUTH.KAKAO}`} className="flex items-center justify-center gap-2">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M11.9899 3C6.45796 3 2 6.5461 2 10.9027C2 13.7396 3.90476 16.232 6.74164 17.6302C6.53901 18.4205 5.9919 20.4671 5.87032 20.8926C5.72847 21.4397 6.07295 21.4195 6.29584 21.2776C6.47821 21.156 9.03141 19.4134 10.1459 18.6636C10.7538 18.7447 11.3617 18.8055 12.0101 18.8055C17.542 18.8055 22 15.2594 22 10.9027C22 6.52584 17.5218 3 11.9899 3Z"
@@ -38,7 +39,7 @@ export default function SocialLogin() {
           font-semibold
         "
       >
-        <a href="/api/oauth2/authorization/naver" className="flex items-center justify-center gap-2">
+        <a href={`/api${ENDPOINTS.OAUTH.NAVER}`} className="flex items-center justify-center gap-2">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M14.8485 12.5988L8.917 3.5H4V20.5H9.15152V11.4012L15.083 20.5H20V3.5H14.8485V12.5988Z"
@@ -61,7 +62,7 @@ export default function SocialLogin() {
           font-semibold
         "
       >
-        <a href="/api/oauth2/authorization/google" className="flex items-center justify-center gap-2">
+        <a href={`/api${ENDPOINTS.OAUTH.GOOGLE}`} className="flex items-center justify-center gap-2">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               fillRule="evenodd"

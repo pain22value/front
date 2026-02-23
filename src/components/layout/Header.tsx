@@ -1,18 +1,17 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Bell, Menu, Search } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSidebar } from "@/components/ui/sidebar";
 import { UserMenu } from "../common/UserMenu";
 import { usePathname } from "next/navigation";
 import { cn } from "@/shared/utils/cn";
 import Link from "next/link";
+import SheetMenu from "./SheetMenu";
 // import { Separator } from "@/components/ui/separator";
 // import { SearchForm } from "@/components/search-form"
 
 export default function Header() {
-  const { toggleSidebar } = useSidebar();
   const pathname = usePathname();
   const isHome = pathname === "/";
 
@@ -26,9 +25,7 @@ export default function Header() {
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
         {/* 좌측 */}
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-            <Menu className="w-5 h-5" />
-          </Button>
+          <SheetMenu />
           <Link href="/" className="text-xl font-bold tracking-tight">
             truve
           </Link>

@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
-import { paymentService } from '@/features/payments/services/paymentService';
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { paymentService } from "@/features/payments/services/paymentService";
 
 type Props = {
   searchParams: { paymentKey?: string; orderId?: string; amount?: string };
 };
 
 export default function SuccessClient({ searchParams }: Props) {
-  const paymentKey = searchParams.paymentKey ?? '';
-  const orderId = searchParams.orderId ?? '';
-  const amountStr = searchParams.amount ?? '';
+  const paymentKey = searchParams.paymentKey ?? "";
+  const orderId = searchParams.orderId ?? "";
+  const amountStr = searchParams.amount ?? "";
 
   const amount = useMemo(() => {
     const n = Number(amountStr);
@@ -41,7 +41,7 @@ export default function SuccessClient({ searchParams }: Props) {
       } catch (e) {
         console.error(e);
         setErrorMsg(
-          e instanceof Error ? e.message : '결제 승인 중 오류가 발생했습니다.',
+          e instanceof Error ? e.message : "결제 승인 중 오류가 발생했습니다.",
         );
       } finally {
         setConfirming(false);
@@ -55,9 +55,9 @@ export default function SuccessClient({ searchParams }: Props) {
         <h1 className="text-[22px] font-extrabold">결제 성공</h1>
 
         <div className="mt-3 text-[13px] text-gray-500">
-          <div>paymentKey: {paymentKey || '-'}</div>
-          <div>orderId: {orderId || '-'}</div>
-          <div>amount: {amountStr || '-'}</div>
+          <div>paymentKey: {paymentKey || "-"}</div>
+          <div>orderId: {orderId || "-"}</div>
+          <div>amount: {amountStr || "-"}</div>
         </div>
 
         <hr className="my-[18px] border-gray-100" />
@@ -70,10 +70,10 @@ export default function SuccessClient({ searchParams }: Props) {
 
             <div className="mt-2 text-[13px] text-gray-500">
               {confirming
-                ? '승인 요청 중...'
+                ? "승인 요청 중..."
                 : confirmed
-                  ? '(다음주에 백엔드 confirm 붙이면 여기서 승인 API 호출하면 됩니다)'
-                  : '(승인 요청 준비 중)'}
+                  ? "결제가 정상 승인되었습니다."
+                  : "(승인 요청 준비 중)"}
             </div>
 
             {errorMsg && (

@@ -22,12 +22,11 @@ export function ShowTicketingCard() {
 
   const { data: schedules, isLoading } = useSchedules(date);
   const router = useRouter();
-  const accessToken = useAuthStore((state) => state.accessToken);
-  // const user = useAuthStore((state) => state.user);
+  const user = useAuthStore((state) => state.user);
 
   const handleTicketing = () => {
-    if (!accessToken) {
-      router.push("/signin");
+    if (!user) {
+      router.push("/login");
       return;
     }
     setIsCaptchaModalOpen(true);

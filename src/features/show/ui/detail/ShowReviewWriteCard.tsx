@@ -1,15 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/shared/utils/cn";
+import { toast } from "sonner";
 
 const selectedStyle = "border-red-500 bg-red-50 text-red-500 hover:bg-red-50 hover:text-red-500";
 
-export default function ShowReviewWriteCard() {
+interface ReviewData {
+  sentiment: "good" | "bad";
+  charmPoints: string[];
+  emotionPoints: string[];
+  content: string;
+}
+
+export default function ShowReviewWriteCard({ onWriteSuccess }: { onWriteSuccess?: () => void }) {
   // 리뷰 작성 모드 상태 (작성 중 / 작성 완료)
   const [mode, setMode] = useState<"write" | "done">("write");
   // 만족도 상태 (좋았어요 / 별로에요)
@@ -21,28 +30,26 @@ export default function ShowReviewWriteCard() {
   // 리뷰 내용 상태
   const [content, setContent] = useState("");
 
-  /*
-  // [React Query] 리뷰 작성 요청 (Mutation) 예시
-  // import { useMutation, useQueryClient } from "@tanstack/react-query";
-
   const queryClient = useQueryClient();
 
-  const { mutate: createReview, isPending } = useMutation({
-    mutationFn: async (data: any) => {
+  const { mutate: createReview, isPending } = useMutation<unknown, Error, ReviewData>({
+    mutationFn: async (data) => {
       // 실제 API 호출
       // return await api.post(`/shows/${showId}/reviews`, data);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       console.log("리뷰 데이터 전송:", data);
     },
     onSuccess: () => {
-      // 리뷰 목록 쿼리 무효화 (목록 새로고침)
-      // queryClient.invalidateQueries({ queryKey: ["reviews", showId] });
+      toast.success("리뷰가 성공적으로 등록되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
       setMode("done");
+      onWriteSuccess?.();
     },
     onError: (error) => {
       console.error("리뷰 작성 실패:", error);
+      toast.error(error.message || "리뷰 작성에 실패했습니다.");
     },
   });
-  */
 
   // 매력 포인트 토글 함수
   const toggleCharmPoint = (tag: string) => {
@@ -55,18 +62,20 @@ export default function ShowReviewWriteCard() {
   };
 
   const submitReview = () => {
-    if (!content) return;
-
-    /*
-    // [React Query] Mutation 실행
+    if (!sentiment) {
+      toast.warning("공연에 대한 만족도를 선택해주세요.");
+      return;
+    }
+    if (!content) {
+      toast.warning("관람 후기를 작성해주세요.");
+      return;
+    }
     createReview({
       sentiment,
       charmPoints,
       emotionPoints,
       content,
     });
-    */
-    setMode("done");
   };
 
   return (
@@ -147,7 +156,9 @@ export default function ShowReviewWriteCard() {
 
             {/* 게시 버튼 */}
             <div className="flex justify-end">
-              <Button onClick={submitReview}>게시하기</Button>
+              <Button onClick={submitReview} disabled={isPending}>
+                {isPending ? "게시 중..." : "게시하기"}
+              </Button>
             </div>
           </CardContent>
         </Card>

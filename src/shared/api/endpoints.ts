@@ -3,7 +3,12 @@ export const ENDPOINTS = {
     SIGNUP: "/auth/sign-up",
     LOGIN: "/auth/login",
     LOGOUT: "/auth/logout",
-    REFRESH: "/auth/refresh",
+    REFRESH: "/auth/reissue",
+  },
+  OAUTH: {
+    KAKAO: "/auth/kakao/login",
+    NAVER: "/auth/naver/login",
+    GOOGLE: "/auth/google/login",
   },
   EMAIL: {
     SEND_CODE: "/auth/email/send-code",
@@ -15,9 +20,9 @@ export const ENDPOINTS = {
     DETAIL: "/shows", // 뒤에 /{showId}를 붙여서 사용
   },
   PAYMENTS: {
-    SAVE: '/payments',
-    CONFIRM: '/payments/:orderId/confirm',
-    GET: '/payments/:orderId',
-    CANCEL: '/payments/:orderId/cancel',
+    SAVE: "/payments",
+    CONFIRM: "/payments/:orderId/confirm",
+    GET: "/payments/:orderId",
+    CANCEL: "/payments/:orderId/cancel",
   },
 } as const;

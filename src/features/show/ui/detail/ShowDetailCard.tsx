@@ -1,14 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { Star } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export function ShowDetailCard({
   posterUrl,
   title,
   ranking,
-  rating = 5,
+  truveIndex,
   place,
   period,
   duration,
@@ -19,7 +18,7 @@ export function ShowDetailCard({
   posterUrl: string;
   title: string;
   ranking?: string;
-  rating?: number;
+  truveIndex?: number;
   place: string;
   period: string;
   duration: string;
@@ -34,11 +33,7 @@ export function ShowDetailCard({
           <h2 className="text-2xl font-bold">{title}</h2>
           <div className="flex items-center gap-4 text-sm">
             {ranking && <span>{ranking}</span>}
-            <div className="flex items-center">
-              {Array.from({ length: rating }).map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-              ))}
-            </div>
+            <div className="flex items-center font-medium">truve 지수 {truveIndex}%</div>
           </div>
         </div>
       </CardHeader>

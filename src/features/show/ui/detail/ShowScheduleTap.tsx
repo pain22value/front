@@ -68,12 +68,9 @@ const schedule = [
   },
 ];
 
-export default function ShowSchedule() {
+export default function ShowScheduleTap() {
   const [selectedCast, setSelectedCast] = useState<string | null>(null);
-  const [range, setRange] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 7),
-  });
+  const [range, setRange] = useState<DateRange | undefined>({ from: new Date(), to: addDays(new Date(), 7) });
 
   /*
   // React Query를 사용하여 서버에서 스케줄을 조회하는 로직 예시

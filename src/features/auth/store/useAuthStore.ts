@@ -6,11 +6,13 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 interface AuthState {
   accessToken: string | null;
-  user: User | null;
+  user: string | null;
+  // user: User | null;
   signup: (signupRequest: SignupRequest) => Promise<void>;
   signin: (signinRequest: SigninRequest) => Promise<void>;
   signout: () => Promise<void>;
-  setAuth: (accessToken: string, user: User) => void;
+  setAuth: (accessToken: string, user: string) => void;
+  // setAuth: (accessToken: string, user: User) => void;
 }
 
 export const useAuthStore = create(
@@ -24,8 +26,8 @@ export const useAuthStore = create(
       },
       signin: async (signinRequest) => {
         try {
-          const { accessToken, user } = await authService.signin(signinRequest);
-          set({ accessToken, user });
+          const { accessToken } = await authService.signin(signinRequest);
+          set({ accessToken, user: accessToken });
         } catch (error: unknown) {
           set({ accessToken: null, user: null });
           throw new Error(
@@ -39,7 +41,7 @@ export const useAuthStore = create(
         } catch (error) {
           console.error("서버 로그아웃 요청에 실패했습니다:", error);
         } finally {
-          set({ accessToken: null, user: null });
+          // set({ accessToken: null, user: null });
         }
       },
       setAuth: (accessToken, user) => set({ accessToken, user }),

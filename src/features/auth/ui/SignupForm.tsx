@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { SignupFormValues, signupSchema } from "@/shared/schemas/schemas";
+import { SignupFormValues, signupSchema } from "@/shared/schemas/authSchema";
 import { Label } from "@/components/ui/label";
 import { LoaderSpinner } from "@/components/ui/spinner";
 import { authService } from "../services/authService";

@@ -8,12 +8,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ko } from "date-fns/locale";
 import { type DateRange } from "react-day-picker";
 
-interface DemoProps {
+export default function ShowSchedulePicker({
+  range,
+  setRange,
+}: {
   range: DateRange | undefined;
   setRange: (range: DateRange | undefined) => void;
-}
-
-export default function ShowSchedulePicker({ range, setRange }: DemoProps) {
+}) {
   return (
     <Popover>
       <PopoverTrigger asChild>

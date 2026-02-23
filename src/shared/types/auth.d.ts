@@ -17,5 +17,6 @@ interface SigninRequest {
 
 interface SigninResponse {
   accessToken: string;
-  user: User;
+  user: string;
+  // user: User;
 }

@@ -309,7 +309,13 @@ export const mockShow = {
   period: "2025.12.17 ~ 2026.03.29",
   duration: "155분 (인터미션 20분 포함)",
   ageLimit: "8세 이상 관람가능",
-  prices: [],
+  prices: [
+    { seat: "VIP석", price: "170,000원" },
+    { seat: "R석", price: "140,000원" },
+    { seat: "S석", price: "110,000원" },
+    { seat: "A석", price: "80,000원" },
+    { seat: "OP석", price: "170,000원" },
+  ],
   benefit: "truve 로그인 시 5% 할인",
   info: showInfoData,
 };

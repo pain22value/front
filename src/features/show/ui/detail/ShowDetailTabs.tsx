@@ -4,7 +4,11 @@ import { Clock, Heart, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface ShowDetailTabsProps {
+export function ShowDetailTabs({
+  info,
+  casting,
+  review,
+}: {
   info: {
     cast: { title: string; actors: { id: number; name: string; image: string }[] };
     banner: { text: string };
@@ -13,9 +17,7 @@ interface ShowDetailTabsProps {
   };
   casting?: ReactNode; // 클라이언트 컴포넌트 -> 리액트 쿼리 사용
   review?: ReactNode; // 클라이언트 컴포넌트 -> 리액트 쿼리 사용
-}
-
-export function ShowDetailTabs({ info, casting, review }: ShowDetailTabsProps) {
+}) {
   const tabs = [
     {
       value: "info",

@@ -6,13 +6,14 @@ const signup = async (signupRequest: SignupRequest): Promise<void> => {
 };
 
 const signin = async (signinRequest: SigninRequest): Promise<SigninResponse> => {
-  const { data } = await api.post<ApiResponse<SigninResponse>>(ENDPOINTS.AUTH.LOGIN, signinRequest);
-  if (!data.data) throw new Error(data.message || "로그인 데이터가 없습니다.");
-  return data.data;
+  const { data } = await api.post<SigninResponse>(ENDPOINTS.AUTH.LOGIN, signinRequest);
+  // const { data } = await api.post<ApiResponse<SigninResponse>>(ENDPOINTS.AUTH.LOGIN, signinRequest);
+  if (!data) throw new Error("로그인 데이터가 없습니다.");
+  return data;
 };
 
 const signout = async (): Promise<void> => {
-  await api.post(ENDPOINTS.AUTH.LOGOUT);
+  await api.delete(ENDPOINTS.AUTH.LOGOUT);
 };
 
 const refresh = async (): Promise<SigninResponse> => {

@@ -10,12 +10,12 @@ export default function Home() {
   return (
     <section>
       <HomeHeroSection />
-      <div className="pl-20 my-30 space-y-20">
+      <section className="pl-20 my-30 space-y-20">
         <HomeRecommendSection1 />
         <HomeRightNowSection />
         <HomeRecommendSection2 />
         <HomeActorsSection />
-      </div>
+      </section>
     </section>
   );
 }

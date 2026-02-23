@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import SocialLogin from "./SocialLogin";
-import { SigninFormValues, signinSchema } from "@/shared/schemas/schemas";
+import { SigninFormValues, signinSchema } from "@/shared/schemas/authSchema";
 
 export default function SigninForm() {
   const router = useRouter();

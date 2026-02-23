@@ -1,10 +1,10 @@
 import { ShowDetailCard } from "@/features/show/ui/detail/ShowDetailCard";
-import ShowSchedule from "@/features/show/ui/detail/ShowSchedule";
+import ShowScheduleTap from "@/features/show/ui/detail/ShowScheduleTap";
 import { ShowDetailTabs } from "@/features/show/ui/detail/ShowDetailTabs";
 import { ShowTicketingCard } from "@/features/show/ui/detail/ShowTicketingCard";
 import { mockShow } from "@/shared/data/shows";
 import { showInfoData } from "@/shared/data/tabs";
-import ShowReviews from "@/features/show/ui/detail/ShowReviews";
+import ShowReviewTab from "@/features/show/ui/detail/ShowReviewTab";
 // import { ENDPOINTS } from "@/shared/api/endpoints";
 
 // export const revalidate = 60; // 재검증시간설정 : n초동안캐시
@@ -54,8 +54,8 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
             <ShowDetailTabs
               // info={displayInfo}
               info={showInfoData}
-              casting={<ShowSchedule />}
-              review={<ShowReviews />}
+              casting={<ShowScheduleTap />}
+              review={<ShowReviewTab />}
             />
           </div>
 

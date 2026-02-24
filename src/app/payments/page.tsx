@@ -13,7 +13,7 @@ export default function CheckoutPage() {
   const bookingFee = 2000;
   const total = ticketUnitPrice * ticketQty + bookingFee;
 
-  const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
+  const clientKey = "test_ck_jExPeJWYVQxDje9xG7Mj349R5gvN";
   const customerKey = "EkTWyj8AhmS5rtOMSB4Ck";
 
   const orderName = `뮤지컬 <킹키부츠> VIP석 ${ticketQty}매`;

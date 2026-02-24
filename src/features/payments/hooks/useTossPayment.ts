@@ -23,7 +23,7 @@ type UseTossPaymentArgs = {
 };
 
 // 토스 SDK v2 method 명과 1:1 매핑
-export type PayMethod = "CARD" | "VIRTUAL_ACCOUNT" | "TRANSFER";
+export type PayMethod = "CARD" | "VIRTUAL_ACCOUNT";
 
 export type RequestTossPaymentPayload = {
   amountValue: number;
@@ -104,15 +104,6 @@ export function useTossPayment({
             cashReceipt: { type: "소득공제" },
             useEscrow: false,
             validHours: 24,
-          },
-        });
-      } else if (method === "TRANSFER") {
-        await payment.requestPayment({
-          method,
-          ...commonParams,
-          transfer: {
-            cashReceipt: { type: "소득공제" },
-            useEscrow: false,
           },
         });
       } else {

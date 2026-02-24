@@ -1,6 +1,6 @@
 "use client";
 
-import { useTossPayment } from "@/features/payments/hooks/useTossPayment";
+import { useTossPayment, type PayMethod } from "@/features/payments/hooks/useTossPayment";
 import { paymentService } from "@/features/payments/services/paymentService";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -83,15 +83,18 @@ export default function CheckoutPage() {
         orderId,
         orderName,
         amountValue: total,
+        method: payMethod,
       });
     } finally {
       setPaying(false);
     }
   };
-
+/* payMethod 상태 타입을 PayMethod로 교체 : 박영준
   const [payMethod, setPayMethod] = useState<"CARD" | "EASY" | "TRANSFER">(
     "CARD",
   );
+*/
+  const [payMethod, setPayMethod] = useState<PayMethod>("CARD");
   const [receipt, setReceipt] = useState<"NONE" | "PERSONAL" | "BIZ">("NONE");
 
   return (
@@ -263,14 +266,16 @@ export default function CheckoutPage() {
                   value="CARD"
                   checked={payMethod === "CARD"}
                   onChange={() => setPayMethod("CARD")}
-                  title="토스 결제"
+                  title="카드 / 간편결제"
+                  desc="신용·체크카드, 토스페이, 카카오페이 등"
                 />
                 <RadioRow
                   name="pay"
-                  value="EASY"
-                  checked={payMethod === "EASY"}
-                  onChange={() => setPayMethod("EASY")}
-                  title="카드 결제"
+                  value="VIRTUAL_ACCOUNT"
+                  checked={payMethod === "VIRTUAL_ACCOUNT"}
+                  onChange={() => setPayMethod("VIRTUAL_ACCOUNT")}
+                  title="무통장 입금"
+                  desc="24시간 내 입금 / 가상계좌 발급 후 계좌번호 안내"
                 />
                 <RadioRow
                   name="pay"

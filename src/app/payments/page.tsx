@@ -89,7 +89,7 @@ export default function CheckoutPage() {
       setPaying(false);
     }
   };
-/* payMethod 상태 타입을 PayMethod로 교체 : 박영준
+/* payMethod 상태 타입을 PayMethod로 : 박영준
   const [payMethod, setPayMethod] = useState<"CARD" | "EASY" | "TRANSFER">(
     "CARD",
   );

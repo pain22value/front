@@ -40,8 +40,8 @@ export const SeatCanvas = ({ sections, selectedSeat, onSeatClick }: SeatCanvasPr
     appRef.current = app;
 
     app.init({
-      width: canvasRef.current.clientWidth,
-      height: canvasRef.current.clientHeight,
+      width: canvasRef.current.clientWidth || 800,
+      height: canvasRef.current.clientHeight || 600,
       background: 0xf5f5f5,
       antialias: true,
     }).then(() => {

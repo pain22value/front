@@ -6,7 +6,7 @@ interface SeatPageProps {
 
 export default function SeatPage({ params }: SeatPageProps) {
   return (
-    <div className="h-screen">
+    <div className="h-[calc(100vh-64px)] w-full">
       <SeatMap showId={Number(params.showId)} />
     </div>
   );

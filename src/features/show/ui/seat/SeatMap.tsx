@@ -1,4 +1,3 @@
-// seat 컴포넌트 모두 여기서 조립
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -14,11 +13,7 @@ interface SeatMapProps {
 
 export const SeatMap = ({ showId }: SeatMapProps) => {
   const router = useRouter();
-
-  // 좌석 목록 가져오기
   const { data: sections, isLoading, isError } = useGetSeats(showId);
-
-  // 좌석 선택/해제 상태 관리
   const { selectedSeat, expiredAt, selectSeat, cancelSeat } = useSeatSelection(showId);
 
   if (isLoading) return <div className="flex items-center justify-center h-full">로딩 중...</div>;
@@ -32,13 +27,12 @@ export const SeatMap = ({ showId }: SeatMapProps) => {
   return (
     <div className="flex h-full">
       {/* 좌석 배치도 영역 */}
-      <div className="flex flex-col flex-1 relative">
+      <div className="flex flex-col flex-1 items-center overflow-auto relative p-4">
         <SeatCanvas
           sections={sections}
           selectedSeat={selectedSeat}
           onSeatClick={selectSeat}
         />
-
         {/* 좌하단 등급별 가격 */}
         <div className="absolute bottom-4 left-4">
           <SeatGradeLegend sections={sections} />

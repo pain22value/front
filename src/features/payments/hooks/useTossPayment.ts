@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 
 type Money = {
@@ -14,19 +14,24 @@ type TossPayment = Awaited<
 
 type UseTossPaymentArgs = {
   clientKey: string;
-  customerKey: string; // 비회원이면 ANONYMOUS 가능
-  successPath?: string; // 기본 /payments/success
-  failPath?: string; // 기본 /payments/fail
+  customerKey: string;
+  successPath?: string;
+  failPath?: string;
   customerEmail?: string;
   customerName?: string;
   customerMobilePhone?: string;
 };
+
+// 토스 SDK v2 method 명과 1:1 매핑
+export type PayMethod = "CARD" | "VIRTUAL_ACCOUNT" | "TRANSFER";
+
 export type RequestTossPaymentPayload = {
   amountValue: number;
   orderId: string;
   orderName: string;
-  method?: "CARD"; // 지금은 CARD만 쓴다고 가정(필요하면 확장)
+  method?: PayMethod;
 };
+
 export function useTossPayment({
   clientKey,
   customerKey,
@@ -80,9 +85,7 @@ export function useTossPayment({
       if (!payment) return;
 
       const amount: Money = { currency: "KRW", value: amountValue };
-
-      await payment.requestPayment({
-        method,
+      const commonParams = {
         amount,
         orderId,
         orderName,
@@ -91,22 +94,42 @@ export function useTossPayment({
         customerEmail,
         customerName,
         customerMobilePhone,
-        card: {
-          useEscrow: false,
-          flowMode: "DEFAULT",
-          useCardPoint: false,
-          useAppCardOnly: false,
-        },
-      });
+      };
+
+      if (method === "VIRTUAL_ACCOUNT") {
+        await payment.requestPayment({
+          method,
+          ...commonParams,
+          virtualAccount: {
+            cashReceipt: { type: "소득공제" },
+            useEscrow: false,
+            validHours: 24,
+          },
+        });
+      } else if (method === "TRANSFER") {
+        await payment.requestPayment({
+          method,
+          ...commonParams,
+          transfer: {
+            cashReceipt: { type: "소득공제" },
+            useEscrow: false,
+          },
+        });
+      } else {
+        // CARD: 카드 + 간편결제(토스페이, 카카오페이 등) 통합창
+        await payment.requestPayment({
+          method,
+          ...commonParams,
+          card: {
+            useEscrow: false,
+            flowMode: "DEFAULT", // DEFAULT = 통합창에서 카드/간편결제 모두 선택 가능
+            useCardPoint: false,
+            useAppCardOnly: false,
+          },
+        });
+      }
     },
-    [
-      payment,
-      successPath,
-      failPath,
-      customerEmail,
-      customerName,
-      customerMobilePhone,
-    ],
+    [payment, successPath, failPath, customerEmail, customerName, customerMobilePhone],
   );
 
   return { isReady, error, requestPayment };

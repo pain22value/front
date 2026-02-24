@@ -266,8 +266,7 @@ export default function CheckoutPage() {
                   value="CARD"
                   checked={payMethod === "CARD"}
                   onChange={() => setPayMethod("CARD")}
-                  title="카드 / 간편결제"
-                  desc="신용·체크카드, 토스페이, 카카오페이 등"
+                  title="간편 결제·카드 결제"
                 />
                 <RadioRow
                   name="pay"
@@ -275,14 +274,6 @@ export default function CheckoutPage() {
                   checked={payMethod === "VIRTUAL_ACCOUNT"}
                   onChange={() => setPayMethod("VIRTUAL_ACCOUNT")}
                   title="무통장 입금"
-                  desc="24시간 내 입금 / 가상계좌 발급 후 계좌번호 안내"
-                />
-                <RadioRow
-                  name="pay"
-                  value="TRANSFER"
-                  checked={payMethod === "TRANSFER"}
-                  onChange={() => setPayMethod("TRANSFER")}
-                  title="계좌 이체"
                 />
               </div>
             </div>

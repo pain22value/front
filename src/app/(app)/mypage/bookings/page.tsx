@@ -2,26 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-// 예매 상태 타입
-type BookingStatus = "CONFIRMED" | "PENDING_PAYMENT" | "PARTIAL_CANCEL" | "CANCELED" | "WATCHED";
-
-type Booking = {
-  id: string;
-  orderId: string;
-  bookedAt: string; // 예매일 "2026.01.20"
-  status: BookingStatus;
-  dueTime?: string; // 입금대기 마감 시간
-  entryTime?: string; // 예매확정 입장 가능 시간
-  show: {
-    title: string;
-    venue: string;
-    date: string;
-    time: string;
-    seat: string;
-    posterUrl?: string;
-  };
-};
+import { Booking, BookingStatus, STATUS_LABEL, STATUS_COLOR, STATUS_BG } from "@/shared/types/booking";
 
 // TODO: 백엔드 연동 시 실제 데이터로 교체
 const MOCK_BOOKINGS: Booking[] = [
@@ -127,31 +108,6 @@ const MOCK_BOOKINGS: Booking[] = [
     },
   },
 ];
-
-const STATUS_LABEL: Record<BookingStatus, string> = {
-  CONFIRMED: "예매확정",
-  PENDING_PAYMENT: "입금대기",
-  PARTIAL_CANCEL: "부분취소",
-  CANCELED: "취소",
-  WATCHED: "관람완료",
-};
-
-const STATUS_COLOR: Record<BookingStatus, string> = {
-  CONFIRMED: "text-[#23222A] text-[16px] font-bold",
-  PENDING_PAYMENT: "text-[#0B9B9D] text-[16px] font-bold",
-  PARTIAL_CANCEL: "text-[#F11322] text-[16px] font-bold",
-  CANCELED: "text-[#F11322] text-[16px] font-bold",
-  WATCHED: "text-[#23222A] text-[16px] font-bold",
-};
-
-const STATUS_BG: Record<BookingStatus, string> = {
-  CONFIRMED: "bg-[#FFFFFF] border-[#DDDDE4]",
-  PENDING_PAYMENT: "bg-[#FFFFFF] border-[#DDDDE4]",
-  PARTIAL_CANCEL: "bg-[#FFFFFF] border-[#DDDDE4]",
-  CANCELED: "bg-[#FFFFFF] border-[#DDDDE4]",
-  WATCHED: "bg-[#FFFFFF] border-[#DDDDE4]", 
-};
-
 
 // 포스터 placeholder
 function PosterPlaceholder({ title }: { title: string }) {

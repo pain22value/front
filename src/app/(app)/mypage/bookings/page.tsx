@@ -79,18 +79,19 @@ const STATUS_LABEL: Record<BookingStatus, string> = {
 };
 
 const STATUS_COLOR: Record<BookingStatus, string> = {
-  CONFIRMED: "text-[#F93E4B]",
-  PENDING_PAYMENT: "text-[#F93E4B]",
-  PARTIAL_CANCEL: "text-[#68677E]",
-  CANCELED: "text-[#68677E]",
+  CONFIRMED: "text-[#23222A] text-[16px] font-bold",
+  PENDING_PAYMENT: "text-[#0B9B9D] text-[16px] font-bold",
+  PARTIAL_CANCEL: "text-[#F11322] text-[16px] font-bold",
+  CANCELED: "text-[#F11322] text-[16px] font-bold",
 };
 
 const STATUS_BG: Record<BookingStatus, string> = {
-  CONFIRMED: "bg-[#FFF5F6] border-[#FDDDE0]",
-  PENDING_PAYMENT: "bg-[#FFFBF0] border-[#FFE9A0]",
-  PARTIAL_CANCEL: "bg-[#F7F7F9] border-[#DDDDE4]",
-  CANCELED: "bg-[#F7F7F9] border-[#DDDDE4]",
+  CONFIRMED: "bg-[#FFFFFF] border-[#DDDDE4]",
+  PENDING_PAYMENT: "bg-[#FFFFFF] border-[#DDDDE4]",
+  PARTIAL_CANCEL: "bg-[#FFFFFF] border-[#DDDDE4]",
+  CANCELED: "bg-[#FFFFFF] border-[#DDDDE4]",
 };
+
 
 // 포스터 placeholder
 function PosterPlaceholder() {
@@ -112,15 +113,19 @@ function BookingCard({ booking }: { booking: Booking }) {
           {STATUS_LABEL[booking.status]}
         </span>
         {booking.entryTime && (
-          <p className="mt-0.5 text-[13px] font-semibold text-[#F93E4B]">{booking.entryTime}</p>
+          <p className="mt-0.5 text-[16px] font-bold text-[#F93E4B] bg-[#FFF5F6] px-1 py-1 rounded-md">
+            {booking.entryTime}
+          </p>
         )}
         {booking.dueTime && (
-          <p className="mt-0.5 text-[13px] font-semibold text-[#E8A800]">{booking.dueTime}</p>
+          <p className="mt-0.5 text-[16px] font-bold text-[#0B9B9D] bg-[#ECFDFD] px-1 py-1 rounded-md">
+            {booking.dueTime}
+          </p>
         )}
       </div>
 
       {/* 공연 정보 */}
-      <div className="bg-white mx-3 mb-3 rounded-lg border border-[#DDDDE4] px-4 py-3">
+      <div className="bg-white mx-3 mb-3 px-1 py-3">
         <div className="flex items-start gap-3">
           {/* 포스터 */}
           <PosterPlaceholder />
@@ -148,22 +153,18 @@ function BookingCard({ booking }: { booking: Booking }) {
         </div>
 
         {/* 액션 버튼 */}
-        <div className="mt-3 flex gap-2 border-t border-[#F1F1F4] pt-3">
-          <button className="flex-1 rounded-md border border-[#DDDDE4] py-2 text-[13px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors">
+        <div className="mt-3 flex gap-2 pt-1">
+          <button className="flex-1 rounded-md border border-[#9E9DAF] py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors">
             작품 상세
           </button>
-          <button className="flex-1 rounded-md border border-[#DDDDE4] py-2 text-[13px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors">
+          <button className="flex-1 rounded-md border border-[#9E9DAF] py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors">
             주소 복사
           </button>
           {isPendingPayment ? (
-            <button className="flex-1 rounded-md bg-[#23222A] py-2 text-[13px] font-semibold text-white hover:bg-[#3a3945] transition-colors">
-              입금하기
-            </button>
-          ) : (
-            <button className="flex-1 rounded-md border border-[#DDDDE4] py-2 text-[13px] font-semibold text-[#68677E] hover:bg-gray-50 transition-colors">
-              예매 취소
-            </button>
-          )}
+            <button className="flex-1 rounded-md bg-[#23222A] py-2 text-[16px] font-semibold text-white hover:bg-[#3a3945] transition-colors">입금하기</button>
+          ) : booking.status !== "PARTIAL_CANCEL" && booking.status !== "CANCELED" ? (
+            <button className="flex-1 rounded-md py-2 text-[16px] font-semibold text-[#22212B] hover:bg-gray-50 transition-colors">예매 취소</button>
+          ) : null}
         </div>
       </div>
     </div>

@@ -171,12 +171,13 @@ function BookingCard({ booking }: { booking: Booking }) {
 }
 
 // 날짜별 그룹핑
-function groupByDate(bookings: Booking[]) {
+function groupByDateAndStatus(bookings: Booking[]) {
   const map = new Map<string, Booking[]>();
   for (const b of bookings) {
-    const list = map.get(b.bookedAt) ?? [];
+    const key = `${b.bookedAt}_${b.status}`;
+    const list = map.get(key) ?? [];
     list.push(b);
-    map.set(b.bookedAt, list);
+    map.set(key, list);
   }
   return map;
 }
@@ -186,7 +187,7 @@ export default function BookingsPage() {
   const [endDate, setEndDate] = useState("");
 
   // TODO: 백엔드 연동 시 날짜 필터로 API 호출
-  const grouped = groupByDate(MOCK_BOOKINGS);
+  const grouped = groupByDateAndStatus(MOCK_BOOKINGS);
 
   return (
     <div className="flex gap-6 py-8 pr-6 pl-32 max-w-[1600px] mx-auto">
@@ -195,9 +196,9 @@ export default function BookingsPage() {
         <h1 className="text-[32px] font-bold text-[#23222A] mb-6">예매 내역 확인</h1>
 
         <div className="space-y-8">
-          {Array.from(grouped.entries()).map(([date, bookings]) => (
-            <div key={date}>
-              <p className="text-[20px] font-bold text-[#23222A] mb-3">예매일 {date}</p>
+          {Array.from(grouped.entries()).map(([key, bookings]) => (
+            <div key={key}>
+              <p className="text-[20px] font-bold text-[#23222A] mb-3">예매일 {key.split("_")[0]}</p>
               <div className="space-y-3">
                 {bookings.map((booking) => (
                   <BookingCard key={booking.id} booking={booking} />

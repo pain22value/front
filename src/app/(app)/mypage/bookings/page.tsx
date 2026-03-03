@@ -192,12 +192,12 @@ export default function BookingsPage() {
     <div className="flex gap-6 py-8 pr-6 pl-32 max-w-[1600px] mx-auto">
       {/* LEFT: 예매 내역 */}
       <section className="flex-1 min-w-0">
-        <h1 className="text-[22px] font-bold text-[#23222A] mb-6">예매 내역 확인</h1>
+        <h1 className="text-[32px] font-bold text-[#23222A] mb-6">예매 내역 확인</h1>
 
         <div className="space-y-8">
           {Array.from(grouped.entries()).map(([date, bookings]) => (
             <div key={date}>
-              <p className="text-[14px] font-semibold text-[#68677E] mb-3">예매일 {date}</p>
+              <p className="text-[20px] font-bold text-[#23222A] mb-3">예매일 {date}</p>
               <div className="space-y-3">
                 {bookings.map((booking) => (
                   <BookingCard key={booking.id} booking={booking} />
@@ -216,13 +216,13 @@ export default function BookingsPage() {
       </section>
 
       {/* RIGHT: 조회기간 필터 */}
-      <aside className="w-[220px] shrink-0">
-        <div className="sticky top-6 rounded-xl border border-[#DDDDE4] bg-white p-4">
-          <p className="text-[14px] font-bold text-[#23222A] mb-4">조회기간 선택</p>
+      <aside className="w-[220px] shrink-0 pt-[64px]">
+        <div className="sticky top-[68px] rounded-xl border border-[#DDDDE4] bg-white p-4">
+          <p className="text-[16px] font-bold text-[#23222A] mb-4">조회기간 선택</p>
 
           <div className="space-y-3">
             <div>
-              <label className="text-[12px] font-medium text-[#68677E] mb-1 block">종료일</label>
+              <label className="text-[14px] font-medium text-[#68677E] mb-1 block">종료일</label>
               <div className="relative">
                 <input
                   type="date"
@@ -234,7 +234,7 @@ export default function BookingsPage() {
             </div>
 
             <div>
-              <label className="text-[12px] font-medium text-[#68677E] mb-1 block">시작일</label>
+              <label className="text-[14px] font-medium text-[#68677E] mb-1 block">시작일</label>
               <div className="relative">
                 <input
                   type="date"
@@ -248,7 +248,7 @@ export default function BookingsPage() {
             <button
               // TODO: 백엔드 연동 시 날짜 필터 API 호출
               onClick={() => console.log("조회:", startDate, endDate)}
-              className="w-full rounded-md border border-[#DDDDE4] py-2 text-[13px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors mt-1"
+              className="w-full rounded-md border border-[#9E9DAF] py-2 text-[16px] font-semibold text-[#22212B] hover:bg-gray-50 transition-colors mt-1"
             >
               조회하기
             </button>

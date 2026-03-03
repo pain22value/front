@@ -117,17 +117,15 @@ return (
         </div>
       </div>
 
-      <hr className="border-[#DDDDE4] mb-6" />
-
       <div className="flex justify-between items-center mb-5">
-        <span className="text-[13px] font-semibold text-[#23222A]">최종 결제금액</span>
-        <span className="text-[18px] font-bold text-[#F11322]">
+        <span className="text-[16px] font-bold text-[#23222A]">최종 결제금액</span>
+        <span className="text-[16px] font-bold text-[#F11322]">
           {formatAmount(booking.finalAmount)}
         </span>
       </div>
 
       <div className="mb-6">
-        <div className="grid grid-cols-3 text-[12px] text-[#68677E] mb-2 px-1">
+        <div className="grid grid-cols-3 font-bold text-[14px] text-[#23222A] mb-2">
           <span>상품명</span>
           <span className="text-center">수량</span>
           <span className="text-right">금액</span>
@@ -135,7 +133,7 @@ return (
         {booking.items.map((item, idx) => (
           <div
             key={idx}
-            className="grid grid-cols-3 text-[13px] text-[#23222A] py-2 border-t border-[#DDDDE4]"
+            className="grid grid-cols-3 text-[14px] text-[#68677E] py-2 border-t border-[#F1F1F4]"
           >
             <span>{item.name}</span>
             <span className="text-center">{item.quantity ?? ""}</span>
@@ -144,7 +142,7 @@ return (
             </span>
           </div>
         ))}
-        <div className="grid grid-cols-3 text-[13px] font-semibold text-[#23222A] py-2 border-t border-[#23222A] mt-1">
+        <div className="grid grid-cols-3 text-[13px] font-semibold text-[#23222A] py-2 border-t border-[#F1F1F4] mt-1">
           <span>합계</span>
           <span />
           <span className="text-right">{formatAmount(booking.totalAmount)}</span>
@@ -153,37 +151,37 @@ return (
 
       <div className="mb-6">
         <div className="flex justify-between items-center mb-3">
-          <span className="text-[13px] font-semibold text-[#23222A]">결제 정보</span>
-          <span className="text-[13px] font-bold text-[#23222A]">
+          <span className="text-[16px] font-bold text-[#23222A]">결제 정보</span>
+          <span className="text-[16px] font-bold text-[#23222A]">
             {formatAmount(booking.paymentAmount)}
           </span>
         </div>
-        <div className="flex items-center gap-2 text-[13px] text-[#23222A]">
-          <span className="w-1 h-5 rounded-full bg-[#3182F6]" />
+        <div className="flex items-center gap-2 font-medium text-[14px] text-[#23222A]">
+          <span className="w-1 h-5 bg-[#3182F6]" />
           <span>{booking.paymentMethod}</span>
-          <span className="ml-auto text-[#68677E]">
+          <span className="ml-auto font-Medium text=[14px] text-[#23222A]">
             {formatAmount(booking.paymentAmount)}
           </span>
         </div>
       </div>
 
-      <p className="text-[13px] mb-6 text-[#F93E4B]">
+      <p className="text-[14px] font-bold mb-6 text-[#F93E4B]">
         {booking.freeCancelDeadline}까지 무료 취소 가능합니다.
       </p>
 
       <div className="rounded-lg px-5 py-4 mb-8 bg-[#F0FAFA]">
         <div className="flex items-center gap-2 mb-3">
-          <svg className="w-4 h-4 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-teal-600 flex-shrink-0" fill="none" stroke="#23222A" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" strokeWidth="2" />
             <line x1="12" y1="8" x2="12" y2="12" strokeWidth="2" strokeLinecap="round" />
             <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2" strokeLinecap="round" />
           </svg>
-          <span className="text-[13px] font-semibold text-teal-800">입장 안내</span>
+          <span className="text-[16px] font-bold text-[#23222A]">입장 안내</span>
         </div>
         <ul className="space-y-1">
           {booking.admissionInfo.map((info, idx) => (
-            <li key={idx} className="flex items-start gap-2 text-[13px] text-teal-700">
-              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-teal-400 flex-shrink-0" />
+            <li key={idx} className="flex items-start gap-2 text-[13px] text-[#68677E]">
+              <span className="mt-1.5 w-1 h-1 rounded-full bg-[#68677E] flex-shrink-0" />
               {info}
             </li>
           ))}
@@ -193,7 +191,7 @@ return (
       {isConfirmed && (
         <div className="flex justify-end">
           <button
-            className="px-6 py-2 rounded-md border text-[13px] font-medium text-[#23222A] border-[#9E9DAF] hover:bg-gray-50 transition-colors"
+            className="px-12 py-2 rounded-md border text-[16px] font-semibold text-[#23222A] border-[#9E9DAF] hover:bg-gray-50 transition-colors"
             onClick={() => alert("예매 취소 API 연동 예정")}
           >
             예매 취소

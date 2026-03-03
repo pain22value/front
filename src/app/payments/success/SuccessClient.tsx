@@ -160,7 +160,8 @@ export default function SuccessClient({ searchParams }: Props) {
           {/* 버튼 */}
           <div className="space-y-2 px-6 pb-6 pt-2">
             <Link
-              href={`/mypage/bookings/${orderId}`}
+              // href={`/mypage/bookings/${orderId}`} 임시 제거
+              href={`/mypage/bookings`}
               className="block w-full rounded-md bg-[#F93E4B] py-3 text-center text-[16px] font-semibold text-white hover:bg-[#e0323e] active:scale-[0.99] transition-transform"
             >
               예매 확인하기

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 // 예매 상태 타입
-type BookingStatus = "CONFIRMED" | "PENDING_PAYMENT" | "PARTIAL_CANCEL" | "CANCELED";
+type BookingStatus = "CONFIRMED" | "PENDING_PAYMENT" | "PARTIAL_CANCEL" | "CANCELED" | "WATCHED";
 
 type Booking = {
   id: string;
@@ -69,13 +69,71 @@ const MOCK_BOOKINGS: Booking[] = [
       posterUrl: "",
     },
   },
+  {
+    id: "4",
+    orderId: "70fh1i98-019e-731e-di86-1h46090f75e5",
+    bookedAt: "2025.12.10",
+    status: "WATCHED",
+    show: {
+      title: "뮤지컬 <슬립노모어>",
+      venue: "블랙박스씨어터",
+      date: "2025.12.15.(일)",
+      time: "오후 3:00-5:30",
+      seat: "R석 1인",
+      posterUrl: "",
+    },
+  },
+  {
+    id: "5",
+    orderId: "81gi2j09-120f-842f-ej97-2i57101g86f6",
+    bookedAt: "2025.11.05",
+    status: "WATCHED",
+    show: {
+      title: "뮤지컬 <슬립노모어>",
+      venue: "블랙박스씨어터",
+      date: "2025.11.10.(월)",
+      time: "오후 7:00-9:30",
+      seat: "S석 2인",
+      posterUrl: "",
+    },
+  },
+  {
+    id: "6",
+    orderId: "92hj3k10-231g-953g-fk08-3j68212h97g7",
+    bookedAt: "2025.10.20",
+    status: "WATCHED",
+    show: {
+      title: "뮤지컬 <슬립노모어>",
+      venue: "블랙박스씨어터",
+      date: "2025.10.25.(토)",
+      time: "오후 2:00-4:30",
+      seat: "VIP석 1인",
+      posterUrl: "",
+    },
+  },
+  // 취소 - 킹키부츠
+  {
+    id: "7",
+    orderId: "03ik4l21-342h-064h-gl19-4k79323i08h8",
+    bookedAt: "2025.09.15",
+    status: "CANCELED",
+    show: {
+      title: "뮤지컬 <킹키부츠>",
+      venue: "샤롯데씨어터",
+      date: "2025.09.20.(토)",
+      time: "오후 7:00-9:30",
+      seat: "S석 2인",
+      posterUrl: "",
+    },
+  },
 ];
 
 const STATUS_LABEL: Record<BookingStatus, string> = {
   CONFIRMED: "예매확정",
   PENDING_PAYMENT: "입금대기",
   PARTIAL_CANCEL: "부분취소",
-  CANCELED: "취소완료",
+  CANCELED: "취소",
+  WATCHED: "관람완료",
 };
 
 const STATUS_COLOR: Record<BookingStatus, string> = {
@@ -83,6 +141,7 @@ const STATUS_COLOR: Record<BookingStatus, string> = {
   PENDING_PAYMENT: "text-[#0B9B9D] text-[16px] font-bold",
   PARTIAL_CANCEL: "text-[#F11322] text-[16px] font-bold",
   CANCELED: "text-[#F11322] text-[16px] font-bold",
+  WATCHED: "text-[#68677E] text-[16px] font-bold",
 };
 
 const STATUS_BG: Record<BookingStatus, string> = {
@@ -90,20 +149,31 @@ const STATUS_BG: Record<BookingStatus, string> = {
   PENDING_PAYMENT: "bg-[#FFFFFF] border-[#DDDDE4]",
   PARTIAL_CANCEL: "bg-[#FFFFFF] border-[#DDDDE4]",
   CANCELED: "bg-[#FFFFFF] border-[#DDDDE4]",
+  WATCHED: "bg-[#FFFFFF] border-[#DDDDE4]", 
 };
 
 
 // 포스터 placeholder
-function PosterPlaceholder() {
+function PosterPlaceholder({ title }: { title: string }) {
+  const isSlipNoMore = title.includes("슬립노모어");
   return (
-    <div className="h-[90px] w-[64px] shrink-0 rounded-md bg-gradient-to-b from-[#F93E4B] to-[#c0202b] flex items-center justify-center">
-      <span className="text-[10px] font-bold text-white text-center leading-tight px-1">킹키부츠</span>
+    <div
+      className={`h-[90px] w-[64px] shrink-0 rounded-md flex items-center justify-center ${
+        isSlipNoMore
+          ? "bg-gradient-to-b from-[#23222A] to-[#3a3945]"
+          : "bg-gradient-to-b from-[#F93E4B] to-[#c0202b]"
+      }`}
+    >
+      <span className="text-[10px] font-bold text-white text-center leading-tight px-1">
+        {isSlipNoMore ? "슬립노모어" : "킹키부츠"}
+      </span>
     </div>
   );
 }
 
 function BookingCard({ booking }: { booking: Booking }) {
   const isPendingPayment = booking.status === "PENDING_PAYMENT";
+  const isWatched = booking.status === "WATCHED";
 
   return (
     <div className={`rounded-xl border ${STATUS_BG[booking.status]} overflow-hidden`}>
@@ -128,7 +198,7 @@ function BookingCard({ booking }: { booking: Booking }) {
       <div className="bg-white mx-3 mb-3 px-1 py-3">
         <div className="flex items-start gap-3">
           {/* 포스터 */}
-          <PosterPlaceholder />
+          <PosterPlaceholder title={booking.show.title} />
 
           {/* 텍스트 정보 */}
           <div className="flex-1 min-w-0">
@@ -162,6 +232,10 @@ function BookingCard({ booking }: { booking: Booking }) {
           </button>
           {isPendingPayment ? (
             <button className="flex-1 rounded-md bg-[#23222A] py-2 text-[16px] font-semibold text-white hover:bg-[#3a3945] transition-colors">입금하기</button>
+          ) : isWatched ? (
+            <button className="flex-1 rounded-md bg-[#F93E4B] border border-[#F93E4B] py-2 text-[16px] font-semibold text-[#FFFFFF] hover:bg-gray-50 transition-colors">
+              관람평 작성
+            </button>
           ) : booking.status !== "PARTIAL_CANCEL" && booking.status !== "CANCELED" ? (
             <button className="flex-1 rounded-md py-2 text-[16px] font-semibold text-[#22212B] hover:bg-gray-50 transition-colors">예매 취소</button>
           ) : null}

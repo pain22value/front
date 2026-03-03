@@ -189,7 +189,7 @@ export default function BookingsPage() {
   const grouped = groupByDate(MOCK_BOOKINGS);
 
   return (
-    <div className="flex gap-6 py-8 pr-6 pl-24">
+    <div className="flex gap-6 py-8 pr-6 pl-32 max-w-[1600px] mx-auto">
       {/* LEFT: 예매 내역 */}
       <section className="flex-1 min-w-0">
         <h1 className="text-[22px] font-bold text-[#23222A] mb-6">예매 내역 확인</h1>

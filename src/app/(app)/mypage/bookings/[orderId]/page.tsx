@@ -73,7 +73,7 @@ export default function BookingDetailPage() {
 
 return (
   <div className="flex-1 py-10 bg-white min-h-screen">
-    <div className="max-w-2xl mx-auto px-4">  {/* ← 이 안에 전부 다 */}
+    <div className="max-w-4xl mx-auto px-4">  {/* ← 이 안에 전부 다 */}
 
       <h1 className="text-[32px] font-bold text-[#23222A] mb-6">예매 상세</h1>
 
@@ -171,7 +171,7 @@ return (
         {booking.freeCancelDeadline}까지 무료 취소 가능합니다.
       </p>
 
-      <div className="rounded-lg px-5 py-4 mb-8 bg-[#F0FAFA]">
+      <div className="rounded-lg px-5 py-4 mb-8" style={{ background: "linear-gradient(to right, #FFF5F6, #ECFDFD)" }}>
         <div className="flex items-center gap-2 mb-3">
           <svg className="w-5 h-5 text-teal-600 flex-shrink-0" fill="none" stroke="#23222A" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" strokeWidth="2" />

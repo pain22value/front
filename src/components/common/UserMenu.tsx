@@ -1,14 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+// import { Card, CardContent } from "@/components/ui/card";
 
 export function UserMenu() {
   const { user, signout } = useAuthStore();
@@ -28,9 +25,36 @@ export function UserMenu() {
           <div className="w-8 h-8 rounded-full bg-muted" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>마이페이지</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => signout()}>로그아웃</DropdownMenuItem>
+      <DropdownMenuContent align="end" className="min-w-[320] p-4 bg-popover shadow-lg rounded-lg">
+        {/* 사용자 이름 섹션 */}
+        <Link
+          href="/my/profile"
+          className="flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
+        >
+          <span className="text-xl font-bold text-foreground">{user.slice(0, 3)}님</span>
+          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+        </Link>
+
+        {/* 메뉴 리스트 */}
+        <div className="flex flex-col mt-2">
+          <Button variant="ghost" className="w-full justify-start text-lg font-medium h-12 px-2">
+            마이 티켓
+          </Button>
+          <Button variant="ghost" className="w-full justify-start text-lg font-medium h-12 px-2">
+            마이 멤버십
+          </Button>
+        </div>
+
+        {/* 로그아웃 버튼 */}
+        <div className="mt-4">
+          <Button
+            variant="ghost"
+            onClick={signout}
+            className="w-fit text-muted-foreground hover:text-foreground font-normal p-2 h-auto text-base hover:bg-transparent"
+          >
+            로그아웃
+          </Button>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

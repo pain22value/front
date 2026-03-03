@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/features/auth/store/useAuthStore";
+// import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import { MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function ShowReviewItem({ review }: { review: Review }) {
-  const user = useAuthStore((state) => state.user);
+  // const user = useAuthStore((state) => state.user);
   // const isMyReview = user?.id === review.userId;
   const isMyReview = null;
 

@@ -22,7 +22,8 @@ export const useAuthQuery = () => {
 
   // 토큰 갱신 성공 시 스토어 업데이트
   useEffect(() => {
-    if (isSuccess && data) setAuth(data.accessToken, data.user);
+    if (isSuccess && data) setAuth(data.accessToken, data.accessToken);
+    // if (isSuccess && data) setAuth(data.accessToken, data.user);
   }, [isSuccess, data, setAuth]);
 
   // 토큰 갱신 실패 시 로그아웃 처리

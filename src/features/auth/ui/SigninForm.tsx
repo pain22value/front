@@ -30,7 +30,6 @@ export default function SigninForm() {
   const emailValue = watch("email");
   const passwordValue = watch("password");
   const isInputFilled = !!emailValue && !!passwordValue;
-  console.log({ isInputFilled });
 
   const onSubmit = async (data: SigninFormValues) => {
     try {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,12 +9,15 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/shared/utils/cn";
 import Link from "next/link";
 import SheetMenu from "./SheetMenu";
-// import { Separator } from "@/components/ui/separator";
-// import { SearchForm } from "@/components/search-form"
+import ConfirmModal from "../common/modals/ConfirmModal";
+import AlertModal from "../common/modals/AlertModal";
 
 export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false);
+  const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false);
 
   return (
     <header
@@ -29,6 +33,19 @@ export default function Header() {
           <Link href="/" className="text-xl font-bold tracking-tight">
             truve
           </Link>
+        </div>
+
+        {/* 모달 테스트를 위한 버튼들 */}
+        <div className="flex items-center gap-2 ml-4">
+          <Button variant="outline" size="sm" onClick={() => setIsConfirmDialogOpen(true)}>
+            확인모달
+          </Button>
+          <Button variant="destructive" size="sm" onClick={() => setIsErrorAlertOpen(true)}>
+            에러모달
+          </Button>
+          <Button variant="default" size="sm" onClick={() => setIsSuccessAlertOpen(true)}>
+            성공모달
+          </Button>
         </div>
 
         {/* 임시메뉴 */}
@@ -48,8 +65,6 @@ export default function Header() {
           </ul>
         </nav> */}
 
-        {/* <Separator orientation="vertical" className="mr-2 h-4" /> */}
-
         {/* 우측 검색바 */}
         <div className="relative ml-auto w-[320px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -63,9 +78,27 @@ export default function Header() {
           </Button>
           <UserMenu />
         </div>
-
-        {/* <SearchForm className="w-full sm:ml-auto sm:w-auto" /> */}
       </div>
+
+      <ConfirmModal
+        open={isConfirmDialogOpen}
+        title="예매 내역이 없습니다."
+        onOpenChange={setIsConfirmDialogOpen}
+        onConfirm={() => setIsConfirmDialogOpen(false)}
+        onCancel={() => setIsConfirmDialogOpen(false)}
+      />
+
+      <AlertModal
+        open={isErrorAlertOpen}
+        message="에러가 발생했습니다. 다시 시도해주세요."
+        onConfirm={() => setIsErrorAlertOpen(false)}
+      />
+
+      <AlertModal
+        open={isSuccessAlertOpen}
+        message="성공적으로 처리되었습니다."
+        onConfirm={() => setIsSuccessAlertOpen(false)}
+      />
     </header>
   );
 }

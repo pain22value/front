@@ -11,7 +11,7 @@ import ShowReviewTab from "@/features/show/ui/detail/ShowReviewTab";
 
 export async function generateStaticParams() {
   try {
-    // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${ENDPOINTS.SHOWS.LIST}`);
+    // const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.LIST}`);
     // if (!res.ok) throw new Error("Failed to fetch shows");
     // const shows = await res.json();
     // return shows.map((show: { id: number }) => ({ showId: show.id.toString() }));
@@ -24,7 +24,7 @@ export async function generateStaticParams() {
 
 // async function fetchShowDetail(showId: string) {
 //   try {
-//     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${ENDPOINTS.SHOWS.DETAIL}/${showId}`);
+//     const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.DETAIL}/${showId}`);
 //     if (!res.ok) throw new Error("Failed to fetch show detail");
 //     return res.json();
 //   } catch (error) {

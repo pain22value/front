@@ -1,13 +1,16 @@
 import { cn } from "@/shared/utils/cn";
 
-interface LoadingSpinnerProps {
+export function LoadingSpinner({
+  title,
+  subtitle,
+  fullPage = false,
+  className,
+}: {
   title?: string;
   subtitle?: string;
   fullPage?: boolean;
   className?: string;
-}
-
-export function LoadingSpinner({ title, subtitle, fullPage = false, className }: LoadingSpinnerProps) {
+}) {
   return (
     <div
       className={cn(

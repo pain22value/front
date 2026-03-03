@@ -141,7 +141,7 @@ const STATUS_COLOR: Record<BookingStatus, string> = {
   PENDING_PAYMENT: "text-[#0B9B9D] text-[16px] font-bold",
   PARTIAL_CANCEL: "text-[#F11322] text-[16px] font-bold",
   CANCELED: "text-[#F11322] text-[16px] font-bold",
-  WATCHED: "text-[#68677E] text-[16px] font-bold",
+  WATCHED: "text-[#23222A] text-[16px] font-bold",
 };
 
 const STATUS_BG: Record<BookingStatus, string> = {

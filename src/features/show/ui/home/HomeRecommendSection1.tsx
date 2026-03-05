@@ -14,7 +14,7 @@ export default function HomeRecommendSection1() {
       <h1 className="font-semibold text-2xl">이 뮤지컬 어떠세요?</h1>
       <BaseCarousel
         items={shows || recommendShows}
-        className="max-w-7xl mx-auto"
+        className="max-w-[1200] mx-auto"
         itemClassName="sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
         showPagination
         showButtonsOnHover

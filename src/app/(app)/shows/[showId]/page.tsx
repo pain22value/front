@@ -43,7 +43,7 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
 
   return (
     <section className="pl-20">
-      <section className="max-w-7xl mx-auto p-0 xs:p-2 sm:p-4 md:p-6 lg:p-10 border border-dashed">
+      <section className="max-w-[1200] mx-auto p-0 xs:p-2 sm:p-4 md:p-6 lg:p-10 border border-dashed">
         <div className="grid grid-cols-1 md:grid-cols-[minmax(550px,65%)_minmax(300px,35%)] gap-8">
           <div className="col-span-[100%] md:col-span-[65%] space-y-20">
             {/* 상단 뮤지컬 정보 */}

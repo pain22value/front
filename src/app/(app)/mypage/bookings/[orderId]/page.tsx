@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BookingDetail, STATUS_LABEL, STATUS_COLOR } from "@/shared/types/booking";
+import { useRouter } from "next/navigation";
 
 // ─── 임시 목업 데이터 (API 연동 전) ──────────────────────────────────────────
 const MOCK_BOOKING: BookingDetail = {
@@ -70,6 +71,7 @@ export default function BookingDetailPage() {
   const booking = MOCK_BOOKING;
   const timeLeft = useCountdown(booking.performanceDatetime);
   const isConfirmed = booking.status === "CONFIRMED";
+  const router = useRouter();
 
 return (
   <div className="flex-1 py-10 bg-white min-h-screen pl-20">
@@ -194,7 +196,7 @@ return (
         <div className="flex justify-end">
           <button
             className="px-12 py-2 rounded-md border text-[16px] font-semibold text-[#23222A] border-[#9E9DAF] hover:bg-gray-50 transition-colors"
-            onClick={() => alert("예매 취소 API 연동 예정")}
+            onClick={() => router.push(`/mypage/bookings/${booking.orderId}/cancel`)}
           >
             예매 취소
           </button>

@@ -255,7 +255,7 @@ export default function BookingCancelPage() {
         <div className="flex gap-3">
           <button
             className="flex-1 py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors"
-            onClick={() => router.back()}
+            onClick={() => router.push(`/mypage/bookings/${booking.orderId}/cancel/success`)}
           >
             닫기
           </button>
@@ -266,10 +266,7 @@ export default function BookingCancelPage() {
                 : "bg-[#DDDDE4] cursor-not-allowed"
             }`}
             disabled={checkedItems.size === 0 || !cancelReason}
-            onClick={() => {
-              // TODO: 취소 API 연동
-              alert("취소 API 연동 예정");
-            }}
+            onClick={() => router.push(`/mypage/bookings/${booking.orderId}/cancel/success`)}
           >
             취소 진행
           </button>

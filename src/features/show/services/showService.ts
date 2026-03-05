@@ -1,9 +1,39 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
 import { reviews } from "@/shared/data/reviews";
+import { actors } from "@/shared/data/actors";
+import { shows } from "@/shared/data/shows";
+
+const search = async (query: string) => {
+  if (!query.trim()) {
+    return { shows: [], actors: [] };
+  }
+
+  /**
+   * const { data } = await api.get<ApiResponse<{
+   *   shows: Show[];
+   *   actors: Actor[];
+   * }>>(ENDPOINTS.SEARCH, {
+   *   params: { q: query },
+   * });
+   *
+   * return data.data;
+   */
+
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  const lower = query.toLowerCase();
+  const filteredShows = shows.filter((show) => show.title.toLowerCase().includes(lower));
+  const filteredActors = actors.filter((actor) => actor.name.toLowerCase().includes(lower));
+
+  return {
+    shows: filteredShows,
+    actors: filteredActors,
+  };
+};
 
 const getRecommendations = async () => {
-  const { data } = await api.get<ApiResponse<ShowItem[]>>(ENDPOINTS.SHOWS.RECOMMENDATIONS);
+  const { data } = await api.get<ApiResponse<Show[]>>(ENDPOINTS.SHOWS.RECOMMENDATIONS);
   return data.data;
 };
 
@@ -34,4 +64,4 @@ const getSchedules = async (date: Date | undefined) => {
   ];
 };
 
-export const showService = { getRecommendations, getReviews, getSchedules };
+export const showService = { search, getRecommendations, getReviews, getSchedules };

@@ -22,7 +22,15 @@ export const useAuthStore = create(
       accessToken: null,
       user: null,
       signup: async (signupRequest) => {
-        await authService.signup(signupRequest);
+        try {
+          await authService.signup(signupRequest);
+        } catch (error: unknown) {
+          throw new Error(
+            error instanceof Error
+              ? error.message
+              : "회원가입에 실패했습니다. 아이디와 비밀번호를 확인해주세요.",
+          );
+        }
       },
       signin: async (signinRequest) => {
         try {
@@ -31,14 +39,16 @@ export const useAuthStore = create(
         } catch (error: unknown) {
           set({ accessToken: null, user: null });
           throw new Error(
-            error instanceof Error ? error.message : "로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.",
+            error instanceof Error
+              ? error.message
+              : "로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.",
           );
         }
       },
       signout: async () => {
         try {
           await authService.signout();
-        } catch (error) {
+        } catch (error: unknown) {
           console.error("서버 로그아웃 요청에 실패했습니다:", error);
         } finally {
           set({ accessToken: null, user: null });

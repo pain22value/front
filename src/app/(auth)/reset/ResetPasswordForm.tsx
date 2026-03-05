@@ -1,22 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { SignupFormValues, signupSchema } from "@/shared/schemas/authSchema";
 import { Label } from "@/components/ui/label";
 import { LoaderSpinner } from "@/components/ui/spinner";
-import { authService } from "../services/authService";
+import {
+  resetPasswordSchema,
+  ResetPasswordFormValues,
+} from "@/shared/schemas/authSchema";
+import { authService } from "@/features/auth/services/authService";
+import { useRouter } from "next/navigation";
 
-export default function SignupForm() {
-  const router = useRouter();
-  const { signup } = useAuthStore();
+export default function ResetPasswordForm() {
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isSendingVerification, setIsSendingVerification] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -24,6 +24,7 @@ export default function SignupForm() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -32,8 +33,8 @@ export default function SignupForm() {
     getValues,
     trigger,
     watch,
-  } = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema),
+  } = useForm<ResetPasswordFormValues>({
+    resolver: zodResolver(resetPasswordSchema),
     mode: "onTouched",
     reValidateMode: "onChange",
     defaultValues: {
@@ -41,21 +42,21 @@ export default function SignupForm() {
       verificationCode: "",
       password: "",
       passwordConfirm: "",
-      nickname: "",
     },
   });
 
   const emailValue = watch("email");
   const passwordValue = watch("password");
   const passwordConfirmValue = watch("passwordConfirm");
-  const nicknameValue = watch("nickname");
   const verificationCodeValue = watch("verificationCode");
+
   const isInputFilled =
     !!emailValue &&
+    !!verificationCodeValue &&
     !!passwordValue &&
     !!passwordConfirmValue &&
-    !!nicknameValue &&
-    !!verificationCodeValue;
+    isVerified;
+
   const isEmailInputValid = !!emailValue && !errors.email;
 
   /* ================= password 교차 검증 보완 ================= */
@@ -77,38 +78,21 @@ export default function SignupForm() {
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
-
-  /* ================= 회원가입 ================= */
-  const onSubmit = async (data: SignupFormValues) => {
-    try {
-      const { email, password, nickname } = data;
-      await signup({ email, password, name: nickname });
-      toast.success("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
-      router.push("/signin");
-    } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "서버와의 통신 중 문제가 발생했습니다.",
-      );
-    }
+    const remain = seconds % 60;
+    return `${minutes}:${remain.toString().padStart(2, "0")}`;
   };
 
   /* ================= 인증코드 발송 ================= */
   const handleSendVerification = async (e: React.MouseEvent) => {
     e.preventDefault();
+
     const email = getValues("email");
     const isEmailValid = await trigger("email");
-
     if (!isEmailValid) return;
 
     try {
       setIsSendingVerification(true);
-      await authService.sendVerificationCode(email);
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
+      await authService.sendVerificationCode(email); // reset 전용 API
       setIsVerificationSent(true);
       setIsVerified(false);
       setTimeLeft(180);
@@ -130,10 +114,9 @@ export default function SignupForm() {
     const code = getValues("verificationCode");
     if (!code) return;
 
-    setIsVerifying(true);
     try {
+      setIsVerifying(true);
       await authService.verifyEmail(email, code);
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
       setIsVerified(true);
       toast.success("인증되었습니다.");
     } catch (error) {
@@ -147,29 +130,50 @@ export default function SignupForm() {
     }
   };
 
+  /* ================= 비밀번호 재설정 ================= */
+  const onSubmit = async () => {
+    try {
+      // 주석 해제하여 실제 API 호출
+      // await authService.resetPassword(data);
+
+      toast.success("비밀번호가 성공적으로 변경되었습니다.");
+
+      // 3. 성공 시 로그인 페이지로 이동
+      router.push("/signin");
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "비밀번호 변경에 실패했습니다. 다시 시도해주세요.",
+      );
+    }
+  };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="w-full mx-auto max-w-[400] space-y-6"
     >
-      <h1 className="text-center text-2xl font-bold">회원가입</h1>
+      <h1 className="text-center text-2xl font-bold">비밀번호 재설정</h1>
 
       {/* ================= 이메일 ================= */}
       <div className="space-y-2">
         <Label className="text-sm text-muted-foreground font-medium">
           이메일
         </Label>
+
         <div className="flex gap-2">
           <div className="relative w-full">
             <Input
               {...register("email")}
-              aria-invalid={!!errors.email}
               disabled={isVerified}
+              aria-invalid={!!errors.email}
             />
             {isVerified && (
               <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 w-4 h-4" />
             )}
           </div>
+
           {!isVerified && (
             <Button
               type="button"
@@ -189,6 +193,7 @@ export default function SignupForm() {
             </Button>
           )}
         </div>
+
         {errors.email && (
           <p className="text-sm text-destructive">{errors.email.message}</p>
         )}
@@ -211,6 +216,7 @@ export default function SignupForm() {
                 </span>
               )}
             </div>
+
             {!isVerified && (
               <Button
                 type="button"
@@ -233,11 +239,12 @@ export default function SignupForm() {
         )}
       </div>
 
-      {/* ================= 비밀번호 ================= */}
+      {/* ================= 새 비밀번호 ================= */}
       <div className="space-y-2">
         <Label className="text-sm text-muted-foreground font-medium">
-          비밀번호
+          새 비밀번호
         </Label>
+
         <div className="relative">
           <Input
             type={showPassword ? "text" : "password"}
@@ -248,7 +255,7 @@ export default function SignupForm() {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           >
             {showPassword ? (
               <EyeOff className="w-4 h-4" />
@@ -257,9 +264,11 @@ export default function SignupForm() {
             )}
           </button>
         </div>
+
         <p className="text-xs text-muted-foreground">
           영문, 숫자, 특수문자 포함 8~32자
         </p>
+
         {errors.password && (
           <p className="text-sm text-destructive">{errors.password.message}</p>
         )}
@@ -270,6 +279,7 @@ export default function SignupForm() {
         <Label className="text-sm text-muted-foreground font-medium">
           비밀번호 확인
         </Label>
+
         <div className="relative">
           <Input
             type={showPasswordConfirm ? "text" : "password"}
@@ -280,7 +290,7 @@ export default function SignupForm() {
           <button
             type="button"
             onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           >
             {showPasswordConfirm ? (
               <EyeOff className="w-4 h-4" />
@@ -289,6 +299,7 @@ export default function SignupForm() {
             )}
           </button>
         </div>
+
         {errors.passwordConfirm && (
           <p className="text-sm text-destructive">
             {errors.passwordConfirm.message}
@@ -296,28 +307,14 @@ export default function SignupForm() {
         )}
       </div>
 
-      {/* ================= 닉네임 ================= */}
-      <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">
-          닉네임
-        </Label>
-        <Input {...register("nickname")} aria-invalid={!!errors.nickname} />
-        <p className="text-xs text-muted-foreground">
-          원하는 닉네임을 설정해 보세요. (1~32자, 특수문자 사용 불가)
-        </p>
-        {errors.nickname && (
-          <p className="text-sm text-destructive">{errors.nickname.message}</p>
-        )}
-      </div>
-
-      {/* ================= 가입 버튼 ================= */}
+      {/* ================= 변경 버튼 ================= */}
       <Button
         type="submit"
-        className={`w-full h-11 ${isInputFilled ? "bg-red-500 hover:bg-red-600 text-white" : ""}`}
-        disabled={!isVerified || isSubmitting}
         variant="secondary"
+        className={`w-full h-11 ${isInputFilled ? "bg-red-500 hover:bg-red-600 text-white" : ""}`}
+        disabled={isSubmitting || !isVerified}
       >
-        {isSubmitting ? "가입 중..." : "가입하기"}
+        {isSubmitting ? "변경 중..." : "비밀번호 변경"}
       </Button>
     </form>
   );

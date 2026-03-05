@@ -165,6 +165,8 @@
   body {
     @apply bg-background text-foreground;
 
+    .reset-page > section,
+    .signup-terms-page > section,
     .signin-page > section,
     .signup-page > section {
       @apply max-w-[1200] h-screen mx-auto px-4 sm:px-6 lg:px-8;

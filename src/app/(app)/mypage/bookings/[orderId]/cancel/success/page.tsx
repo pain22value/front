@@ -12,7 +12,7 @@ const MOCK_CANCEL_RESULT = {
   paymentAmount: 160000,
   cancelFee: 32000,
   paymentMethod: "토스페이 환불",
-  refundAmount: 160000 + 32000,
+  refundAmount: 160000 - 32000,
 };
 
 export default function BookingCancelSuccessPage() {

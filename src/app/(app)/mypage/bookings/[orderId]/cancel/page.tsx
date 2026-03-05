@@ -110,25 +110,33 @@ export default function BookingCancelPage() {
 
         {/* 전체 선택 */}
         <label className="flex items-center gap-2 mb-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={allChecked}
-            onChange={toggleAll}
-            className="w-4 h-4 accent-[#F11322]"
-          />
-          <span className="text-[14px] text-[#23222A]">전체 선택</span>
+            <div
+            onClick={toggleAll}
+            className={`w-5 h-5 rounded border-2 flex items-center justify-center cursor-pointer transition-colors ${
+                allChecked
+                ? "bg-[#F11322] border-[#F11322]"
+                : "bg-white border-[#DDDDE4]"
+            }`}
+            >
+            {allChecked && (
+                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            )}
+            </div>
+          <span className="text-[14px] font-semibold text-[#68677E]">전체 선택</span>
         </label>
 
         {/* 티켓 항목 */}
-        <div className="flex flex-col gap-3 mb-8">
+        <div className="flex flex-col gap-3 mb-4">
           {booking.items.map((item, idx) => {
             const isChecked = checkedItems.has(idx);
             return (
               <label
                 key={idx}
-                className={`flex items-center gap-3 rounded-xl border px-4 py-4 cursor-pointer transition-colors ${
+                className={`flex items-center gap-3 rounded-sm border px-4 py-4 cursor-pointer transition-colors ${
                   isChecked
-                    ? "border-[#F11322] bg-[#FFF5F6]"
+                    ? "border-[#F11322] bg-[#FFE6E8]"
                     : "border-[#DDDDE4] bg-white"
                 }`}
               >
@@ -151,36 +159,35 @@ export default function BookingCancelPage() {
 
         {/* 금액 정보 */}
         <div className="flex flex-col gap-2 mb-2">
-          <div className="flex justify-between text-[14px] text-[#68677E]">
+          <div className="flex justify-between text-[14px] font-medium text-[#68677E]">
             <span>결제 금액</span>
             <span>{formatAmount(selectedAmount)}</span>
           </div>
-          <div className="flex justify-between text-[14px] text-[#68677E]">
+          <div className="flex justify-between text-[14px] font-medium text-[#68677E]">
             <span>취소 수수료</span>
             <span>{formatAmount(cancelFee)}</span>
           </div>
-          <div className="flex justify-between text-[14px] text-[#68677E]">
+          <hr className="border-[#F1F1F4] my-1" />
+          <div className="flex justify-between text-[14px] font-medium text-[#68677E]">
             <span>환불 방법</span>
             <span>{booking.paymentMethod}</span>
           </div>
         </div>
 
-        <hr className="border-[#DDDDE4] my-3" />
-
         <div className="flex justify-between items-center mb-8">
           <span className="text-[16px] font-bold text-[#23222A]">최종 환불 금액</span>
-          <span className="text-[16px] font-bold text-[#F11322]">
+          <span className="text-[16px] font-bold text-[#23222A]">
             {formatAmount(refundAmount)}
           </span>
         </div>
 
         {/* 취소 사유 */}
-        <h2 className="text-[16px] font-bold text-[#23222A] mb-3">취소 사유</h2>
+        <h2 className="text-[16px] font-medium text-[#23222A] mb-3">취소 사유</h2>
 
         {/* 드롭다운 */}
         <div className="relative mb-6">
           <button
-            className="w-full flex items-center justify-between rounded-xl border border-[#DDDDE4] px-4 py-3 text-[14px] text-left transition-colors hover:border-[#9E9DAF]"
+            className="w-full flex items-center justify-between rounded-sm border border-[#DDDDE4] px-4 py-3 text-[14px] text-left transition-colors hover:border-[#9E9DAF]"
             onClick={() => setReasonOpen((v) => !v)}
           >
             <span className={cancelReason ? "text-[#23222A]" : "text-[#9E9DAF]"}>
@@ -218,12 +225,12 @@ export default function BookingCancelPage() {
         {/* 취소 환불 정책 */}
         <div className="mb-10">
           <div className="flex items-center gap-1 mb-2">
-            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="#68677E" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="#23222A" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10" strokeWidth="2" />
               <line x1="12" y1="8" x2="12" y2="12" strokeWidth="2" strokeLinecap="round" />
               <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2" strokeLinecap="round" />
             </svg>
-            <span className="text-[14px] font-bold text-[#68677E]">취소 환불 정책</span>
+            <span className="text-[16px] font-medium text-[#23222A]">취소 환불 정책</span>
           </div>
           <ul className="space-y-1 pl-1">
             {MOCK_BOOKING.admissionInfo.length > 0
@@ -247,15 +254,15 @@ export default function BookingCancelPage() {
         {/* 하단 버튼 */}
         <div className="flex gap-3">
           <button
-            className="flex-1 rounded-xl border border-[#9E9DAF] py-4 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors"
+            className="flex-1 py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors"
             onClick={() => router.back()}
           >
             닫기
           </button>
           <button
-            className={`flex-1 rounded-xl py-4 text-[16px] font-semibold text-white transition-colors ${
+            className={`flex-1 rounded-sm py-2 text-[16px] font-semibold text-white transition-colors ${
               checkedItems.size > 0 && cancelReason
-                ? "bg-[#F11322] hover:bg-[#d40f1e]"
+                ? "bg-[#F93E4B] hover:bg-[#d40f1e]"
                 : "bg-[#DDDDE4] cursor-not-allowed"
             }`}
             disabled={checkedItems.size === 0 || !cancelReason}

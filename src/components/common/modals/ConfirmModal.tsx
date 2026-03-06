@@ -20,8 +20,8 @@ export default function ConfirmModal({
   onCancel,
 }: {
   open: boolean;
-  title: string;
-  description?: string;
+  title: React.ReactNode;
+  description?: React.ReactNode;
   confirmLabel?: string;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
@@ -29,10 +29,10 @@ export default function ConfirmModal({
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[90%] sm:max-w-sm gap-0 p-2 overflow-hidden border-none shadow-2xl">
+      <DialogContent className="max-w-[90%] sm:max-w-md gap-0 p-2 overflow-hidden border-none shadow-2xl">
         <DialogHeader className="px-6 py-16 flex flex-col items-center gap-2">
           <DialogTitle className="text-center">{title}</DialogTitle>
-          {description && <DialogDescription className="text-center">{description}</DialogDescription>}
+          {description && <DialogDescription className="text-center mt-4">{description}</DialogDescription>}
         </DialogHeader>
         <Separator />
         <DialogFooter className="grid grid-cols-2 gap-2 pt-2">

@@ -37,11 +37,11 @@ export function UserMenu() {
 
         {/* 메뉴 리스트 */}
         <div className="flex flex-col mt-2">
-          <Button variant="ghost" className="w-full justify-start text-lg font-medium h-12 px-2">
-            마이 티켓
+          <Button variant="ghost" asChild className="w-full justify-start text-lg font-medium h-12 px-2">
+            <Link href="/my/bookings">마이 티켓</Link>
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-lg font-medium h-12 px-2">
-            마이 멤버십
+          <Button variant="ghost" asChild className="w-full justify-start text-lg font-medium h-12 px-2">
+            <Link href="/my/membership">마이 멤버십</Link>
           </Button>
         </div>
 

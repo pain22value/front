@@ -1,6 +1,7 @@
 import Providers from "@/components/providers/Providers";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import ModalRoot from "@/components/common/modals/ModalRoot";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <Toaster />
+          <ModalRoot />
         </Providers>
       </body>
     </html>

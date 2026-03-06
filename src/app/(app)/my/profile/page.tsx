@@ -7,8 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import PasswordChangeDialog from "@/features/my/profile/ui/PasswordChangeDialog";
-import NicknameChangeDialog from "@/features/my/profile/ui/NicknameChangeDialog";
+import PasswordChangeDialog from "@/features/my/ui/PasswordChangeDialog";
+import NicknameChangeDialog from "@/features/my/ui/NicknameChangeDialog";
 
 export default function ProfileEditPage() {
   const [isPasswordChangeOpen, setIsPasswordChangeOpen] = useState(false);

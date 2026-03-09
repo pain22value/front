@@ -44,7 +44,7 @@ export default function BookingCancelSuccessPage() {
         },
       ]}
       buttons={[
-        { label: "다른 뮤지컬 둘러보기", href: "/", variant: "primary" },
+        { label: "다른 뮤지컬 둘러보기", href: "/shows", variant: "primary" },
         { label: "홈으로 가기", href: "/", variant: "outline" },
       ]}
     />

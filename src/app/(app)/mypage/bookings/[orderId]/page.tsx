@@ -456,7 +456,7 @@ export default function BookingDetailPage() {
           {(isWatched || isCanceled) && (
             <button
               className="px-12 py-2 rounded-md border text-[16px] font-semibold text-[#23222A] border-[#9E9DAF] hover:bg-gray-50 transition-colors"
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/shows")}
             >
               다른 뮤지컬 둘러보기
             </button>

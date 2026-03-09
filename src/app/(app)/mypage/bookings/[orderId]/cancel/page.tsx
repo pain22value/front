@@ -9,11 +9,14 @@ import { BookingDetail } from "@/shared/types/booking";
 const MOCK_BOOKING: BookingDetail = {
   id: "1",
   orderId: "TRV-2026-031501",
+  
   bookedAt: "2026.01.20",
   status: "CONFIRMED",
+  showId: "1",
   show: {
     title: "뮤지컬 <킹키부츠>",
     venue: "샤롯데씨어터",
+    address: "서울특별시 송파구 올림픽로 240",
     date: "2026.01.26.(월)",
     time: "오후 7:00-9:30",
     seat: "VIP석 2인",

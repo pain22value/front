@@ -17,6 +17,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",
+      address: "서울 송파구 올림픽로 240",
       date: "2026.01.26.(월)",
       time: "오후 7:00-9:30",
       seat: "VIP석 2인",
@@ -54,6 +55,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",
+      address: "서울 송파구 올림픽로 240",
       date: "2026.01.26.(월)",
       time: "오후 7:00-9:30",
       seat: "VIP석 2인",
@@ -90,6 +92,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",
+      address: "서울 송파구 올림픽로 240",
       date: "2026.01.26.(월)",
       time: "오후 7:00-9:30",
       seat: "VIP석 2인",
@@ -124,6 +127,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     show: {
       title: "뮤지컬 <슬립노모어>",
       venue: "샤롯데씨어터",
+      address: "서울 송파구 올림픽로 240",
       date: "2025.12.15.(일)",
       time: "오후 7:00-9:30",
       seat: "VIP석 2인",
@@ -158,6 +162,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",
+      address: "서울 송파구 올림픽로 240",
       date: "2025.09.20.(토)",
       time: "오후 7:00-9:30",
       seat: "S석 2인",

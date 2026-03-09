@@ -8,9 +8,7 @@ type Money = {
   value: number;
 };
 
-type TossPayment = Awaited<
-  ReturnType<Awaited<ReturnType<typeof loadTossPayments>>["payment"]>
->;
+type TossPayment = Awaited<ReturnType<Awaited<ReturnType<typeof loadTossPayments>>["payment"]>>;
 
 type UseTossPaymentArgs = {
   clientKey: string;
@@ -55,8 +53,7 @@ export function useTossPayment({
         setPayment(p);
         setIsReady(true);
       } catch (e) {
-        const err =
-          e instanceof Error ? e : new Error("TossPayments init error");
+        const err = e instanceof Error ? e : new Error("TossPayments init error");
         if (!mounted) return;
         setError(err);
         setPayment(null);
@@ -71,12 +68,7 @@ export function useTossPayment({
   }, [clientKey, customerKey]);
 
   const requestPayment = useCallback(
-    async ({
-      amountValue,
-      orderId,
-      orderName,
-      method = "CARD",
-    }: RequestTossPaymentPayload) => {
+    async ({ amountValue, orderId, orderName, method = "CARD" }: RequestTossPaymentPayload) => {
       if (!payment) return;
 
       const amount: Money = { currency: "KRW", value: amountValue };
@@ -99,14 +91,7 @@ export function useTossPayment({
         },
       });
     },
-    [
-      payment,
-      successPath,
-      failPath,
-      customerEmail,
-      customerName,
-      customerMobilePhone,
-    ],
+    [payment, successPath, failPath, customerEmail, customerName, customerMobilePhone],
   );
 
   return { isReady, error, requestPayment };

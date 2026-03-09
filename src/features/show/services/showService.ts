@@ -1,18 +1,18 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
 import { reviews } from "@/shared/data/reviews";
-import { actors } from "@/shared/data/actors";
+import { artists } from "@/shared/data/artists";
 import { shows } from "@/shared/data/shows";
 
 const search = async (query: string) => {
   if (!query.trim()) {
-    return { shows: [], actors: [] };
+    return { shows: [], artists: [] };
   }
 
   /**
    * const { data } = await api.get<ApiResponse<{
    *   shows: Show[];
-   *   actors: Actor[];
+   *   artists: Artist[];
    * }>>(ENDPOINTS.SEARCH, {
    *   params: { q: query },
    * });
@@ -24,11 +24,11 @@ const search = async (query: string) => {
 
   const lower = query.toLowerCase();
   const filteredShows = shows.filter((show) => show.title.toLowerCase().includes(lower));
-  const filteredActors = actors.filter((actor) => actor.name.toLowerCase().includes(lower));
+  const filteredActors = artists.filter((artist) => artist.name.toLowerCase().includes(lower));
 
   return {
     shows: filteredShows,
-    actors: filteredActors,
+    artists: filteredActors,
   };
 };
 

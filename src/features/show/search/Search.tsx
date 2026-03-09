@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import ActorCard from "@/features/show/ui/ActorCard";
+import ArtistCard from "@/features/show/ui/ArtistCard";
 import { useSearch } from "../hooks/useSearch";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -13,7 +13,7 @@ export default function Search({ query }: { query?: string }) {
     return <SearchSkeleton />;
   }
 
-  const actors = data?.actors ?? [];
+  const artists = data?.artists ?? [];
   const shows = data?.shows ?? [];
 
   return (
@@ -53,11 +53,11 @@ export default function Search({ query }: { query?: string }) {
         </div>
       </section>
       <section>
-        <h2 className="text-2xl font-semibold">배우({actors.length})</h2>
+        <h2 className="text-2xl font-semibold">배우({artists.length})</h2>
         <Separator className="mt-4! mb-6!" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {actors.map((actor) => (
-            <ActorCard key={actor.id} actor={actor} />
+          {artists.map((artist) => (
+            <ArtistCard key={artist.id} artist={artist} />
           ))}
         </div>
       </section>

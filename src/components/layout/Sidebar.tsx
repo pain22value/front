@@ -3,11 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Heart, LayoutGrid, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { actors } from "@/shared/data/actors";
+import { artists } from "@/shared/data/artists";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import Link from "next/link";
 
 export default function Sidebar() {
   const { isExpanded, setExpanded } = useSidebarStore();
@@ -83,14 +84,16 @@ export default function Sidebar() {
       {/* Top */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
         {/* 로고 */}
-        <div className="flex items-center gap-4 w-full cursor-pointer group">
+        <Link href="/" className="flex items-center gap-4 w-full cursor-pointer group">
           <Button
-            variant="outline"
+            variant="ghost"
             className="size-10 flex items-center justify-center rounded-lg text-3xl font-bold shrink-0
               border-2 border-black bg-white text-black
               group-hover:bg-black group-hover:text-white group-hover:border-black
+              hover:bg-black hover:text-white hover:border-black
               dark:bg-black dark:text-white dark:border-white
-              dark:group-hover:bg-white dark:group-hover:text-black dark:group-hover:border-black"
+              dark:group-hover:bg-white dark:group-hover:text-black dark:group-hover:border-white
+              dark:hover:bg-white dark:hover:text-black dark:hover:border-white"
           >
             t
           </Button>
@@ -102,10 +105,10 @@ export default function Sidebar() {
           >
             truve
           </span>
-        </div>
+        </Link>
 
         {/* 메뉴 */}
-        <div className="flex items-center gap-4 w-full cursor-pointer group">
+        <Link href="/shows/now" className="flex items-center gap-4 w-full cursor-pointer group">
           <Button
             variant="secondary"
             size="icon"
@@ -127,14 +130,20 @@ export default function Sidebar() {
           >
             전체 서비스
           </span>
-        </div>
+        </Link>
+      </div>
 
-        {/* 배우 */}
+      <div className="w-full px-5">
+        <Separator className="bg-muted-foreground" />
+      </div>
+
+      {/* 배우 */}
+      <div className="flex flex-col items-start gap-4 w-full px-5">
         <div className="flex flex-col gap-5 w-full">
-          {actors.map((actor) => (
-            <div key={actor.id} className="flex items-center gap-4 w-full cursor-pointer group">
+          {artists.map((artist) => (
+            <div key={artist.id} className="flex items-center gap-4 w-full cursor-pointer group">
               <Avatar className="size-10 rounded-lg shrink-0 transition-transform group-hover:scale-105">
-                <AvatarImage src={actor.image} className="object-cover" />
+                <AvatarImage src={artist.image} className="object-cover" />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
               <span
@@ -143,7 +152,7 @@ export default function Sidebar() {
                 after:bg-black dark:after:bg-white
                 after:transition-all after:duration-300 group-hover:after:w-full"
               >
-                {actor.name}
+                {artist.name}
               </span>
             </div>
           ))}
@@ -156,7 +165,7 @@ export default function Sidebar() {
 
       {/* Bottom Icons */}
       <div className="flex flex-col gap-4 pb-6 w-full px-5">
-        <div className="flex items-center gap-4 w-full cursor-pointer group">
+        <Link href="/my/favorite" className="flex items-center gap-4 w-full cursor-pointer group">
           <Button
             variant="secondary"
             size="icon"
@@ -178,7 +187,7 @@ export default function Sidebar() {
           >
             관심 리스트
           </span>
-        </div>
+        </Link>
 
         <div className="flex items-center gap-4 w-full cursor-pointer group">
           <Button

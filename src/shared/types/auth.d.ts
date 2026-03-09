@@ -1,22 +1,22 @@
-interface User {
+type User = {
   email: string;
   name: string;
   // roles: string[];
-}
+};
 
-interface SignupRequest {
+type SignupRequest = {
   email: string;
   password: string;
   name: string;
-}
+};
 
-interface SigninRequest {
+type SigninRequest = {
   email: string;
   password: string;
-}
+};
 
-interface SigninResponse {
+type SigninResponse = {
   accessToken: string;
   user: string;
   // user: User;
-}
+};

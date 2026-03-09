@@ -25,10 +25,19 @@ const MOCK_BOOKING: BookingDetail = {
     { name: "VIP석 1층 B구역 16열 7번", quantity: 1, amount: 160000 },
   ],
   totalAmount: 322000,
-  paymentMethod: "토스페이 환불",
-  paymentAmount: 322000,
+  paymentInfo: {
+    type: "CARD",
+    method: "토스페이",
+    amount: 322000,
+    orderedAt: "2026.01.25.(월) 12:34:07",
+  },
   freeCancelDeadline: "2026.01.31(토)",
-  admissionInfo: [],
+  guideTitle: "입장 안내",
+  guideItems: [
+    "공연 시작 1시간 전부터 입장 가능합니다",
+    "본인 확인을 위해 신분증을 지참해주세요",
+    "QR코드 캡처 화면은 입장 불가합니다",
+  ],
   performanceDatetime: new Date("2026-01-26T19:00:00"),
 };
 
@@ -46,6 +55,14 @@ function formatAmount(amount: number) {
   return amount.toLocaleString("ko-KR") + "원";
 }
 
+// 결제 수단 라벨 추출 (타입에 따라 다르게)
+function getRefundMethodLabel(booking: BookingDetail): string {
+  if (booking.paymentInfo.type === "CARD") {
+    return `${booking.paymentInfo.method} 환불`;
+  }
+  return "무통장 환불";
+}
+
 export default function BookingCancelPage() {
   const router = useRouter();
   const booking = MOCK_BOOKING;
@@ -56,7 +73,6 @@ export default function BookingCancelPage() {
 
   const allChecked = checkedItems.size === booking.items.length;
 
-  // 전체 선택 토글
   const toggleAll = () => {
     if (allChecked) {
       setCheckedItems(new Set());
@@ -65,7 +81,6 @@ export default function BookingCancelPage() {
     }
   };
 
-  // 개별 선택 토글
   const toggleItem = (idx: number) => {
     const next = new Set(checkedItems);
     if (next.has(idx)) {
@@ -76,13 +91,13 @@ export default function BookingCancelPage() {
     setCheckedItems(next);
   };
 
-  // 선택된 항목 결제 금액 합산
   const selectedAmount = booking.items
     .filter((_, idx) => checkedItems.has(idx))
     .reduce((sum, item) => sum + item.amount, 0);
 
   const cancelFee = Math.floor(selectedAmount * CANCEL_FEE_RATE);
   const refundAmount = selectedAmount - cancelFee;
+  const refundMethodLabel = getRefundMethodLabel(booking);
 
   return (
     <div className="flex-1 py-10 bg-white min-h-screen pl-20">
@@ -111,20 +126,20 @@ export default function BookingCancelPage() {
 
         {/* 전체 선택 */}
         <label className="flex items-center gap-2 mb-3 cursor-pointer">
-            <div
+          <div
             onClick={toggleAll}
-            className={`w-5 h-5 rounded border-2 flex items-center justify-center cursor-pointer transition-colors ${
-                allChecked
+            className={`w-5 h-5 rounded-sm border-2 flex items-center justify-center cursor-pointer transition-colors ${
+              allChecked
                 ? "bg-[#F11322] border-[#F11322]"
                 : "bg-white border-[#DDDDE4]"
             }`}
-            >
+          >
             {allChecked && (
-                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
+              </svg>
             )}
-            </div>
+          </div>
           <span className="text-[14px] font-semibold text-[#68677E]">전체 선택</span>
         </label>
 
@@ -171,7 +186,7 @@ export default function BookingCancelPage() {
           <hr className="border-[#F1F1F4] my-1" />
           <div className="flex justify-between text-[14px] font-medium text-[#68677E]">
             <span>환불 방법</span>
-            <span>{booking.paymentMethod}</span>
+            <span>{refundMethodLabel}</span>
           </div>
         </div>
 
@@ -234,21 +249,12 @@ export default function BookingCancelPage() {
             <span className="text-[16px] font-medium text-[#23222A]">취소 환불 정책</span>
           </div>
           <ul className="space-y-1 pl-1">
-            {MOCK_BOOKING.admissionInfo.length > 0
-              ? MOCK_BOOKING.admissionInfo.map((info, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-[13px] text-[#68677E]">
-                    <span className="mt-1.5 w-1 h-1 rounded-full bg-[#68677E] flex-shrink-0" />
-                    {info}
-                  </li>
-                ))
-              : ["공연 시작 1시간 전부터 입장 가능", "본인 확인을 위해 신분증을 지참해주세요", "QR코드 캡처 화면은 입장 불가"].map(
-                  (info, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-[13px] text-[#68677E]">
-                      <span className="mt-1.5 w-1 h-1 rounded-full bg-[#68677E] flex-shrink-0" />
-                      {info}
-                    </li>
-                  )
-                )}
+            {booking.guideItems.map((info, idx) => (
+              <li key={idx} className="flex items-start gap-2 text-[13px] text-[#68677E]">
+                <span className="mt-1.5 w-1 h-1 rounded-full bg-[#68677E] flex-shrink-0" />
+                {info}
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -256,7 +262,7 @@ export default function BookingCancelPage() {
         <div className="flex gap-3">
           <button
             className="flex-1 py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors"
-            onClick={() => router.push(`/mypage/bookings/${booking.orderId}/cancel/success`)}
+            onClick={() => router.back()}
           >
             닫기
           </button>

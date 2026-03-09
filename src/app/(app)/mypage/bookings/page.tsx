@@ -65,34 +65,6 @@ const MOCK_BOOKINGS: Booking[] = [
       posterUrl: "",
     },
   },
-  {
-    id: "5",
-    orderId: "81gi2j09-120f-842f-ej97-2i57101g86f6",
-    bookedAt: "2025.11.05",
-    status: "WATCHED",
-    show: {
-      title: "뮤지컬 <슬립노모어>",
-      venue: "블랙박스씨어터",
-      date: "2025.11.10.(월)",
-      time: "오후 7:00-9:30",
-      seat: "S석 2인",
-      posterUrl: "",
-    },
-  },
-  {
-    id: "6",
-    orderId: "92hj3k10-231g-953g-fk08-3j68212h97g7",
-    bookedAt: "2025.10.20",
-    status: "WATCHED",
-    show: {
-      title: "뮤지컬 <슬립노모어>",
-      venue: "블랙박스씨어터",
-      date: "2025.10.25.(토)",
-      time: "오후 2:00-4:30",
-      seat: "VIP석 1인",
-      posterUrl: "",
-    },
-  },
   // 취소 - 킹키부츠
   {
     id: "7",

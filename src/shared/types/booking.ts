@@ -28,22 +28,42 @@ export type BookingItem = {
   amount: number;
 };
 
+// 결제 정보: 일반 결제 (카드/토스페이 등)
+export type CardPaymentInfo = {
+  type: "CARD";
+  method: string;       // e.g. "토스페이"
+  amount: number;
+  orderedAt: string;    // e.g. "2026.01.25.(월) 12:34:07"
+};
+
+// 결제 정보: 무통장 입금
+export type VirtualAccountPaymentInfo = {
+  type: "VIRTUAL_ACCOUNT";
+  depositName: string;        // 입금자명
+  bankAccount: string;        // 계좌번호 e.g. "우리은행 26109854118255 (TRUVE)"
+  depositDeadline: string;    // 입금 마감일시 e.g. "2026.01.26.(월) 23:59까지"
+  amount: number;
+};
+
+export type PaymentInfo = CardPaymentInfo | VirtualAccountPaymentInfo;
+
 export type BookingDetail = Booking & {
   finalAmount: number;
   items: BookingItem[];
   totalAmount: number;
-  paymentMethod: string;
-  paymentAmount: number;
-  freeCancelDeadline: string;
-  admissionInfo: string[];
-  performanceDatetime: Date;
+  paymentInfo: PaymentInfo;
+  freeCancelDeadline?: string;    // CONFIRMED 일 때만
+  guideTitle: string;             // 안내 박스 제목 e.g. "입장 안내" | "결제 안내"
+  guideItems: string[];           // 안내 박스 내용
+  performanceDatetime?: Date;     // CONFIRMED 카운트다운용
+  depositDeadline?: Date;         // PENDING_PAYMENT 카운트다운용
 };
 
 export const STATUS_LABEL: Record<BookingStatus, string> = {
   CONFIRMED: "예매확정",
   PENDING_PAYMENT: "입금대기",
   PARTIAL_CANCEL: "부분취소",
-  CANCELED: "취소",
+  CANCELED: "예매취소",
   WATCHED: "관람완료",
 };
 

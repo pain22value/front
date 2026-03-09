@@ -16,6 +16,7 @@ export type Booking = {
   show: {
     title: string;
     venue: string;
+    address: string;
     date: string;
     time: string;
     seat: string;

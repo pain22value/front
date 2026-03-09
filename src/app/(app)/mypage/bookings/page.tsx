@@ -178,7 +178,7 @@ function BookingCard({ booking }: { booking: Booking }) {
           {isPendingPayment ? (
             <button className="flex-1 rounded-md bg-[#23222A] py-2 text-[16px] font-semibold text-white hover:bg-[#3a3945] transition-colors">입금하기</button>
           ) : isWatched ? (
-            <button className="flex-1 rounded-md bg-[#F93E4B] border border-[#F93E4B] py-2 text-[16px] font-semibold text-[#FFFFFF] hover:bg-gray-50 transition-colors">
+            <button className="flex-1 rounded-md bg-[#F93E4B] border border-[#F93E4B] py-2 text-[16px] font-semibold text-[#FFFFFF] hover:bg-[#fa6570] transition-colors">
               관람평 작성
             </button>
           ) : booking.status !== "PARTIAL_CANCEL" && booking.status !== "CANCELED" ? (

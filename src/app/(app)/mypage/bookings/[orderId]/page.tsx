@@ -36,9 +36,9 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     freeCancelDeadline: "2026.01.31(토)",
     guideTitle: "입장 안내",
     guideItems: [
-      "공연 시작 1시간 전부터 입장 가능합니다",
+      "공연 시작 1시간 전부터 입장 가능",
       "본인 확인을 위해 신분증을 지참해주세요",
-      "QR코드 캡처 화면은 입장 불가합니다",
+      "QR코드 캡처 화면은 입장 불가",
     ],
     performanceDatetime: new Date("2026-01-26T19:00:00"),
   },
@@ -105,9 +105,9 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     },
     guideTitle: "입장 안내",
     guideItems: [
-      "공연 시작 1시간 전부터 입장 가능합니다",
+      "공연 시작 1시간 전부터 입장 가능",
       "본인 확인을 위해 신분증을 지참해주세요",
-      "QR코드 캡처 화면은 입장 불가합니다",
+      "QR코드 캡처 화면은 입장 불가",
     ],
   },
 
@@ -119,28 +119,28 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     status: "WATCHED",
     show: {
       title: "뮤지컬 <슬립노모어>",
-      venue: "블랙박스씨어터",
+      venue: "샤롯데씨어터",
       date: "2025.12.15.(일)",
-      time: "오후 3:00-5:30",
-      seat: "R석 1인",
+      time: "오후 7:00-9:30",
+      seat: "VIP석 2인",
     },
-    finalAmount: 150000,
+    finalAmount: 320000,
     items: [
-      { name: "R석", quantity: 1, amount: 150000 },
-      { name: "예매 수수료", quantity: null, amount: 1000 },
+      { name: "VIP석", quantity: 2, amount: 320000 },
+      { name: "예매 수수료", quantity: null, amount: 2000 },
     ],
-    totalAmount: 151000,
+    totalAmount: 322000,
     paymentInfo: {
       type: "CARD",
       method: "토스페이",
-      amount: 151000,
+      amount: 322000,
       orderedAt: "2025.12.10.(화) 10:05:33",
     },
     guideTitle: "입장 안내",
     guideItems: [
-      "공연 시작 1시간 전부터 입장 가능합니다",
+      "공연 시작 1시간 전부터 입장 가능",
       "본인 확인을 위해 신분증을 지참해주세요",
-      "QR코드 캡처 화면은 입장 불가합니다",
+      "QR코드 캡처 화면은 입장 불가",
     ],
   },
 
@@ -171,9 +171,9 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     },
     guideTitle: "입장 안내",
     guideItems: [
-      "공연 시작 1시간 전부터 입장 가능합니다",
+      "공연 시작 1시간 전부터 입장 가능",
       "본인 확인을 위해 신분증을 지참해주세요",
-      "QR코드 캡처 화면은 입장 불가합니다",
+      "QR코드 캡처 화면은 입장 불가",
     ],
   },
 };
@@ -217,7 +217,7 @@ function useCountdown(targetDate: Date | undefined) {
 function ConfirmedBanner({ performanceDatetime }: { performanceDatetime: Date }) {
   const timeLeft = useCountdown(performanceDatetime);
   return (
-    <div className="rounded-lg px-4 py-3 mb-4 bg-[#FFF5F6]">
+    <div className="rounded-lg px-1 py-1 mb-1 bg-[#FFF5F6]">
       <span className="text-[16px] font-bold text-[#F93E4B]">
         입장까지 {timeLeft}
       </span>
@@ -228,7 +228,7 @@ function ConfirmedBanner({ performanceDatetime }: { performanceDatetime: Date })
 function PendingPaymentBanner({ depositDeadline }: { depositDeadline: Date }) {
   const timeLeft = useCountdown(depositDeadline);
   return (
-    <div className="rounded-lg px-4 py-3 mb-4 bg-[#ECFDFD]">
+    <div className="rounded-lg px-1 py-1 mb-1 bg-[#ECFDFD]">
       <span className="text-[16px] font-bold text-[#0B9B9D]">
         입금 마감 {timeLeft}
       </span>
@@ -247,14 +247,14 @@ function PaymentInfoSection({ booking }: { booking: BookingDetail }) {
         </div>
         <div className="space-y-2">
           <div className="flex justify-between text-[14px]">
-            <span className="text-[#23222A] font-medium">입금자명</span>
-            <span className="text-[#23222A]">{paymentInfo.depositName}</span>
+            <span className="text-[#68677E] font-medium text-[14px]">입금자명</span>
+            <span className="text-[#68677E] font-medium text-[14px]">{paymentInfo.depositName}</span>
           </div>
           <div className="flex justify-between text-[14px]">
-            <span className="text-[#23222A] font-medium">결제수단 (무통장 입금)</span>
+            <span className="text-[#68677E] font-medium text-[14px]">결제수단 (무통장 입금)</span>
             <div className="text-right">
-              <p className="text-[#23222A]">{paymentInfo.bankAccount}</p>
-              <p className="text-[#F93E4B] font-medium">{paymentInfo.depositDeadline}</p>
+              <p className="text-[#23222A] font-medium text-[14px]">{paymentInfo.bankAccount}</p>
+              <p className="text-[#F11322] font-medium text-[14px]">{paymentInfo.depositDeadline}</p>
             </div>
           </div>
         </div>
@@ -264,7 +264,7 @@ function PaymentInfoSection({ booking }: { booking: BookingDetail }) {
 
   return (
     <div className="mb-6">
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex justify-between items-center mb-2">
         <span className="text-[16px] font-bold text-[#23222A]">결제 정보</span>
         <span className="text-[16px] font-bold text-[#23222A]">
           {formatAmount(paymentInfo.amount)}
@@ -277,17 +277,19 @@ function PaymentInfoSection({ booking }: { booking: BookingDetail }) {
           {formatAmount(paymentInfo.amount)}
         </span>
       </div>
-      <div className="flex justify-between text-[14px] text-[#68677E]">
-        <span>주문 일시</span>
-        <span>{paymentInfo.orderedAt}</span>
-      </div>
+      {booking.status !== "CONFIRMED" && (
+        <div className="flex justify-between text-[14px] text-[#68677E]">
+          <span>주문 일시</span>
+          <span>{paymentInfo.orderedAt}</span>
+        </div>
+      )}
     </div>
   );
 }
 
 function GuideBox({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="rounded-lg px-5 py-4 mb-8 bg-[#F0FAFA]">
+    <div className="rounded-lg px-5 py-4 mb-8" style={{ background: "linear-gradient(to right, #FFF5F6, #ECFDFD)" }}>
       <div className="flex items-center gap-2 mb-3">
         <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="#23222A" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="10" strokeWidth="2" />
@@ -341,7 +343,7 @@ export default function BookingDetailPage() {
         <h1 className="text-[32px] font-bold text-[#23222A] mb-6">예매 상세</h1>
 
         {/* 상태 텍스트 */}
-        <div className="mb-4">
+        <div className="mb-6">
           <span className={STATUS_COLOR[booking.status]}>
             {STATUS_LABEL[booking.status]}
           </span>
@@ -392,14 +394,14 @@ export default function BookingDetailPage() {
                 {formatAmount(booking.finalAmount)}
               </span>
             </div>
-            <hr className="border-[#DDDDE4] mb-2" />
+            <hr className="border-[#F1F1F4] mb-2" />
           </>
         ) : (
           <>
             <div className="mb-2">
               <span className="text-[16px] font-bold text-[#23222A]">결제액</span>
             </div>
-            <hr className="border-[#DDDDE4] mb-2" />
+            <hr className="border-[#F1F1F4] mb-2" />
           </>
         )}
 
@@ -410,15 +412,17 @@ export default function BookingDetailPage() {
             <span className="text-center">수량</span>
             <span className="text-right">금액</span>
           </div>
-          <hr className="border-[#DDDDE4]" />
+          <hr className="border-[#F1F1F4]" />
           {booking.items.map((item, idx) => (
-            <div key={idx} className="grid grid-cols-3 text-[14px] text-[#68677E] py-2">
+            <div key={idx} className="grid grid-cols-3 text-[14px] text-[#68677E] py-1">
               <span>{item.name}</span>
               <span className="text-center">{item.quantity ?? ""}</span>
-              <span className="text-right">+{item.amount.toLocaleString("ko-KR")}원</span>
+              <span className="text-right">
+                {item.name.includes("수수료") ? "+" : ""}{item.amount.toLocaleString("ko-KR")}원
+              </span>
             </div>
           ))}
-          <hr className="border-[#DDDDE4] mb-1" />
+          <hr className="border-[#F1F1F4] mb-1" />
           <div className="grid grid-cols-3 text-[14px] font-semibold text-[#23222A] py-2">
             <span>합계</span>
             <span />

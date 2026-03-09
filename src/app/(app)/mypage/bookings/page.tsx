@@ -129,6 +129,7 @@ function PosterPlaceholder({ title }: { title: string }) {
 function BookingCard({ booking }: { booking: Booking }) {
   const isPendingPayment = booking.status === "PENDING_PAYMENT";
   const isWatched = booking.status === "WATCHED";
+  const [showToast, setShowToast] = useState(false);
 
   return (
     <div className={`rounded-xl border ${STATUS_BG[booking.status]} overflow-hidden`}>
@@ -185,7 +186,14 @@ function BookingCard({ booking }: { booking: Booking }) {
           >
             작품 상세
           </Link>
-          <button className="flex-1 rounded-md border border-[#9E9DAF] py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors">
+          <button
+            className="flex-1 rounded-md border border-[#9E9DAF] py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors"
+            onClick={() => {
+              navigator.clipboard.writeText(booking.show.address);
+              setShowToast(true);
+              setTimeout(() => setShowToast(false), 2000);
+            }}
+          >
             주소 복사
           </button>
           {isPendingPayment ? (
@@ -199,7 +207,14 @@ function BookingCard({ booking }: { booking: Booking }) {
           ) : null}
         </div>
       </div>
-    </div>
+
+      {/* 토스트 ← 여기 추가 */}
+      {showToast && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 rounded-lg px-6 py-3 bg-[#322F35] w-[calc(100%-32px)] max-w-[800px]">
+          <p className="text-center text-[16px] font-normal text-[#F5EFF7]">주소가 복사되었습니다.</p>
+        </div>
+      )}
+      </div>
   );
 }
 

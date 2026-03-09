@@ -205,9 +205,10 @@ function groupByDateAndStatus(bookings: Booking[]) {
 export default function BookingsPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [bookings, setBookings] = useState(MOCK_BOOKINGS);
 
   // TODO: 백엔드 연동 시 날짜 필터로 API 호출
-  const grouped = groupByDateAndStatus(MOCK_BOOKINGS);
+  const grouped = groupByDateAndStatus(bookings);
 
   return (
     <div className="flex gap-6 py-8 pr-6 pl-32 max-w-[1600px] mx-auto">
@@ -268,7 +269,14 @@ export default function BookingsPage() {
 
             <button
               // TODO: 백엔드 연동 시 날짜 필터 API 호출
-              onClick={() => console.log("조회:", startDate, endDate)}
+              onClick={() => {
+                const filtered = MOCK_BOOKINGS.filter((b) => {
+                  if (startDate && b.bookedAt < startDate.replaceAll("-", ".")) return false;
+                  if (endDate && b.bookedAt > endDate.replaceAll("-", ".")) return false;
+                  return true;
+                });
+                setBookings(filtered);
+              }}
               className="w-full rounded-md border border-[#9E9DAF] py-2 text-[16px] font-semibold text-[#22212B] hover:bg-gray-50 transition-colors mt-1"
             >
               조회하기

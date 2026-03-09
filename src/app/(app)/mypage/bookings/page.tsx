@@ -203,7 +203,9 @@ function BookingCard({ booking }: { booking: Booking }) {
             주소 복사
           </button>
           {isPendingPayment ? (
-            <button className="flex-1 rounded-md bg-[#23222A] py-2 text-[16px] font-semibold text-white hover:bg-[#3a3945] transition-colors">입금하기</button>
+            <Link href={`/mypage/bookings/${booking.orderId}`} className="flex-1">
+              <button className="w-full rounded-md bg-[#23222A] py-2 text-[16px] font-semibold text-white hover:bg-[#3a3945] transition-colors">입금하기</button>
+            </Link>
           ) : isWatched ? (
                 isReviewed ? (
                   <button className="flex-1 rounded-md py-2 text-[16px] font-semibold bg-[#33323D] text-[#FFFFFF] hover:bg-[#4a4958] transition-colors">

@@ -1,3 +1,4 @@
+// mypage/bookings : 예매 내역 확인 페이지
 "use client";
 
 import { useState } from "react";

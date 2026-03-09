@@ -1,3 +1,4 @@
+// mypage/bookings/orderId : 예매 상세 페이지
 "use client";
 
 import { useEffect, useState } from "react";

@@ -1,3 +1,4 @@
+// 예매 취소 성공 페이지
 "use client";
 
 import { useRouter } from "next/navigation";

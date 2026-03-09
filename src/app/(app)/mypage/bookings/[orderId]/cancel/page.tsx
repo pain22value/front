@@ -1,3 +1,4 @@
+// mypage/bookings/orderId/cancel : 예매 취소 페이지
 "use client";
 
 import { useState } from "react";

@@ -78,6 +78,14 @@ export default function CheckoutPage() {
           method: payMethod,
         }),
       });
+      
+      // 임시 데이터
+      sessionStorage.setItem("pendingBooking", JSON.stringify({
+        showTitle: "뮤지컬 <킹키부츠>",
+        datetime: "2026.01.26(월) 오후 7:00",
+        seats: ["1층 B구역 16열 6번", "1층 B구역 16열 7번"],
+        method: payMethod,
+      }));
 
       await requestPayment({
         orderId,

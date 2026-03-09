@@ -29,6 +29,9 @@ export type ConfirmPaymentResponse = {
   totalAmount?: number;
   code?: string;
   message?: string;
+  // 무통장 입금 전용
+  bankAccount?: string;
+  depositDeadline?: string;
 };
 
 export type CancelPaymentRequest = {

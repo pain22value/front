@@ -12,6 +12,7 @@ const MOCK_BOOKINGS: Booking[] = [
     orderId: "47ce8f65-796b-408b-af53-8e13767c42b2",
     bookedAt: "2026.01.20",
     status: "CONFIRMED",
+    showId: "1",
     entryTime: "1월 11시간 11분 뒤 입장 가능",
     show: {
       title: "뮤지컬 <킹키부츠>",
@@ -27,6 +28,7 @@ const MOCK_BOOKINGS: Booking[] = [
     orderId: "58df9g76-897c-519c-bg64-9f24878d53c3",
     bookedAt: "2026.01.20",
     status: "PENDING_PAYMENT",
+    showId: "1",
     dueTime: "2시간 22분까지 입금",
     show: {
       title: "뮤지컬 <킹키부츠>",
@@ -42,6 +44,7 @@ const MOCK_BOOKINGS: Booking[] = [
     orderId: "69eg0h87-908d-620d-ch75-0g35989e64d4",
     bookedAt: "2026.01.20",
     status: "PARTIAL_CANCEL",
+    showId: "1",
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",
@@ -56,6 +59,7 @@ const MOCK_BOOKINGS: Booking[] = [
     orderId: "70fh1i98-019e-731e-di86-1h46090f75e5",
     bookedAt: "2025.12.10",
     status: "WATCHED",
+    showId: "2",
     show: {
       title: "뮤지컬 <슬립노모어>",
       venue: "블랙박스씨어터",
@@ -71,6 +75,7 @@ const MOCK_BOOKINGS: Booking[] = [
     orderId: "03ik4l21-342h-064h-gl19-4k79323i08h8",
     bookedAt: "2025.09.15",
     status: "CANCELED",
+    showId: "2",
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",
@@ -169,9 +174,12 @@ function BookingCard({ booking }: { booking: Booking }) {
 
         {/* 액션 버튼 */}
         <div className="mt-3 flex gap-2 pt-1">
-          <button className="flex-1 rounded-md border border-[#9E9DAF] py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors">
+          <Link
+            href={`/shows/${booking.showId}`}
+            className="flex-1 rounded-md border border-[#9E9DAF] py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors text-center"
+          >
             작품 상세
-          </button>
+          </Link>
           <button className="flex-1 rounded-md border border-[#9E9DAF] py-2 text-[16px] font-semibold text-[#23222A] hover:bg-gray-50 transition-colors">
             주소 복사
           </button>

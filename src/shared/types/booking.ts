@@ -10,6 +10,7 @@ export type Booking = {
   orderId: string;
   bookedAt: string;
   status: BookingStatus;
+  showId: string;
   dueTime?: string;
   entryTime?: string;
   show: {

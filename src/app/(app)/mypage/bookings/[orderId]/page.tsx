@@ -13,6 +13,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     orderId: "TRV-2026-031501",
     bookedAt: "2026.01.20",
     status: "CONFIRMED",
+    showId: "1",
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",
@@ -49,6 +50,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     orderId: "TRV-2026-031502",
     bookedAt: "2026.01.20",
     status: "PENDING_PAYMENT",
+    showId: "1",
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",
@@ -84,6 +86,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     orderId: "TRV-2026-031503",
     bookedAt: "2026.01.20",
     status: "PARTIAL_CANCEL",
+    showId: "1",
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",
@@ -117,6 +120,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     orderId: "TRV-2026-031504",
     bookedAt: "2025.12.10",
     status: "WATCHED",
+    showId: "2",
     show: {
       title: "뮤지컬 <슬립노모어>",
       venue: "샤롯데씨어터",
@@ -150,6 +154,7 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
     orderId: "TRV-2026-031507",
     bookedAt: "2025.09.15",
     status: "CANCELED",
+    showId: "1",
     show: {
       title: "뮤지컬 <킹키부츠>",
       venue: "샤롯데씨어터",

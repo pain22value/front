@@ -1,7 +1,7 @@
 // mypage/bookings : 예매 내역 확인 페이지
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Booking, BookingStatus, STATUS_LABEL, STATUS_COLOR, STATUS_BG } from "@/shared/types/booking";
 
@@ -130,6 +130,12 @@ function BookingCard({ booking }: { booking: Booking }) {
   const isPendingPayment = booking.status === "PENDING_PAYMENT";
   const isWatched = booking.status === "WATCHED";
   const [showToast, setShowToast] = useState(false);
+  const [isReviewed, setIsReviewed] = useState(false);
+
+  useEffect(() => {
+    const reviewed = JSON.parse(localStorage.getItem("reviewedOrders") ?? "[]");
+    setIsReviewed(reviewed.includes(booking.orderId));
+  }, [booking.orderId]);
 
   return (
     <div className={`rounded-xl border ${STATUS_BG[booking.status]} overflow-hidden`}>
@@ -199,9 +205,17 @@ function BookingCard({ booking }: { booking: Booking }) {
           {isPendingPayment ? (
             <button className="flex-1 rounded-md bg-[#23222A] py-2 text-[16px] font-semibold text-white hover:bg-[#3a3945] transition-colors">입금하기</button>
           ) : isWatched ? (
-            <button className="flex-1 rounded-md bg-[#F93E4B] border border-[#F93E4B] py-2 text-[16px] font-semibold text-[#FFFFFF] hover:bg-[#fa6570] transition-colors">
-              관람평 작성
-            </button>
+                isReviewed ? (
+                  <button className="flex-1 rounded-md py-2 text-[16px] font-semibold bg-[#33323D] text-[#FFFFFF] hover:bg-[#4a4958] transition-colors">
+                    내 관람평 보기
+                  </button>
+                ) : (
+                  <Link href={`/mypage/bookings/${booking.orderId}/review`} className="flex-1">
+                    <button className="w-full rounded-md bg-[#F93E4B] border border-[#F93E4B] py-2 text-[16px] font-semibold text-[#FFFFFF] hover:bg-[#f95360] transition-colors">
+                      관람평 작성
+                    </button>
+                  </Link>
+                )
           ) : booking.status !== "PARTIAL_CANCEL" && booking.status !== "CANCELED" ? (
             <button className="flex-1 rounded-md py-2 text-[16px] font-semibold text-[#22212B] hover:bg-gray-50 transition-colors">예매 취소</button>
           ) : null}
@@ -211,7 +225,7 @@ function BookingCard({ booking }: { booking: Booking }) {
       {/* 토스트 ← 여기 추가 */}
       {showToast && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 rounded-lg px-6 py-3 bg-[#322F35] w-[calc(100%-32px)] max-w-[800px]">
-          <p className="text-center text-[16px] font-normal text-[#F5EFF7]">주소가 복사되었습니다.</p>
+          <p className="text-[16px] font-normal text-[#F5EFF7]">주소가 복사되었습니다.</p>
         </div>
       )}
       </div>

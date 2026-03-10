@@ -130,10 +130,12 @@ function BookingCard({ booking }: { booking: Booking }) {
   const isPendingPayment = booking.status === "PENDING_PAYMENT";
   const isWatched = booking.status === "WATCHED";
   const [showToast, setShowToast] = useState(false);
-  const [isReviewed, setIsReviewed] = useState(() => {
-  const reviewed = JSON.parse(localStorage.getItem("reviewedOrders") ?? "[]");
-    return reviewed.includes(booking.orderId);
-  });
+  const [isReviewed, setIsReviewed] = useState(false);
+
+  useEffect(() => {
+    const reviewed = JSON.parse(localStorage.getItem("reviewedOrders") ?? "[]");
+    setIsReviewed(reviewed.includes(booking.orderId));
+  }, [booking.orderId]);
 
 
   return (

@@ -33,7 +33,7 @@ const search = async (query: string) => {
 };
 
 const getRecommendations = async () => {
-  const { data } = await api.get<ApiResponse<Show[]>>(ENDPOINTS.SHOWS.RECOMMENDATIONS);
+  const { data } = await api.get<ApiResponse<ShowItem[]>>(ENDPOINTS.SHOWS.RECOMMENDATIONS);
   return data.data;
 };
 
@@ -64,4 +64,4 @@ const getSchedules = async (date: Date | undefined) => {
   ];
 };
 
-export const showService = { search, getRecommendations, getReviews, getSchedules };
+export const showService = { getRecommendations, getReviews, getSchedules };

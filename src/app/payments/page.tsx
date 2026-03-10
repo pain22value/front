@@ -86,6 +86,21 @@ export default function CheckoutPage() {
 
   const [payMethod, setPayMethod] = useState<PayMethod>("CARD");
   const [receipt, setReceipt] = useState<"NONE" | "PERSONAL" | "BIZ" | null>(null);
+  const [agreeAll, setAgreeAll] = useState(false);
+  const [agrees, setAgrees] = useState([false, false, false]);
+
+  const handleAgreeAll = () => {
+    const next = !agreeAll;
+    setAgreeAll(next);
+    setAgrees([next, next, next]);
+  };
+
+  const handleAgree = (idx: number) => {
+    const next = [...agrees];
+    next[idx] = !next[idx];
+    setAgrees(next);
+    setAgreeAll(next.every(Boolean));
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -230,20 +245,18 @@ export default function CheckoutPage() {
             </div>
 
             {/* 결제 수단 */}
-            <div className="mt-6 rounded-xl border border-gray-100 bg-white">
+            <div className="mt-6">
               <div className="border-b border-gray-100 px-5 py-4">
-                <h2 className="text-sm font-extrabold">결제 수단</h2>
+                <h2 className="text-[16px] font-bold">결제 수단</h2>
               </div>
-              <div className="px-5 py-5">
-                <RadioRow
-                  name="pay"
+              <div className="py-2">
+                <PayMethodRow
                   value="CARD"
                   checked={payMethod === "CARD"}
                   onChange={() => setPayMethod("CARD")}
                   title="간편 결제·카드 결제"
                 />
-                <RadioRow
-                  name="pay"
+                <PayMethodRow
                   value="VIRTUAL_ACCOUNT"
                   checked={payMethod === "VIRTUAL_ACCOUNT"}
                   onChange={() => setPayMethod("VIRTUAL_ACCOUNT")}
@@ -253,30 +266,21 @@ export default function CheckoutPage() {
             </div>
 
             {/* 약관 동의 */}
-            <div className="mt-6 rounded-xl border border-gray-100 bg-white">
+            <div className="mt-6">
               <div className="border-b border-gray-100 px-5 py-4">
-                <h2 className="text-sm font-extrabold">약관 동의</h2>
+                <h2 className="text-[16px] font-bold text-[#23222A]">약관 동의</h2>
               </div>
-              <div className="px-5 py-5">
-                <div className="flex items-center gap-3">
-                  <input id="agreeAll" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
-                  <label htmlFor="agreeAll" className="text-sm text-gray-800">
-                    이용약관 전체 동의
-                  </label>
-                </div>
-                <div className="flex items-center gap-3 my-3">
-                  <input id="agreeCancel" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
-                  <label htmlFor="agreeCancel" className="text-sm text-gray-500">
-                    (필수) 취소 규정 안내
-                  </label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input id="agreePolicy" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
-                  <label htmlFor="agreePolicy" className="text-sm text-gray-500">
-                    (필수) 티켓 이용정책 동의
-                  </label>
-                </div>
-                <div className="mt-4 text-xs text-gray-500">개인정보 제 3자 제공 안내</div>
+              <div>
+                {/* 전체 동의 - PayMethodRow 동일 스타일 */}
+                <PayMethodRow
+                  value="ALL"
+                  checked={agreeAll}
+                  onChange={handleAgreeAll}
+                  title="이용약관 전체 동의"
+                />
+                <AgreeRow label="(필수) 취소 규정 안내" checked={agrees[0]} onChange={() => handleAgree(0)} />
+                <AgreeRow label="(필수) 티켓 이용정책 동의" checked={agrees[1]} onChange={() => handleAgree(1)} />
+                <AgreeRow label="개인정보 제 3자 제공 안내" checked={agrees[2]} onChange={() => handleAgree(2)} />
               </div>
             </div>
           </section>
@@ -284,13 +288,13 @@ export default function CheckoutPage() {
           {/* RIGHT: 결제 정보 */}
           <aside className="col-span-12 lg:col-span-4">
             <div className="lg:sticky lg:top-6">
-              <div className="rounded-xl border border-gray-100 bg-white p-5">
-                <h3 className="text-sm font-extrabold">결제 정보</h3>
+              <div className="rounded-xl border border-[#DDDDE4] bg-white p-5">
+                <h3 className="text-[16px] font-bold text-[#23222A]">결제 정보</h3>
 
                 <div className="mt-4 space-y-3 text-sm">
                   {/* 티켓금액: 수량만큼 한 장씩 표시 */}
                   <div className="flex items-start justify-between">
-                    <div className="text-gray-500 shrink-0">티켓금액</div>
+                    <div className="text-[16px] font-medium text-[#68677E] shrink-0">티켓금액</div>
                     <div className="text-right font-semibold text-gray-900">
                       {Array.from({ length: ticketQty }).map((_, idx) => (
                         <div key={idx} className="mb-1">
@@ -307,13 +311,13 @@ export default function CheckoutPage() {
                 <div className="my-4 h-px bg-gray-100" />
 
                 <div className="flex items-center justify-between">
-                  <div className="text-sm font-semibold text-gray-700">최종 결제금액</div>
-                  <div className="text-lg font-extrabold text-red-500">{total.toLocaleString()}원</div>
+                  <div className="text-[16px] font-bold text-[#68677E]">최종 결제금액</div>
+                  <div className="text-[16px] font-bold text-[#F11322]">{total.toLocaleString()}원</div>
                 </div>
 
                 <button
                   type="button"
-                  className="mt-4 w-full rounded-md bg-red-500 px-4 py-3 text-sm font-extrabold text-white hover:bg-red-600 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-4 w-full rounded-md bg-[#F93E4B] px-4 py-3 text-[16px] font-semibold text-[#FFFFFF] hover:bg-red-600 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handlePay}
                   disabled={!isReady || paying}
                 >
@@ -348,7 +352,7 @@ function RadioRow({ name, value, checked, onChange, title, desc }: {
   desc?: string;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3 py-3.5 group">
+    <label className="flex cursor-pointer items-center gap-3 py-4 group">
       {/* 커스텀 라디오 */}
         <div
           className={`h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
@@ -371,7 +375,7 @@ function RadioRow({ name, value, checked, onChange, title, desc }: {
 function Line({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <div className="text-gray-500">{label}</div>
+      <div className="text-[16px] font-medium text-[#68677E] shrink-0">{label}</div>
       <div className="font-semibold text-gray-900">{value}</div>
     </div>
   );
@@ -379,3 +383,55 @@ function Line({ label, value }: { label: string; value: string }) {
 
 const inputCls =
   "w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-[#F11322]";
+
+  function PayMethodRow({
+  value,
+  checked,
+  onChange,
+  title,
+  desc,
+}: {
+  value: string;
+  checked: boolean;
+  onChange: () => void;
+  title: string;
+  desc?: string;
+}) {
+  return (
+    <label
+      className={`flex cursor-pointer items-center gap-3 px-5 py-3 transition-colors group ${
+        checked ? "bg-[#FFE6E8]" : "bg-white hover:bg-[#FFF5F6]"
+      }`}
+    >
+      <div
+        className={`h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+          checked
+            ? "border-[#CB0614] bg-[#CB0614]"
+            : "border-[#B9B9C6] bg-white group-hover:border-[#FDB5BA] group-hover:bg-[#FFF5F6]"
+        }`}
+      >
+        {checked && <div className="h-2 w-2 rounded-full bg-white" />}
+      </div>
+      <input type="radio" name="pay" value={value} checked={checked} onChange={onChange} className="hidden" />
+      <div>
+        <div className="text-[14px] font-bold text-[#23222A]">{title}</div>
+        {desc && <div className="text-xs text-gray-500">{desc}</div>}
+      </div>
+    </label>
+  );
+}
+
+function AgreeRow({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
+  return (
+    <div
+      className="flex items-center justify-between px-5 py-2 cursor-pointer hover:bg-[#FFF5F6] transition-colors"
+      onClick={onChange}
+    >
+      <div className="flex items-center gap-3">
+        <span className={`text-sm font-bold ${checked ? "text-[#F11322]" : "text-[#B9B9C6]"}`}>✓</span>
+        <span className="text-[14px] font-medium text-[#9E9DAF]">{label}</span>
+      </div>
+      <span className="text-gray-400 text-sm">{">"}</span>
+    </div>
+  );
+}

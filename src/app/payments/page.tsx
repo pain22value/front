@@ -85,7 +85,7 @@ export default function CheckoutPage() {
   };
 
   const [payMethod, setPayMethod] = useState<PayMethod>("CARD");
-  const [receipt, setReceipt] = useState<"NONE" | "PERSONAL" | "BIZ">("NONE");
+  const [receipt, setReceipt] = useState<"NONE" | "PERSONAL" | "BIZ" | null>(null);
 
   return (
     <div className="min-h-screen bg-white">
@@ -202,26 +202,30 @@ export default function CheckoutPage() {
             </div>
 
             {/* 티켓 수령 방법 */}
-            <div className="mt-6 rounded-xl border border-gray-100 bg-white">
-              <div className="border-b border-gray-100 px-5 py-4 flex items-center gap-1">
+            <div className="mt-6">
+              <div className="px-5 py-4 flex items-start gap-1">
                 {/* 필수 표시 * 추가 (피그마 기준) */}
-                <h2 className="text-sm font-extrabold">티켓 수령 방법</h2>
-                <span className="text-red-500 text-sm font-bold">*</span>
+                <h2 className="text-[16px] font-bold text-[#23222A]">티켓 수령 방법</h2>
+                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0.5">
+                  <circle cx="2" cy="2" r="2" fill="#F93E4B"/>
+                </svg>
               </div>
-              <div className="px-5 py-5">
-                <div className="rounded-md border border-gray-200 px-3 text-sm font-semibold">
+              <div className="px-5">
+                <div
+                  className={`rounded-sm px-4 inline-block min-w-[120px] border transition-colors cursor-pointer ${
+                    receipt === "NONE"
+                      ? "border-[#F11322] bg-[#FFE6E8]"
+                      : "border-[#B9B9C6] bg-white hover:border-[#F11322] hover:bg-[#FFF5F6]"
+                  }`}
+                >
                   <RadioRow
                     name="ticket"
                     value="ticket"
                     checked={receipt === "NONE"}
                     onChange={() => setReceipt("NONE")}
                     title="현장수령"
-                    desc="Text"
                   />
                 </div>
-                <p className="mt-2 text-xs text-red-500">
-                  예매 시 부여된 예약번호 또는 QR로 관람 당일 티켓을 수령해 입장합니다.
-                </p>
               </div>
             </div>
 
@@ -335,14 +339,7 @@ function FormRow({ label, children }: { label: string; children: React.ReactNode
   );
 }
 
-function RadioRow({
-  name,
-  value,
-  checked,
-  onChange,
-  title,
-  desc,
-}: {
+function RadioRow({ name, value, checked, onChange, title, desc }: {
   name: string;
   value: string;
   checked: boolean;
@@ -351,8 +348,18 @@ function RadioRow({
   desc?: string;
 }) {
   return (
-    <label className="flex cursor-pointer items-start gap-3 py-4">
-      <input type="radio" name={name} value={value} checked={checked} onChange={onChange} className="mt-1 h-4 w-4" />
+    <label className="flex cursor-pointer items-center gap-3 py-3.5 group">
+      {/* 커스텀 라디오 */}
+        <div
+          className={`h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+            checked
+              ? "border-[#CB0614] bg-[#CB0614]"
+              : "border-[#B9B9C6] bg-white group-hover:border-[#FDB5BA] group-hover:bg-[#FFF5F6]"
+          }`}
+        >
+        {checked && <div className="h-2 w-2 rounded-full bg-white" />}
+      </div>
+      <input type="radio" name={name} value={value} checked={checked} onChange={onChange} className="hidden" />
       <div>
         <div className="text-sm font-semibold text-gray-900">{title}</div>
         {desc && <div className="text-xs text-gray-500">{desc}</div>}

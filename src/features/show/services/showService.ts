@@ -64,4 +64,4 @@ const getSchedules = async (date: Date | undefined) => {
   ];
 };
 
-export const showService = { getRecommendations, getReviews, getSchedules };
+export const showService = { getRecommendations, getReviews, getSchedules, search };

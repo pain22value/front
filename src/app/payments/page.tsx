@@ -4,14 +4,12 @@ import { useTossPayment, type PayMethod } from "@/features/payments/hooks/useTos
 import { paymentService } from "@/features/payments/services/paymentService";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { custom } from "zod";
-import { Righteous } from "next/font/google";
 
 export default function CheckoutPage() {
   // 데모용 가격 계산
   const ticketUnitPrice = 160000;
   const ticketQty = 2;
-  const bookingFee = 2000;
+  const bookingFee = 4000; // 2000 → 4000으로 수정 (피그마 기준)
   const total = ticketUnitPrice * ticketQty + bookingFee;
 
   const clientKey = "test_ck_jExPeJWYVQxDje9xG7Mj349R5gvN";
@@ -46,8 +44,6 @@ export default function CheckoutPage() {
     customerMobilePhone: customerInfo.phone,
   });
 
-  //결제 성공시 결제 정보 저장
-
   const handlePay = async () => {
     if (!isReady || paying) return;
     setPaying(true);
@@ -59,27 +55,16 @@ export default function CheckoutPage() {
       // const res = await paymentService.saveInfo({ orderName, amount: total });
       // const orderId = res.orderId;
 
-      // 결제 요청 전 백엔드에 주문 정보 저장
       await fetch("http://api.truve.site:8080/api/payments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // //결제수단
-          // orderId,
-          // amount: total,
-          // 예약자정보,
-          // customerName: customerInfo.name,
-          // customerBirth: customerInfo.birth,
-          // customerEmail: customerInfo.email,
-          // customerPhone: customerInfo.phone,
-          // //수령방법
-          // //약관동의여부
           orderId,
           amount: total,
           method: payMethod,
         }),
       });
-      
+
       // 임시 데이터
       sessionStorage.setItem("pendingBooking", JSON.stringify({
         showTitle: "뮤지컬 <킹키부츠>",
@@ -98,11 +83,7 @@ export default function CheckoutPage() {
       setPaying(false);
     }
   };
-/* payMethod 상태 타입을 PayMethod로 : 박영준
-  const [payMethod, setPayMethod] = useState<"CARD" | "EASY" | "TRANSFER">(
-    "CARD",
-  );
-*/
+
   const [payMethod, setPayMethod] = useState<PayMethod>("CARD");
   const [receipt, setReceipt] = useState<"NONE" | "PERSONAL" | "BIZ">("NONE");
 
@@ -112,106 +93,116 @@ export default function CheckoutPage() {
       <header className="border-b border-gray-100">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <div className="text-[28px] font-righteous text-[#23222A]">truve</div>
-          <div className="text-md text-red-500 font-semibold">결제 취소</div>
+          <div className="text-[18px] text-[#CB0614] font-semibold">예매 취소</div>
         </div>
+        {/* 서브헤더: 공연 정보 + 결제 가능 시간 */}
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 border-t border-b border-gray-100">
-          <p className="text-md font-bold tracking-tight">{"뮤지컬<킹키부츠> -2026.01.26(월) 오후 7:00"}</p>
-          <div className="text-sm text-gray-500">
-            결제 마감 시간 <span className="font-semibold text-red-500">00:20</span>
+          <p className="text-[16px] font-bold text-[#23222A]">{"뮤지컬<킹키부츠> -2026.01.26(월) 오후 7:00"}</p>
+          <div className="text-[16px] font-bold text-[#23222A]">
+            {/* "결제 마감 시간" → "결제 가능 시간" (피그마 기준) */}
+            결제 가능 시간 <span className="text-[16px] font-bold text-[#F93E4B]">07:00</span>
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8">
-        <Link href="/cart" className="text-sm font-medium text-gray-500 hover:text-gray-900">
-          {"<"} 좌석선택페이지로 돌아가기
+        <Link href="/shows/1" className="flex items-center gap-1 px-6 mb-8">
+          <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.9715 1.68725C15.0617 1.59178 15.1322 1.47947 15.179 1.35674C15.2259 1.23401 15.248 1.10327 15.2443 0.971965C15.2406 0.840663 15.2111 0.711378 15.1574 0.591492C15.1037 0.471606 15.027 0.363467 14.9315 0.273249C14.836 0.183031 14.7237 0.112501 14.601 0.0656852C14.4782 0.0188697 14.3475 -0.00331434 14.2162 0.000400002C14.0849 0.00411435 13.9556 0.0336542 13.8357 0.0873329C13.7158 0.141012 13.6077 0.217778 13.5175 0.313249L5.01748 9.31325C4.84195 9.49892 4.74414 9.74474 4.74414 10.0002C4.74414 10.2558 4.84195 10.5016 5.01748 10.6872L13.5175 19.6882C13.6071 19.7858 13.7152 19.8646 13.8355 19.92C13.9559 19.9754 14.086 20.0064 14.2184 20.0111C14.3508 20.0158 14.4828 19.9942 14.6068 19.9474C14.7307 19.9007 14.8442 19.8298 14.9405 19.7388C15.0368 19.6479 15.1141 19.5387 15.1679 19.4176C15.2216 19.2965 15.2508 19.166 15.2537 19.0335C15.2566 18.9011 15.2331 18.7694 15.1847 18.6461C15.1362 18.5228 15.0638 18.4103 14.9715 18.3153L7.11948 10.0002L14.9715 1.68725Z" fill="#68677E"/>
+          </svg>
+          <span className="text-[18px] font-bold text-[#23222A]">티켓 결제</span>
         </Link>
+
         <div className="grid grid-cols-12 gap-8">
           {/* LEFT */}
           <section className="col-span-12 lg:col-span-8">
-            <div className="mb-6">
-              <div>
-                <h1 className="text-2xl font-extrabold">티켓 결제</h1>
-                <p className="mt-1 text-sm text-gray-500">주문 정보를 확인하고 결제를 진행해주세요.</p>
-              </div>
+            {/* 티켓 주문 상세 */}
+            <div className="mb-4">
+              <h1 className="text-[16px] font-bold text-[#23222A] px-5">티켓 주문 상세</h1>
             </div>
 
-            {/* 주문 상품 */}
-            <div className="rounded-xl border border-gray-100 bg-white">
-              <div className="border-b border-gray-100 px-5 py-4">
-                <h2 className="text-sm font-extrabold">티켓 주문 상세</h2>
+            <div className="bg-white px-5 py-5">
+              {/* 공연 제목 + 일시 */}
+              <div className="text-[16px] font-semibold text-[#23222A]">{"뮤지컬 <킹키부츠>"}</div>
+              <div className="text-[16px] font-regular text-[#68677E]">2026.01.26(월) 오후 7:00 · 샤롯데씨어터</div>
+
+              {/* 좌석 등급 + 수량 */}
+              <div className="mt-8 flex items-center gap-1 text-sm">
+                <span className="text-[16px] font-bold text-[#23222A]">VIP석</span>
+                <span className="text-[16px] font-bold text-[#F93E4B]">{ticketQty}</span>
               </div>
 
-              <div className="space-y-4 px-5 py-5">
-                <div className="flex items-end gap-4 justify-between">
-                  <div className="flex-1">
-                    <div>
-                      <div className="text-sm font-semibold text-gray-900">{"뮤지컬 <킹키부츠>"}</div>
-                      <div className="mt-1 text-xs text-gray-500">2026.01.26(월) 오후 7:00 · 샤롯데씨어터</div>
-                    </div>
-                    {/* 추가 내용 시작 */}
-                    <div className="mt-4 space-y-3 text-sm text-gray-900">
-                      <div className="flex items-center gap-1">
-                        <span className="font-semibold">VIP석</span>
-                        <span className="text-red-500 font-semibold">2</span>
-                      </div>
+              {/* 좌석 정보 */}
+              <div className="mt-4 flex gap-4">
+                <div className="text-[14px] font-medium text-[#68677E] w-20 shrink-0">좌석 정보</div>
+                <ul className="text-[14px] font-medium text-[#23222A]">
+                  <li>1층 B구역 16열 6번</li>
+                  <li>1층 B구역 16열 7번</li>
+                </ul>
+              </div>
 
-                      <div>
-                        <div className="text-xs font-semibold text-gray-700">좌석 정보</div>
-
-                        <ul className="mt-2 space-y-1 text-sm text-gray-900">
-                          <li className="flex items-center gap-2">
-                            <span className="h-1.5 w-1.5 rounded-full bg-gray-300" />
-                            1층 B구역 16열 6번
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="h-1.5 w-1.5 rounded-full bg-gray-300" />
-                            1층 B구역 16열 7번
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    {/* 추가 내용 끝 */}
-                  </div>
-
-                  <div className="text-sm font-bold text-gray-900">{total.toLocaleString()}원</div>
-                </div>
+              {/* 가격 정보 */}
+              <div className="mt-2 flex gap-4 text-sm">
+                <span className="text-[14px] font-medium text-[#68677E] w-20 shrink-0">가격 정보</span>
+                <span className="text-[14px] font-medium text-[#23222A]">
+                  {ticketUnitPrice.toLocaleString()}원 X {ticketQty}매
+                </span>
               </div>
             </div>
 
             {/* 예약자 정보 */}
-            <div className="mt-6 rounded-xl border border-gray-100 bg-white ">
-              <div className="border-b border-gray-100 px-5 py-4">
+            <div className="mt-6 rounded-xl border border-gray-100 bg-white">
+              <div className="border-b border-gray-100 px-5 py-4 flex items-center gap-1">
+                {/* 필수 표시 * 추가 (피그마 기준) */}
                 <h2 className="text-sm font-extrabold">예약자 정보</h2>
+                <span className="text-red-500 text-sm font-bold">*</span>
               </div>
-
               <div className="px-5 py-5">
                 <FormRow label="예약자">
-                  <input name="name" className={inputCls} onChange={handleChange} placeholder="이름을 입력하세요" />
+                  <input
+                    name="name"
+                    className={inputCls}
+                    onChange={handleChange}
+                    placeholder="홍길동" // 피그마 기준 placeholder
+                  />
                 </FormRow>
                 <FormRow label="생년월일">
-                  <input name="birth" className={inputCls} onChange={handleChange} placeholder="ex)19960101" />
+                  <input
+                    name="birth"
+                    className={inputCls}
+                    onChange={handleChange}
+                    placeholder="20XX-XX-XX" // 피그마 기준 placeholder
+                  />
                 </FormRow>
                 <FormRow label="이메일">
-                  <input name="email" onChange={handleChange} className={inputCls} placeholder="이름을 입력하세요" />
+                  <input
+                    name="email"
+                    onChange={handleChange}
+                    className={inputCls}
+                    placeholder="XXXX@naver.com" // 피그마 기준 placeholder
+                  />
                 </FormRow>
                 <FormRow label="휴대폰">
                   <input
                     name="phone"
                     className={inputCls}
                     onChange={handleChange}
-                    placeholder="010-0000-0000"
+                    placeholder="010-1234-5678" // 피그마 기준 placeholder
                     inputMode="tel"
                   />
                 </FormRow>
-                <p className="mt-2 text-xs">티켓 수령 및 본인 확인을 위해 정확한 정보를 입력해주세요.</p>
+                <p className="mt-2 text-xs text-gray-500">
+                  티켓 수령 및 본인 확인을 위해 정확한 정보를 입력해주세요.
+                </p>
               </div>
             </div>
 
             {/* 티켓 수령 방법 */}
             <div className="mt-6 rounded-xl border border-gray-100 bg-white">
-              <div className="border-b border-gray-100 px-5 py-4">
+              <div className="border-b border-gray-100 px-5 py-4 flex items-center gap-1">
+                {/* 필수 표시 * 추가 (피그마 기준) */}
                 <h2 className="text-sm font-extrabold">티켓 수령 방법</h2>
+                <span className="text-red-500 text-sm font-bold">*</span>
               </div>
               <div className="px-5 py-5">
                 <div className="rounded-md border border-gray-200 px-3 text-sm font-semibold">
@@ -221,6 +212,7 @@ export default function CheckoutPage() {
                     checked={receipt === "NONE"}
                     onChange={() => setReceipt("NONE")}
                     title="현장수령"
+                    desc="Text"
                   />
                 </div>
                 <p className="mt-2 text-xs text-red-500">
@@ -234,7 +226,6 @@ export default function CheckoutPage() {
               <div className="border-b border-gray-100 px-5 py-4">
                 <h2 className="text-sm font-extrabold">결제 수단</h2>
               </div>
-
               <div className="px-5 py-5">
                 <RadioRow
                   name="pay"
@@ -258,7 +249,6 @@ export default function CheckoutPage() {
               <div className="border-b border-gray-100 px-5 py-4">
                 <h2 className="text-sm font-extrabold">약관 동의</h2>
               </div>
-
               <div className="px-5 py-5">
                 <div className="flex items-center gap-3">
                   <input id="agreeAll" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
@@ -267,14 +257,14 @@ export default function CheckoutPage() {
                   </label>
                 </div>
                 <div className="flex items-center gap-3 my-3">
-                  <input id="agreeAll" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
-                  <label htmlFor="agreeAll" className="text-sm text-gray-500">
+                  <input id="agreeCancel" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
+                  <label htmlFor="agreeCancel" className="text-sm text-gray-500">
                     (필수) 취소 규정 안내
                   </label>
                 </div>
                 <div className="flex items-center gap-3">
-                  <input id="agreeAll" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
-                  <label htmlFor="agreeAll" className="text-sm text-gray-500">
+                  <input id="agreePolicy" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
+                  <label htmlFor="agreePolicy" className="text-sm text-gray-500">
                     (필수) 티켓 이용정책 동의
                   </label>
                 </div>
@@ -283,7 +273,7 @@ export default function CheckoutPage() {
             </div>
           </section>
 
-          {/* RIGHT */}
+          {/* RIGHT: 결제 정보 */}
           <aside className="col-span-12 lg:col-span-4">
             <div className="lg:sticky lg:top-6">
               <div className="rounded-xl border border-gray-100 bg-white p-5">
@@ -292,10 +282,10 @@ export default function CheckoutPage() {
                 <div className="mt-4 space-y-3 text-sm">
                   {/* 티켓금액: 수량만큼 한 장씩 표시 */}
                   <div className="flex items-start justify-between">
-                    <div className="text-gray-500">티켓금액</div>
+                    <div className="text-gray-500 shrink-0">티켓금액</div>
                     <div className="text-right font-semibold text-gray-900">
                       {Array.from({ length: ticketQty }).map((_, idx) => (
-                        <div key={idx} className="mb-3">
+                        <div key={idx} className="mb-1">
                           {ticketUnitPrice.toLocaleString()}원
                         </div>
                       ))}
@@ -315,8 +305,9 @@ export default function CheckoutPage() {
 
                 <button
                   type="button"
-                  className="mt-4 w-full rounded-md bg-red-500 px-4 py-3 text-sm font-extrabold text-white hover:bg-red-600 active:scale-[0.99]"
+                  className="mt-4 w-full rounded-md bg-red-500 px-4 py-3 text-sm font-extrabold text-white hover:bg-red-600 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handlePay}
+                  disabled={!isReady || paying}
                 >
                   총 {total.toLocaleString()}원 결제하기
                 </button>

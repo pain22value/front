@@ -5,6 +5,7 @@ import { paymentService } from "@/features/payments/services/paymentService";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { custom } from "zod";
+import { Righteous } from "next/font/google";
 
 export default function CheckoutPage() {
   // 데모용 가격 계산
@@ -110,10 +111,10 @@ export default function CheckoutPage() {
       {/* Top bar */}
       <header className="border-b border-gray-100">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <div className="text-lg font-black tracking-tight">truve</div>
+          <div className="text-[28px] font-righteous text-[#23222A]">truve</div>
           <div className="text-md text-red-500 font-semibold">결제 취소</div>
         </div>
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 border-t border-b border-gray-100">
           <p className="text-md font-bold tracking-tight">{"뮤지컬<킹키부츠> -2026.01.26(월) 오후 7:00"}</p>
           <div className="text-sm text-gray-500">
             결제 마감 시간 <span className="font-semibold text-red-500">00:20</span>

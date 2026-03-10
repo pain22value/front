@@ -134,7 +134,7 @@ export default function CheckoutPage() {
 
               {/* 좌석 정보 */}
               <div className="mt-4 flex gap-4">
-                <div className="text-[14px] font-medium text-[#68677E] w-20 shrink-0">좌석 정보</div>
+                <div className="text-[14px] font-medium text-[#68677E] w-16 shrink-0">좌석 정보</div>
                 <ul className="text-[14px] font-medium text-[#23222A]">
                   <li>1층 B구역 16열 6번</li>
                   <li>1층 B구역 16열 7번</li>
@@ -143,21 +143,25 @@ export default function CheckoutPage() {
 
               {/* 가격 정보 */}
               <div className="mt-2 flex gap-4 text-sm">
-                <span className="text-[14px] font-medium text-[#68677E] w-20 shrink-0">가격 정보</span>
+                <span className="text-[14px] font-medium text-[#68677E] w-16 shrink-0">가격 정보</span>
                 <span className="text-[14px] font-medium text-[#23222A]">
                   {ticketUnitPrice.toLocaleString()}원 X {ticketQty}매
                 </span>
               </div>
             </div>
 
+            <div className="mt-4 h-px bg-[#F1F1F4]" />
+
             {/* 예약자 정보 */}
-            <div className="mt-6 rounded-xl border border-gray-100 bg-white">
-              <div className="border-b border-gray-100 px-5 py-4 flex items-center gap-1">
+            <div className="mt-6">
+              <div className="px-5 py-4 flex items-start gap-1">
                 {/* 필수 표시 * 추가 (피그마 기준) */}
-                <h2 className="text-sm font-extrabold">예약자 정보</h2>
-                <span className="text-red-500 text-sm font-bold">*</span>
+                <h2 className="text-[16px] font-bold text-[#23222A]">예약자 정보</h2>
+                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0.5">
+                  <circle cx="2" cy="2" r="2" fill="#F93E4B"/>
+                </svg>
               </div>
-              <div className="px-5 py-5">
+              <div className="px-5">
                 <FormRow label="예약자">
                   <input
                     name="name"
@@ -191,7 +195,7 @@ export default function CheckoutPage() {
                     inputMode="tel"
                   />
                 </FormRow>
-                <p className="mt-2 text-xs text-gray-500">
+                <p className="mt-4 text-[14px] font-medium text-[#68677E]">
                   티켓 수령 및 본인 확인을 위해 정확한 정보를 입력해주세요.
                 </p>
               </div>
@@ -324,9 +328,9 @@ export default function CheckoutPage() {
 
 function FormRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-12 gap-3 py-3">
-      <div className="col-span-12 text-sm font-semibold text-gray-800 sm:col-span-3 sm:pt-2">{label}</div>
-      <div className="col-span-12 sm:col-span-9">{children}</div>
+    <div className="flex items-center gap-3 py-1">
+      <div className="text-[14px] font-medium text-[#68677E] w-16 shrink-0">{label}</div>
+      <div className="flex-1">{children}</div>
     </div>
   );
 }
@@ -367,4 +371,4 @@ function Line({ label, value }: { label: string; value: string }) {
 }
 
 const inputCls =
-  "w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-gray-400";
+  "w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-[#F11322]";

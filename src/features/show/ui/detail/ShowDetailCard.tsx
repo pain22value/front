@@ -2,30 +2,27 @@
 
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { formatShowPeriod } from "@/shared/utils/date";
 
 export function ShowDetailCard({
-  posterUrl,
   title,
+  venue, // place -> venue
+  runtimeMin, // duration -> runtimeMin
+  ageLimit,
+  startTime,
+  endTime,
+  description,
+  posterImg, // posterUrl -> posterImg
+  noticeImg,
+  seatGrades, // prices -> seatGrades
   ranking,
   truveIndex,
-  place,
-  period,
-  duration,
-  ageLimit,
-  prices,
   benefit,
-}: {
-  posterUrl: string;
-  title: string;
-  ranking?: string;
-  truveIndex?: number;
-  place: string;
-  period: string;
-  duration: string;
-  ageLimit: string;
-  prices: { seat: string; price: string }[];
-  benefit?: string;
-}) {
+}: ShowDetail) {
+  const periodString = formatShowPeriod(startTime, endTime);
+  const durationString = `${runtimeMin}분 (인터미션 포함)`;
+  const ageLimitString = ageLimit === 0 ? "전체 관람가" : `${ageLimit}세 이상 관람가능`;
+
   return (
     <Card className="w-8/10 py-0 bg-transparent! border-none! shadow-none!">
       <CardHeader>
@@ -40,7 +37,7 @@ export function ShowDetailCard({
       <CardContent className="flex gap-2 xs:gap-4 sm:gap-6 md:gap-8 px-0">
         <div className="relative ">
           <Image
-            src={posterUrl}
+            src={posterImg}
             alt={`${title} 포스터`}
             width={300}
             height={400}
@@ -51,20 +48,20 @@ export function ShowDetailCard({
         <div className="space-y-8 whitespace-nowrap">
           <dl className="grid grid-cols-[6rem_1fr] gap-y-4 text-sm [&_dt]:font-medium [&_dt]:text-muted-foreground">
             <dt>장소</dt>
-            <dd>{place}</dd>
+            <dd>{venue}</dd>
             <dt>공연기간</dt>
-            <dd>{period}</dd>
+            <dd>{periodString}</dd>
             <dt>공연시간</dt>
-            <dd>{duration}</dd>
+            <dd>{durationString}</dd>
             <dt>관람연령</dt>
-            <dd>{ageLimit}</dd>
+            <dd>{ageLimitString}</dd>
             <dt>가격</dt>
             <dd>
               <ul className="space-y-1">
-                {prices.map((price, index) => (
-                  <li key={index} className="flex justify-between">
-                    <span>{price.seat}</span>
-                    <span>{price.price}</span>
+                {seatGrades.map((grade) => (
+                  <li key={grade.id} className="flex justify-between">
+                    <span>{grade.name}</span>
+                    <span>{grade.price.toLocaleString()}원</span>
                   </li>
                 ))}
               </ul>

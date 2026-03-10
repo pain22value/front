@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import CaptchaModal from "./CaptchaModal";
 import { usePostHog } from "posthog-js/react";
-import { useInteractionStore } from "@/store/useInteractionStore";
+import { useInteractionStore } from "@/shared/store/useInteractionStore";
 
 export function ShowTicketingCard() {
   const [date, setDate] = useState<Date | undefined>(new Date());

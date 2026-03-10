@@ -1,4 +1,4 @@
-export const artists: Artist[] = [
+export const actors: Actor[] = [
   {
     id: 1,
     name: "김호영",

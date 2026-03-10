@@ -1,4 +1,4 @@
-import { artists } from "./artists";
+import { actors } from "./actors";
 
 export const tabs = [
   { value: "info", label: "공연정보" },
@@ -7,7 +7,7 @@ export const tabs = [
 ];
 
 export const showInfoData = {
-  cast: { title: "캐스팅", artists: artists },
+  cast: { title: "캐스팅", actors: actors },
   banner: {
     text: `배우를 선택하면 아티스트 페이지로 이동할 수 있습니다.
     관심 배우를 설정하고 소식을 미리 받아보세요.`,

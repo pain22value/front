@@ -1,7 +1,8 @@
 type User = {
   email: string;
   name: string;
-  // roles: string[];
+  role: string;
+  provider: string | null;
 };
 
 type SignupRequest = {

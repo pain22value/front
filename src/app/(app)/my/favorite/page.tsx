@@ -1,9 +1,9 @@
-import ArtistList from "./ArtistList";
+import ActorList from "@/features/my/ui/ActorList";
 
-export default function page() {
+export default function FavoritePage() {
   return (
     <section className="pl-20">
-      <ArtistList />
+      <ActorList />
     </section>
   );
 }

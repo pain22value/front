@@ -12,14 +12,17 @@ import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 
 export default function Header() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
   const { toggleSidebar } = useSidebarStore();
+
+  // 다크 테마(히어로 섹션 등)가 적용되는 경로 패턴들 정의
+  const darkPaths = ["/", "/actors/"];
+  const isDarkPath = darkPaths.some((p) => (p === "/" ? pathname === "/" : pathname.startsWith(p)));
 
   return (
     <header
       className={cn(
         "sticky top-0 z-50 flex w-full items-center border-b transition-colors",
-        isHome ? "dark bg-background text-foreground" : "bg-background",
+        isDarkPath ? "dark bg-background text-foreground" : "bg-background",
       )}
     >
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Heart, LayoutGrid, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { artists } from "@/shared/data/artists";
+import { actors } from "@/shared/data/actors";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 import { useEffect, useRef } from "react";
@@ -87,7 +87,7 @@ export default function Sidebar() {
         <Link href="/" className="flex items-center gap-4 w-full cursor-pointer group">
           <Button
             variant="ghost"
-            className="size-10 flex items-center justify-center rounded-lg text-3xl font-bold shrink-0
+            className="size-9 flex items-center justify-center rounded-lg text-2xl font-bold shrink-0
               border-2 border-black bg-white text-black
               group-hover:bg-black group-hover:text-white group-hover:border-black
               hover:bg-black hover:text-white hover:border-black
@@ -103,7 +103,7 @@ export default function Sidebar() {
             after:bg-black dark:after:bg-white
             after:transition-all after:duration-300 group-hover:after:w-full"
           >
-            truve
+            홈
           </span>
         </Link>
 
@@ -112,7 +112,7 @@ export default function Sidebar() {
           <Button
             variant="secondary"
             size="icon"
-            className="size-10 rounded-lg shrink-0
+            className="size-9 rounded-lg shrink-0
               bg-gray-900 group-hover:bg-white
               [&_svg]:fill-white [&_svg]:stroke-white
               group-hover:[&_svg]:fill-black group-hover:[&_svg]:stroke-black
@@ -128,7 +128,7 @@ export default function Sidebar() {
             after:bg-black dark:after:bg-white
             after:transition-all after:duration-300 group-hover:after:w-full"
           >
-            전체 서비스
+            공연 목록
           </span>
         </Link>
       </div>
@@ -140,10 +140,14 @@ export default function Sidebar() {
       {/* 배우 */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
         <div className="flex flex-col gap-5 w-full">
-          {artists.map((artist) => (
-            <div key={artist.id} className="flex items-center gap-4 w-full cursor-pointer group">
-              <Avatar className="size-10 rounded-lg shrink-0 transition-transform group-hover:scale-105">
-                <AvatarImage src={artist.image} className="object-cover" />
+          {actors.map((actor) => (
+            <Link
+              key={actor.id}
+              href={`/actors/${actor.id}`}
+              className="flex items-center gap-4 w-full cursor-pointer group no-underline text-foreground"
+            >
+              <Avatar className="size-9 rounded-lg shrink-0 transition-transform group-hover:scale-105">
+                <AvatarImage src={actor.image} className="object-cover" />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
               <span
@@ -152,9 +156,9 @@ export default function Sidebar() {
                 after:bg-black dark:after:bg-white
                 after:transition-all after:duration-300 group-hover:after:w-full"
               >
-                {artist.name}
+                {actor.name}
               </span>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -169,7 +173,7 @@ export default function Sidebar() {
           <Button
             variant="secondary"
             size="icon"
-            className="size-10 rounded-lg shrink-0
+            className="size-9 rounded-lg shrink-0
               bg-gray-900 group-hover:bg-white
               [&_svg]:fill-white [&_svg]:stroke-white
               group-hover:[&_svg]:fill-black group-hover:[&_svg]:stroke-black
@@ -185,7 +189,7 @@ export default function Sidebar() {
             after:bg-black dark:after:bg-white
             after:transition-all after:duration-300 group-hover:after:w-full"
           >
-            관심 리스트
+            즐겨찾기
           </span>
         </Link>
 
@@ -193,7 +197,7 @@ export default function Sidebar() {
           <Button
             variant="secondary"
             size="icon"
-            className="size-10 rounded-lg shrink-0
+            className="size-9 rounded-lg shrink-0
               bg-gray-900 group-hover:bg-white
               [&_svg]:fill-white [&_svg]:stroke-white
               group-hover:[&_svg]:fill-black group-hover:[&_svg]:stroke-black
@@ -209,7 +213,7 @@ export default function Sidebar() {
             after:bg-black dark:after:bg-white
             after:transition-all after:duration-300 group-hover:after:w-full"
           >
-            피드백
+            라이브 채팅
           </span>
         </div>
       </div>

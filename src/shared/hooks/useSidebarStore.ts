@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
-interface SidebarState {
+type SidebarState = {
   isExpanded: boolean;
   toggleSidebar: () => void;
   setExpanded: (expanded: boolean) => void;
-}
+};
 
 export const useSidebarStore = create<SidebarState>((set) => ({
   isExpanded: false,

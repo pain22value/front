@@ -6,6 +6,8 @@ import { cn } from "@/shared/utils/cn";
 import { recommendShows } from "@/shared/data/shows";
 import { useGetRecommendations } from "../../hooks/useGetRecommendations";
 
+import { formatShowPeriod } from "@/shared/utils/date";
+
 export default function HomeRecommendSection1() {
   const { data: shows } = useGetRecommendations();
 
@@ -18,7 +20,7 @@ export default function HomeRecommendSection1() {
         itemClassName="sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
         showPagination
         showButtonsOnHover
-        renderItem={(item, index, isSelected) => (
+        renderItem={(item: Show, index, isSelected) => (
           <div
             className={cn(
               "group relative overflow-hidden rounded-xl transition-all duration-300 ease-in-out",
@@ -38,7 +40,7 @@ export default function HomeRecommendSection1() {
             <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4">
               <h3 className="text-lg font-semibold text-white">{item.title}</h3>
               <p className="text-sm text-white/80">{item.venue}</p>
-              <p className="text-sm text-white/70">{item.period}</p>
+              <p className="text-sm text-white/70">{formatShowPeriod(item.startTime, item.endTime)}</p>
             </div>
           </div>
         )}

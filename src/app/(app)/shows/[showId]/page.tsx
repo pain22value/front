@@ -37,9 +37,6 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
   const { showId } = await params;
   console.log(showId);
   // const show = await fetchShowDetail(showId);
-  // const displayShow = show ?? mockShow;
-  // const displayInfo = displayShow.info ?? showInfoData;
-  // console.log({ show, displayShow });
 
   return (
     <section className="pl-20">
@@ -48,17 +45,9 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
           <div className="col-span-[100%] md:col-span-[65%] space-y-20">
             {/* 상단 뮤지컬 정보 */}
             <ShowDetailCard {...mockShow} />
-            {/* <ShowDetailCard {...displayShow} /> */}
-
             {/* 탭 부분 */}
-            <ShowDetailTabs
-              // info={displayInfo}
-              info={showInfoData}
-              casting={<ShowScheduleTap />}
-              review={<ShowReviewTab />}
-            />
+            <ShowDetailTabs info={showInfoData} casting={<ShowScheduleTap />} review={<ShowReviewTab />} />
           </div>
-
           {/* 모바일을 제외한 화면에서 우측에 고정된 상태로 떠있음 */}
           <aside className="hidden md:block sticky top-[calc(var(--header-height)+2.5rem)] self-start">
             <ShowTicketingCard />

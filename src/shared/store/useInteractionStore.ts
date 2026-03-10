@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
-interface InteractionState {
+type InteractionState = {
   isTicketingFlow: boolean;
   startTicketingFlow: () => void;
   stopTicketingFlow: () => void;
-}
+};
 
 export const useInteractionStore = create<InteractionState>((set) => ({
   isTicketingFlow: false,

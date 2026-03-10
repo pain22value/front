@@ -45,15 +45,20 @@ export default function CheckoutPage() {
   });
 
   const handlePay = async () => {
+    const newErrors = {
+      name: !customerInfo.name || customerInfo.name === "미기입" ? "이름을 입력해주세요" : "",
+      birth: !customerInfo.birth || customerInfo.birth === "미기입" ? "8자리의 생년월일을 입력해주세요" : "",
+      email: !customerInfo.email || customerInfo.email === "미기입" ? "올바르지 않은 이메일 형식입니다" : "",
+      phone: !customerInfo.phone || customerInfo.phone === "미기입" ? "-를 제외한 11자리의 전화번호를 입력해주세요" : "",
+    };
+    setErrors(newErrors);
+    if (Object.values(newErrors).some(Boolean)) return; // 에러 있으면 여기서 종료
+
     if (!isReady || paying) return;
     setPaying(true);
 
     try {
       const orderId = crypto.randomUUID();
-
-      // TODO: 백엔드 나오면 여기만 교체
-      // const res = await paymentService.saveInfo({ orderName, amount: total });
-      // const orderId = res.orderId;
 
       await fetch("http://api.truve.site:8080/api/payments", {
         method: "POST",
@@ -65,7 +70,6 @@ export default function CheckoutPage() {
         }),
       });
 
-      // 임시 데이터
       sessionStorage.setItem("pendingBooking", JSON.stringify({
         showTitle: "뮤지컬 <킹키부츠>",
         datetime: "2026.01.26(월) 오후 7:00",
@@ -73,21 +77,30 @@ export default function CheckoutPage() {
         method: payMethod,
       }));
 
+      if (!payMethod) return;
       await requestPayment({
         orderId,
         orderName,
         amountValue: total,
         method: payMethod,
       });
+    } catch (e) {
+      console.error(e);
     } finally {
       setPaying(false);
     }
   };
 
-  const [payMethod, setPayMethod] = useState<PayMethod>("CARD");
+  const [payMethod, setPayMethod] = useState<PayMethod | undefined>(undefined);
   const [receipt, setReceipt] = useState<"NONE" | "PERSONAL" | "BIZ" | null>(null);
   const [agreeAll, setAgreeAll] = useState(false);
   const [agrees, setAgrees] = useState([false, false, false]);
+  const [errors, setErrors] = useState({
+    name: "",
+    birth: "",
+    email: "",
+    phone: "",
+  });
 
   const handleAgreeAll = () => {
     const next = !agreeAll;
@@ -177,36 +190,36 @@ export default function CheckoutPage() {
                 </svg>
               </div>
               <div>
-                <FormRow label="예약자">
+                <FormRow label="예약자" error={errors.name}>
                   <input
                     name="name"
-                    className={inputCls}
+                    className={errors.name ? inputErrorCls : inputCls}
                     onChange={handleChange}
-                    placeholder="홍길동" // 피그마 기준 placeholder
+                    placeholder="홍길동"
                   />
                 </FormRow>
-                <FormRow label="생년월일">
+                <FormRow label="생년월일" error={errors.birth}>
                   <input
                     name="birth"
-                    className={inputCls}
+                    className={errors.birth ? inputErrorCls : inputCls}
                     onChange={handleChange}
-                    placeholder="20XX-XX-XX" // 피그마 기준 placeholder
+                    placeholder="20XX-XX-XX"
                   />
                 </FormRow>
-                <FormRow label="이메일">
+                <FormRow label="이메일" error={errors.email}>
                   <input
                     name="email"
                     onChange={handleChange}
-                    className={inputCls}
-                    placeholder="XXXX@naver.com" // 피그마 기준 placeholder
+                    className={errors.email ? inputErrorCls : inputCls}
+                    placeholder="XXXX@naver.com"
                   />
                 </FormRow>
-                <FormRow label="휴대폰">
+                <FormRow label="휴대폰" error={errors.phone}>
                   <input
                     name="phone"
-                    className={inputCls}
+                    className={errors.phone ? inputErrorCls : inputCls}
                     onChange={handleChange}
-                    placeholder="010-1234-5678" // 피그마 기준 placeholder
+                    placeholder="010-1234-5678"
                     inputMode="tel"
                   />
                 </FormRow>
@@ -254,7 +267,7 @@ export default function CheckoutPage() {
                   value="CARD"
                   checked={payMethod === "CARD"}
                   onChange={() => setPayMethod("CARD")}
-                  title="간편 결제·카드 결제"
+                  title="간편 결제 · 카드 결제"
                 />
                 <PayMethodRow
                   value="VIRTUAL_ACCOUNT"

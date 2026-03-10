@@ -121,7 +121,7 @@ export default function CheckoutPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8">
-        <Link href="/shows/1" className="flex items-center gap-1 px-6 mb-8">
+        <Link href="/shows/1" className="flex items-center gap-1 px-1 mb-8">
           <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14.9715 1.68725C15.0617 1.59178 15.1322 1.47947 15.179 1.35674C15.2259 1.23401 15.248 1.10327 15.2443 0.971965C15.2406 0.840663 15.2111 0.711378 15.1574 0.591492C15.1037 0.471606 15.027 0.363467 14.9315 0.273249C14.836 0.183031 14.7237 0.112501 14.601 0.0656852C14.4782 0.0188697 14.3475 -0.00331434 14.2162 0.000400002C14.0849 0.00411435 13.9556 0.0336542 13.8357 0.0873329C13.7158 0.141012 13.6077 0.217778 13.5175 0.313249L5.01748 9.31325C4.84195 9.49892 4.74414 9.74474 4.74414 10.0002C4.74414 10.2558 4.84195 10.5016 5.01748 10.6872L13.5175 19.6882C13.6071 19.7858 13.7152 19.8646 13.8355 19.92C13.9559 19.9754 14.086 20.0064 14.2184 20.0111C14.3508 20.0158 14.4828 19.9942 14.6068 19.9474C14.7307 19.9007 14.8442 19.8298 14.9405 19.7388C15.0368 19.6479 15.1141 19.5387 15.1679 19.4176C15.2216 19.2965 15.2508 19.166 15.2537 19.0335C15.2566 18.9011 15.2331 18.7694 15.1847 18.6461C15.1362 18.5228 15.0638 18.4103 14.9715 18.3153L7.11948 10.0002L14.9715 1.68725Z" fill="#68677E"/>
           </svg>
@@ -133,10 +133,10 @@ export default function CheckoutPage() {
           <section className="col-span-12 lg:col-span-8">
             {/* 티켓 주문 상세 */}
             <div className="mb-4">
-              <h1 className="text-[16px] font-bold text-[#23222A] px-5">티켓 주문 상세</h1>
+              <h1 className="text-[16px] font-bold text-[#23222A]">티켓 주문 상세</h1>
             </div>
 
-            <div className="bg-white px-5 py-5">
+            <div className="bg-white py-5">
               {/* 공연 제목 + 일시 */}
               <div className="text-[16px] font-semibold text-[#23222A]">{"뮤지컬 <킹키부츠>"}</div>
               <div className="text-[16px] font-regular text-[#68677E]">2026.01.26(월) 오후 7:00 · 샤롯데씨어터</div>
@@ -169,14 +169,14 @@ export default function CheckoutPage() {
 
             {/* 예약자 정보 */}
             <div className="mt-6">
-              <div className="px-5 py-4 flex items-start gap-1">
+              <div className="py-4 flex items-start gap-1">
                 {/* 필수 표시 * 추가 (피그마 기준) */}
                 <h2 className="text-[16px] font-bold text-[#23222A]">예약자 정보</h2>
                 <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0.5">
                   <circle cx="2" cy="2" r="2" fill="#F93E4B"/>
                 </svg>
               </div>
-              <div className="px-5">
+              <div>
                 <FormRow label="예약자">
                   <input
                     name="name"
@@ -218,14 +218,14 @@ export default function CheckoutPage() {
 
             {/* 티켓 수령 방법 */}
             <div className="mt-6">
-              <div className="px-5 py-4 flex items-start gap-1">
+              <div className="py-4 flex items-start gap-1">
                 {/* 필수 표시 * 추가 (피그마 기준) */}
                 <h2 className="text-[16px] font-bold text-[#23222A]">티켓 수령 방법</h2>
                 <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0.5">
                   <circle cx="2" cy="2" r="2" fill="#F93E4B"/>
                 </svg>
               </div>
-              <div className="px-5">
+              <div>
                 <div
                   className={`rounded-sm px-4 inline-block min-w-[120px] border transition-colors cursor-pointer ${
                     receipt === "NONE"
@@ -246,7 +246,7 @@ export default function CheckoutPage() {
 
             {/* 결제 수단 */}
             <div className="mt-6">
-              <div className="border-b border-gray-100 px-5 py-4">
+              <div className="border-b border-gray-100 py-4">
                 <h2 className="text-[16px] font-bold">결제 수단</h2>
               </div>
               <div className="py-2">
@@ -267,7 +267,7 @@ export default function CheckoutPage() {
 
             {/* 약관 동의 */}
             <div className="mt-6">
-              <div className="border-b border-gray-100 px-5 py-4">
+              <div className="border-b border-gray-100 py-4">
                 <h2 className="text-[16px] font-bold text-[#23222A]">약관 동의</h2>
               </div>
               <div>
@@ -334,11 +334,14 @@ export default function CheckoutPage() {
 
 /** ---------- UI helpers ---------- */
 
-function FormRow({ label, children }: { label: string; children: React.ReactNode }) {
+function FormRow({ label, children, error }: { label: string; children: React.ReactNode; error?: string }) {
   return (
-    <div className="flex items-center gap-3 py-1">
-      <div className="text-[14px] font-medium text-[#68677E] w-16 shrink-0">{label}</div>
-      <div className="flex-1">{children}</div>
+    <div className="flex items-start gap-3 py-1">
+      <div className="text-[14px] font-medium text-[#68677E] w-16 shrink-0 pt-2">{label}</div>
+      <div className="flex-1">
+        {children}
+        {error && <p className="mt-1 text-[12px] text-[#F93E4B]">{error}</p>}
+      </div>
     </div>
   );
 }
@@ -382,7 +385,10 @@ function Line({ label, value }: { label: string; value: string }) {
 }
 
 const inputCls =
-  "w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-[#F11322]";
+  "w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-[#515062] [&:not(:placeholder-shown)]:border-[#515062]";
+
+const inputErrorCls =
+  "w-full rounded-md border border-[#F93E4B] bg-white px-3 py-2 text-sm outline-none placeholder:text-gray-400 focus:border-[#F93E4B] [&:not(:placeholder-shown)]:border-[#F93E4B]";
 
   function PayMethodRow({
   value,
@@ -399,7 +405,7 @@ const inputCls =
 }) {
   return (
     <label
-      className={`flex cursor-pointer items-center gap-3 px-5 py-3 transition-colors group ${
+      className={`flex cursor-pointer items-center gap-3 py-3 transition-colors group ${
         checked ? "bg-[#FFE6E8]" : "bg-white hover:bg-[#FFF5F6]"
       }`}
     >
@@ -424,7 +430,7 @@ const inputCls =
 function AgreeRow({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
   return (
     <div
-      className="flex items-center justify-between px-5 py-2 cursor-pointer hover:bg-[#FFF5F6] transition-colors"
+      className="flex items-center justify-between py-2 cursor-pointer hover:bg-[#FFF5F6] transition-colors"
       onClick={onChange}
     >
       <div className="flex items-center gap-3">

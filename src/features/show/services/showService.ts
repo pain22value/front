@@ -1,6 +1,36 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
 import { reviews } from "@/shared/data/reviews";
+import { artists } from "@/shared/data/artists";
+import { shows } from "@/shared/data/shows";
+
+const search = async (query: string) => {
+  if (!query.trim()) {
+    return { shows: [], artists: [] };
+  }
+
+  /**
+   * const { data } = await api.get<ApiResponse<{
+   *   shows: Show[];
+   *   artists: Artist[];
+   * }>>(ENDPOINTS.SEARCH, {
+   *   params: { q: query },
+   * });
+   *
+   * return data.data;
+   */
+
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  const lower = query.toLowerCase();
+  const filteredShows = shows.filter((show) => show.title.toLowerCase().includes(lower));
+  const filteredActors = artists.filter((artist) => artist.name.toLowerCase().includes(lower));
+
+  return {
+    shows: filteredShows,
+    artists: filteredActors,
+  };
+};
 
 const getRecommendations = async () => {
   const { data } = await api.get<ApiResponse<ShowItem[]>>(ENDPOINTS.SHOWS.RECOMMENDATIONS);

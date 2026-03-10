@@ -2,7 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { AvatarItem } from "../common/AvatarItem";
 import { Separator } from "@/components/ui/separator";
-import { actors } from "@/shared/data/actors";
+import { artists } from "@/shared/data/artists";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import Link from "next/link";
 
 export default function Sidebar() {
   return (
@@ -12,14 +17,79 @@ export default function Sidebar() {
       flex w-20 flex-col items-center gap-4 border-r/ border-dashed/ bg-background/ py-4"
     >
       {/* Top */}
-      <div className="flex flex-col items-center gap-4">
-        <Button size="icon" variant="outline" className="rounded-xl">
-          <Plus />
-        </Button>
+      <div className="flex flex-col items-start gap-4 w-full px-5">
+        {/* 로고 */}
+        <Link href="/" className="flex items-center gap-4 w-full cursor-pointer group">
+          <Button
+            variant="ghost"
+            className="size-10 flex items-center justify-center rounded-lg text-3xl font-bold shrink-0
+              border-2 border-black bg-white text-black
+              group-hover:bg-black group-hover:text-white group-hover:border-black
+              hover:bg-black hover:text-white hover:border-black
+              dark:bg-black dark:text-white dark:border-white
+              dark:group-hover:bg-white dark:group-hover:text-black dark:group-hover:border-white
+              dark:hover:bg-white dark:hover:text-black dark:hover:border-white"
+          >
+            t
+          </Button>
+          <span
+            className="sidebar-label hidden text-xl font-bold whitespace-nowrap relative
+            after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 
+            after:bg-black dark:after:bg-white
+            after:transition-all after:duration-300 group-hover:after:w-full"
+          >
+            truve
+          </span>
+        </Link>
 
-        <div className="mt-2 flex flex-col gap-4">
-          {actors.map((avatar) => (
-            <AvatarItem key={avatar.id} src={avatar.image} alt={avatar.name} />
+        {/* 메뉴 */}
+        <Link href="/shows/now" className="flex items-center gap-4 w-full cursor-pointer group">
+          <Button
+            variant="secondary"
+            size="icon"
+            className="size-10 rounded-lg shrink-0
+              bg-gray-900 group-hover:bg-white
+              [&_svg]:fill-white [&_svg]:stroke-white
+              group-hover:[&_svg]:fill-black group-hover:[&_svg]:stroke-black
+              dark:bg-white dark:group-hover:bg-gray-900
+              dark:[&_svg]:fill-black dark:[&_svg]:stroke-black
+              dark:group-hover:[&_svg]:fill-white dark:group-hover:[&_svg]:stroke-white"
+          >
+            <LayoutGrid className="size-5" />
+          </Button>
+          <span
+            className="sidebar-label hidden font-medium whitespace-nowrap relative
+            after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 
+            after:bg-black dark:after:bg-white
+            after:transition-all after:duration-300 group-hover:after:w-full"
+          >
+            전체 서비스
+          </span>
+        </Link>
+      </div>
+
+      <div className="w-full px-5">
+        <Separator className="bg-muted-foreground" />
+      </div>
+
+      {/* 배우 */}
+      <div className="flex flex-col items-start gap-4 w-full px-5">
+        <div className="flex flex-col gap-5 w-full">
+          {artists.map((artist) => (
+            <div key={artist.id} className="flex items-center gap-4 w-full cursor-pointer group">
+              <Avatar className="size-10 rounded-lg shrink-0 transition-transform group-hover:scale-105">
+                <AvatarImage src={artist.image} className="object-cover" />
+                <AvatarFallback>U</AvatarFallback>
+              </Avatar>
+              <span
+                className="sidebar-label hidden font-medium whitespace-nowrap relative
+                after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 
+                after:bg-black dark:after:bg-white
+                after:transition-all after:duration-300 group-hover:after:w-full"
+              >
+                {artist.name}
+              </span>
+            </div>
           ))}
         </div>
       </div>
@@ -28,15 +98,56 @@ export default function Sidebar() {
         <Separator className="bg-gray-500/ bg-muted-foreground" />
       </div>
 
-      {/* Bottom */}
-      <Button size="icon" variant={"ghost"}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M16 6C17.103 6 18 6.897 18 8V16C18 17.103 17.103 18 16 18H11.1006L6 22.0811V18H4C2.897 18 2 17.103 2 16V8C2 6.897 2.897 6 4 6H16ZM20 2C21.103 2 22 2.897 22 4V12C22 13.103 21.103 14 20 14V6C20 4.897 19.103 4 18 4H6C6 2.897 6.897 2 8 2H20Z"
-            fill="#626262"
-          />
-        </svg>
-      </Button>
+      {/* Bottom Icons */}
+      <div className="flex flex-col gap-4 pb-6 w-full px-5">
+        <Link href="/my/favorite" className="flex items-center gap-4 w-full cursor-pointer group">
+          <Button
+            variant="secondary"
+            size="icon"
+            className="size-10 rounded-lg shrink-0
+              bg-gray-900 group-hover:bg-white
+              [&_svg]:fill-white [&_svg]:stroke-white
+              group-hover:[&_svg]:fill-black group-hover:[&_svg]:stroke-black
+              dark:bg-white dark:group-hover:bg-gray-900
+              dark:[&_svg]:fill-black dark:[&_svg]:stroke-black
+              dark:group-hover:[&_svg]:fill-white dark:group-hover:[&_svg]:stroke-white"
+          >
+            <Heart className="size-5" />
+          </Button>
+          <span
+            className="sidebar-label hidden font-medium whitespace-nowrap relative
+            after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 
+            after:bg-black dark:after:bg-white
+            after:transition-all after:duration-300 group-hover:after:w-full"
+          >
+            관심 리스트
+          </span>
+        </Link>
+
+        <div className="flex items-center gap-4 w-full cursor-pointer group">
+          <Button
+            variant="secondary"
+            size="icon"
+            className="size-10 rounded-lg shrink-0
+              bg-gray-900 group-hover:bg-white
+              [&_svg]:fill-white [&_svg]:stroke-white
+              group-hover:[&_svg]:fill-black group-hover:[&_svg]:stroke-black
+              dark:bg-white dark:group-hover:bg-gray-900
+              dark:[&_svg]:fill-black dark:[&_svg]:stroke-black
+              dark:group-hover:[&_svg]:fill-white dark:group-hover:[&_svg]:stroke-white"
+          >
+            <MessageSquare className="size-5" />
+          </Button>
+          <span
+            className="sidebar-label hidden font-medium whitespace-nowrap relative
+            after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 
+            after:bg-black dark:after:bg-white
+            after:transition-all after:duration-300 group-hover:after:w-full"
+          >
+            피드백
+          </span>
+        </div>
+      </div>
     </aside>
   );
 }

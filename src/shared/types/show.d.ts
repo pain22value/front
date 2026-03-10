@@ -6,11 +6,12 @@ interface Show {
   image: string;
 }
 
-interface Actor {
+interface Artist {
   id: number;
   name: string;
   image: string;
   description?: string;
+  isMember?: boolean;
 }
 
 // 2/21 박영준

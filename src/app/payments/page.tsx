@@ -114,21 +114,15 @@ export default function CheckoutPage() {
           <div className="text-md text-red-500 font-semibold">결제 취소</div>
         </div>
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <p className="text-md font-bold tracking-tight">
-            {"뮤지컬<킹키부츠> -2026.01.26(월) 오후 7:00"}
-          </p>
+          <p className="text-md font-bold tracking-tight">{"뮤지컬<킹키부츠> -2026.01.26(월) 오후 7:00"}</p>
           <div className="text-sm text-gray-500">
-            결제 마감 시간{" "}
-            <span className="font-semibold text-red-500">00:20</span>
+            결제 마감 시간 <span className="font-semibold text-red-500">00:20</span>
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8">
-        <Link
-          href="/cart"
-          className="text-sm font-medium text-gray-500 hover:text-gray-900"
-        >
+        <Link href="/cart" className="text-sm font-medium text-gray-500 hover:text-gray-900">
           {"<"} 좌석선택페이지로 돌아가기
         </Link>
         <div className="grid grid-cols-12 gap-8">
@@ -137,9 +131,7 @@ export default function CheckoutPage() {
             <div className="mb-6">
               <div>
                 <h1 className="text-2xl font-extrabold">티켓 결제</h1>
-                <p className="mt-1 text-sm text-gray-500">
-                  주문 정보를 확인하고 결제를 진행해주세요.
-                </p>
+                <p className="mt-1 text-sm text-gray-500">주문 정보를 확인하고 결제를 진행해주세요.</p>
               </div>
             </div>
 
@@ -153,12 +145,8 @@ export default function CheckoutPage() {
                 <div className="flex items-end gap-4 justify-between">
                   <div className="flex-1">
                     <div>
-                      <div className="text-sm font-semibold text-gray-900">
-                        {"뮤지컬 <킹키부츠>"}
-                      </div>
-                      <div className="mt-1 text-xs text-gray-500">
-                        2026.01.26(월) 오후 7:00 · 샤롯데씨어터
-                      </div>
+                      <div className="text-sm font-semibold text-gray-900">{"뮤지컬 <킹키부츠>"}</div>
+                      <div className="mt-1 text-xs text-gray-500">2026.01.26(월) 오후 7:00 · 샤롯데씨어터</div>
                     </div>
                     {/* 추가 내용 시작 */}
                     <div className="mt-4 space-y-3 text-sm text-gray-900">
@@ -168,9 +156,7 @@ export default function CheckoutPage() {
                       </div>
 
                       <div>
-                        <div className="text-xs font-semibold text-gray-700">
-                          좌석 정보
-                        </div>
+                        <div className="text-xs font-semibold text-gray-700">좌석 정보</div>
 
                         <ul className="mt-2 space-y-1 text-sm text-gray-900">
                           <li className="flex items-center gap-2">
@@ -187,9 +173,7 @@ export default function CheckoutPage() {
                     {/* 추가 내용 끝 */}
                   </div>
 
-                  <div className="text-sm font-bold text-gray-900">
-                    {total.toLocaleString()}원
-                  </div>
+                  <div className="text-sm font-bold text-gray-900">{total.toLocaleString()}원</div>
                 </div>
               </div>
             </div>
@@ -202,28 +186,13 @@ export default function CheckoutPage() {
 
               <div className="px-5 py-5">
                 <FormRow label="예약자">
-                  <input
-                    name="name"
-                    className={inputCls}
-                    onChange={handleChange}
-                    placeholder="이름을 입력하세요"
-                  />
+                  <input name="name" className={inputCls} onChange={handleChange} placeholder="이름을 입력하세요" />
                 </FormRow>
                 <FormRow label="생년월일">
-                  <input
-                    name="birth"
-                    className={inputCls}
-                    onChange={handleChange}
-                    placeholder="ex)19960101"
-                  />
+                  <input name="birth" className={inputCls} onChange={handleChange} placeholder="ex)19960101" />
                 </FormRow>
                 <FormRow label="이메일">
-                  <input
-                    name="email"
-                    onChange={handleChange}
-                    className={inputCls}
-                    placeholder="이름을 입력하세요"
-                  />
+                  <input name="email" onChange={handleChange} className={inputCls} placeholder="이름을 입력하세요" />
                 </FormRow>
                 <FormRow label="휴대폰">
                   <input
@@ -234,9 +203,7 @@ export default function CheckoutPage() {
                     inputMode="tel"
                   />
                 </FormRow>
-                <p className="mt-2 text-xs">
-                  티켓 수령 및 본인 확인을 위해 정확한 정보를 입력해주세요.
-                </p>
+                <p className="mt-2 text-xs">티켓 수령 및 본인 확인을 위해 정확한 정보를 입력해주세요.</p>
               </div>
             </div>
 
@@ -256,8 +223,7 @@ export default function CheckoutPage() {
                   />
                 </div>
                 <p className="mt-2 text-xs text-red-500">
-                  예매 시 부여된 예약번호 또는 QR로 관람 당일 티켓을 수령해
-                  입장합니다.
+                  예매 시 부여된 예약번호 또는 QR로 관람 당일 티켓을 수령해 입장합니다.
                 </p>
               </div>
             </div>
@@ -294,38 +260,24 @@ export default function CheckoutPage() {
 
               <div className="px-5 py-5">
                 <div className="flex items-center gap-3">
-                  <input
-                    id="agreeAll"
-                    type="checkbox"
-                    className="mt-1 h-4 w-4 rounded-full"
-                  />
+                  <input id="agreeAll" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
                   <label htmlFor="agreeAll" className="text-sm text-gray-800">
                     이용약관 전체 동의
                   </label>
                 </div>
                 <div className="flex items-center gap-3 my-3">
-                  <input
-                    id="agreeAll"
-                    type="checkbox"
-                    className="mt-1 h-4 w-4 rounded-full"
-                  />
+                  <input id="agreeAll" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
                   <label htmlFor="agreeAll" className="text-sm text-gray-500">
                     (필수) 취소 규정 안내
                   </label>
                 </div>
                 <div className="flex items-center gap-3">
-                  <input
-                    id="agreeAll"
-                    type="checkbox"
-                    className="mt-1 h-4 w-4 rounded-full"
-                  />
+                  <input id="agreeAll" type="checkbox" className="mt-1 h-4 w-4 rounded-full" />
                   <label htmlFor="agreeAll" className="text-sm text-gray-500">
                     (필수) 티켓 이용정책 동의
                   </label>
                 </div>
-                <div className="mt-4 text-xs text-gray-500">
-                  개인정보 제 3자 제공 안내
-                </div>
+                <div className="mt-4 text-xs text-gray-500">개인정보 제 3자 제공 안내</div>
               </div>
             </div>
           </section>
@@ -350,21 +302,14 @@ export default function CheckoutPage() {
                   </div>
 
                   {/* 예매 수수료 */}
-                  <Line
-                    label="예매 수수료"
-                    value={`+${bookingFee.toLocaleString()}원`}
-                  />
+                  <Line label="예매 수수료" value={`+${bookingFee.toLocaleString()}원`} />
                 </div>
 
                 <div className="my-4 h-px bg-gray-100" />
 
                 <div className="flex items-center justify-between">
-                  <div className="text-sm font-semibold text-gray-700">
-                    최종 결제금액
-                  </div>
-                  <div className="text-lg font-extrabold text-red-500">
-                    {total.toLocaleString()}원
-                  </div>
+                  <div className="text-sm font-semibold text-gray-700">최종 결제금액</div>
+                  <div className="text-lg font-extrabold text-red-500">{total.toLocaleString()}원</div>
                 </div>
 
                 <button
@@ -385,18 +330,10 @@ export default function CheckoutPage() {
 
 /** ---------- UI helpers ---------- */
 
-function FormRow({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function FormRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-12 gap-3 py-3">
-      <div className="col-span-12 text-sm font-semibold text-gray-800 sm:col-span-3 sm:pt-2">
-        {label}
-      </div>
+      <div className="col-span-12 text-sm font-semibold text-gray-800 sm:col-span-3 sm:pt-2">{label}</div>
       <div className="col-span-12 sm:col-span-9">{children}</div>
     </div>
   );
@@ -419,14 +356,7 @@ function RadioRow({
 }) {
   return (
     <label className="flex cursor-pointer items-start gap-3 py-4">
-      <input
-        type="radio"
-        name={name}
-        value={value}
-        checked={checked}
-        onChange={onChange}
-        className="mt-1 h-4 w-4"
-      />
+      <input type="radio" name={name} value={value} checked={checked} onChange={onChange} className="mt-1 h-4 w-4" />
       <div>
         <div className="text-sm font-semibold text-gray-900">{title}</div>
         {desc && <div className="text-xs text-gray-500">{desc}</div>}

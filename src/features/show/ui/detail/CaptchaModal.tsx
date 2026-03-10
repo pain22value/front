@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/shared/utils/cn";
+import { useInteractionStore } from "@/store/useInteractionStore";
 
 export default function CaptchaModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   return (
@@ -20,6 +21,7 @@ export default function CaptchaModal({ open, onOpenChange }: { open: boolean; on
 }
 
 function CaptchaContent({ onOpenChange }: { onOpenChange: (open: boolean) => void }) {
+  const stopTicketingFlow = useInteractionStore((state) => state.stopTicketingFlow);
   const [step, setStep] = useState<"captcha" | "queue">("captcha");
   const [selectedTile, setSelectedTile] = useState<number | null>(null);
   const [queueData, setQueueData] = useState({
@@ -36,6 +38,7 @@ function CaptchaContent({ onOpenChange }: { onOpenChange: (open: boolean) => voi
       setQueueData((prev) => {
         if (prev.position <= 0) {
           clearInterval(interval);
+          stopTicketingFlow(); // 예매 프로세스 진입 완료 시 트래킹 종료
           onOpenChange(false);
           return { ...prev, position: 0, progress: 100 };
         }
@@ -55,7 +58,7 @@ function CaptchaContent({ onOpenChange }: { onOpenChange: (open: boolean) => voi
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [step, onOpenChange]);
+  }, [step, onOpenChange, stopTicketingFlow]);
 
   const handleCaptchaSubmit = () => {
     if (selectedTile === null) return;

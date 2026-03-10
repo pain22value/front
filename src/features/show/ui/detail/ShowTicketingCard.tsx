@@ -13,6 +13,8 @@ import ShowTicketOpenNoticeModal from "./ShowTicketOpenNoticeModal";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import CaptchaModal from "./CaptchaModal";
+import { usePostHog } from "posthog-js/react";
+import { useInteractionStore } from "@/store/useInteractionStore";
 
 export function ShowTicketingCard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -22,14 +24,37 @@ export function ShowTicketingCard() {
 
   const { data: schedules, isLoading } = useSchedules(date);
   const router = useRouter();
-  const user = useAuthStore((state) => state.user);
+  const posthog = usePostHog();
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const { startTicketingFlow, stopTicketingFlow } = useInteractionStore();
+  // const user = useAuthStore((state) => state.user);
 
   const handleTicketing = () => {
-    if (!user) {
-      router.push("/login");
+    console.log("티켓팅 버튼 클릭됨. PostHog 준비 상태:", !!posthog);
+
+    // PostHog 이벤트 수집
+    if (posthog) {
+      posthog.capture("ticketing_button_clicked", {
+        selected_date: date?.toISOString(),
+        selected_round_id: round,
+      });
+      console.log("PostHog: ticketing_button_clicked 이벤트 전송 시도됨");
+    }
+
+    startTicketingFlow(); // 고정밀 트래킹 구간 시작 (is_ticketing_flow: true)
+
+    // 모달 표시와 상관없이 지금부터 정확히 10초 동안만 트래킹을 유지합니다.
+    // 10초가 지나면 자동으로 stopTicketingFlow가 호출되어 수집이 중단됩니다.
+    setTimeout(() => {
+      stopTicketingFlow();
+      console.log("PostHog: 10초 트래킹 구간 종료");
+    }, 10000);
+
+    if (!accessToken) {
+      router.push("/signin");
       return;
     }
-    setIsCaptchaModalOpen(true);
+    setIsCaptchaModalOpen(true); // 모달이 떠도 위에서 설정한 10초 타이머는 계속 돌아갑니다.
   };
 
   return (

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { AvatarItem } from "../common/AvatarItem";
@@ -8,6 +10,7 @@ import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Link from "next/link";
+import { LayoutGrid, Heart, MessageSquare } from "lucide-react";
 
 export default function Sidebar() {
   return (

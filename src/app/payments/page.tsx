@@ -4,7 +4,8 @@ import { useTossPayment, type PayMethod } from "@/features/payments/hooks/useTos
 import { paymentService } from "@/features/payments/services/paymentService";
 import Link from "next/link";
 import Modal from "@/components/ui/modal";
-import { useMemo, useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
   // 데모용 가격 계산
@@ -104,7 +105,26 @@ export default function CheckoutPage() {
   const [agreeAll, setAgreeAll] = useState(false);
   const [agrees, setAgrees] = useState([false, false, false]);
   const [errors, setErrors] = useState({ name: "", birth: "", email: "", phone: "" });
+  const router = useRouter();
   const [modal, setModal] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(7 * 60);
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      setModal("expired");
+      return;
+    }
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const formatTime = (sec: number) => {
+    const m = String(Math.floor(sec / 60)).padStart(2, "0");
+    const s = String(sec % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  };
 
   const handleAgreeAll = () => {
     const next = !agreeAll;
@@ -121,7 +141,14 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Modal message={modal} onClose={() => setModal(null)} />
+      <Modal
+        message={modal === "expired" ? "결제 시간이 만료되었습니다." : modal}
+        subMessage={modal === "expired" ? "확인하면 예매 첫 화면으로 이동합니다." : undefined}
+        onClose={() => {
+          if (modal === "expired") router.push("/shows");
+          setModal(null);
+        }}
+      />
       {/* Top bar */}
       <header className="border-b border-gray-100">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
@@ -133,7 +160,7 @@ export default function CheckoutPage() {
           <p className="text-[16px] font-bold text-[#23222A]">{"뮤지컬<킹키부츠> -2026.01.26(월) 오후 7:00"}</p>
           <div className="text-[16px] font-bold text-[#23222A]">
             {/* "결제 마감 시간" → "결제 가능 시간" (피그마 기준) */}
-            결제 가능 시간 <span className="text-[16px] font-bold text-[#F93E4B]">07:00</span>
+            결제 가능 시간 <span className="text-[16px] font-bold text-[#F93E4B]">{formatTime(timeLeft)}</span>
           </div>
         </div>
       </header>

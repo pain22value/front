@@ -220,7 +220,9 @@ function BookingCard({ booking }: { booking: Booking }) {
                   </Link>
                 )
           ) : booking.status !== "PARTIAL_CANCEL" && booking.status !== "CANCELED" ? (
-            <button className="flex-1 rounded-md py-2 text-[16px] font-semibold text-[#22212B] hover:bg-gray-50 transition-colors">예매 취소</button>
+            <Link href={`/mypage/bookings/${booking.orderId}/cancel`} className="flex-1">
+              <button className="w-full rounded-md py-2 text-[16px] font-semibold text-[#22212B] hover:bg-gray-50 transition-colors">예매 취소</button>
+            </Link>
           ) : null}
         </div>
       </div>

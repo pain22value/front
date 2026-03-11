@@ -49,6 +49,13 @@ export type VirtualAccountPaymentInfo = {
 
 export type PaymentInfo = CardPaymentInfo | VirtualAccountPaymentInfo;
 
+export type CancelInfo = {
+  refundAmount: number;
+  cancelFee: number;
+  canceledSeats: string[];
+  canceledAt: string;
+};
+
 export type BookingDetail = Booking & {
   finalAmount: number;
   items: BookingItem[];
@@ -59,6 +66,7 @@ export type BookingDetail = Booking & {
   guideItems: string[];           // 안내 박스 내용
   performanceDatetime?: Date;     // CONFIRMED 카운트다운용
   depositDeadline?: Date;         // PENDING_PAYMENT 카운트다운용
+  cancelInfo?: CancelInfo; 
 };
 
 export const STATUS_LABEL: Record<BookingStatus, string> = {

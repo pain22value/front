@@ -3,6 +3,7 @@
 import { useTossPayment, type PayMethod } from "@/features/payments/hooks/useTossPayment";
 import { paymentService } from "@/features/payments/services/paymentService";
 import Link from "next/link";
+import Modal from "@/components/ui/modal";
 import { useMemo, useState } from "react";
 
 export default function CheckoutPage() {
@@ -28,10 +29,8 @@ export default function CheckoutPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCustomerInfo((prev) => {
-      const updated = { ...prev, [name]: value };
-      return updated;
-    });
+    setCustomerInfo((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const { isReady, requestPayment } = useTossPayment({
@@ -52,7 +51,16 @@ export default function CheckoutPage() {
       phone: !customerInfo.phone || customerInfo.phone === "미기입" ? "-를 제외한 11자리의 전화번호를 입력해주세요" : "",
     };
     setErrors(newErrors);
-    if (Object.values(newErrors).some(Boolean)) return; // 에러 있으면 여기서 종료
+
+    const hasInfoError = Object.values(newErrors).some(Boolean);
+    const hasReceiptError = receipt === null;
+    const hasPayMethodError = payMethod === undefined;
+    const hasAgreeError = !agrees[0] || !agrees[1]; // 필수 약관 2개
+
+    if (hasInfoError || hasReceiptError || hasPayMethodError || hasAgreeError) {
+      setModal("필수 입력 항목을 입력해주세요.");
+      return;
+    }
 
     if (!isReady || paying) return;
     setPaying(true);
@@ -95,12 +103,8 @@ export default function CheckoutPage() {
   const [receipt, setReceipt] = useState<"NONE" | "PERSONAL" | "BIZ" | null>(null);
   const [agreeAll, setAgreeAll] = useState(false);
   const [agrees, setAgrees] = useState([false, false, false]);
-  const [errors, setErrors] = useState({
-    name: "",
-    birth: "",
-    email: "",
-    phone: "",
-  });
+  const [errors, setErrors] = useState({ name: "", birth: "", email: "", phone: "" });
+  const [modal, setModal] = useState<string | null>(null);
 
   const handleAgreeAll = () => {
     const next = !agreeAll;
@@ -117,6 +121,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Modal message={modal} onClose={() => setModal(null)} />
       {/* Top bar */}
       <header className="border-b border-gray-100">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
@@ -259,8 +264,11 @@ export default function CheckoutPage() {
 
             {/* 결제 수단 */}
             <div className="mt-6">
-              <div className="border-b border-gray-100 py-4">
+              <div className="flex gap-1 border-b border-gray-100 py-4">
                 <h2 className="text-[16px] font-bold">결제 수단</h2>
+                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0.5">
+                  <circle cx="2" cy="2" r="2" fill="#F93E4B"/>
+                </svg>
               </div>
               <div className="py-2">
                 <PayMethodRow
@@ -280,8 +288,11 @@ export default function CheckoutPage() {
 
             {/* 약관 동의 */}
             <div className="mt-6">
-              <div className="border-b border-gray-100 py-4">
+              <div className="flex gap-1 border-b border-gray-100 py-4">
                 <h2 className="text-[16px] font-bold text-[#23222A]">약관 동의</h2>
+                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg" className="mt-0.5">
+                  <circle cx="2" cy="2" r="2" fill="#F93E4B"/>
+                </svg>
               </div>
               <div>
                 {/* 전체 동의 - PayMethodRow 동일 스타일 */}

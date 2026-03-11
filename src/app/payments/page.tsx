@@ -111,7 +111,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (timeLeft <= 0) {
-      setModal("expired");
+      if (!paying) setModal("expired"); // 결제창 안 열었을 때만 모달
       return;
     }
     const timer = setInterval(() => {

@@ -30,7 +30,7 @@ export default function Page({ searchParams }: Props) {
       </div>
 
       {/* 예매 정보 카드 */}
-      <div className="w-full max-w-[504px] rounded-xl border border-[##DDDDE4] bg-white overflow-hidden">
+      <div className="w-full max-w-[504px] rounded-xl border border-[#DDDDE4] bg-white overflow-hidden">
         {/* 공연 정보 */}
         <div className="px-5 py-4 space-y-3">
           <InfoRow label="공연명" value={showTitle} />

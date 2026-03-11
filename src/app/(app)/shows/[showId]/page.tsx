@@ -1,7 +1,7 @@
 import { ShowDetailCard } from "@/features/show/ui/detail/ShowDetailCard";
 import ShowScheduleTap from "@/features/show/ui/detail/ShowScheduleTap";
 import { ShowDetailTabs } from "@/features/show/ui/detail/ShowDetailTabs";
-import { ShowTicketingCard } from "@/features/show/ui/detail/ShowTicketingCard";
+import { ShowFloatingTicketingCard } from "@/features/show/ui/detail/ShowFloatingTicketingCard";
 import { mockShow } from "@/shared/data/shows";
 import { showInfoData } from "@/shared/data/tabs";
 import ShowReviewTab from "@/features/show/ui/detail/ShowReviewTab";
@@ -41,7 +41,7 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
   return (
     <section className="pl-20">
       <section className="max-w-[1200] mx-auto p-0 xs:p-2 sm:p-4 md:p-6 lg:p-10 border border-dashed">
-        <div className="grid grid-cols-1 md:grid-cols-[minmax(550px,65%)_minmax(300px,35%)] gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(550px,65%)_minmax(300px,35%)]/ md:grid-cols-[minmax(550px,1fr)_300px] gap-8">
           <div className="col-span-[100%] md:col-span-[65%] space-y-20">
             {/* 상단 뮤지컬 정보 */}
             <ShowDetailCard {...mockShow} />
@@ -49,8 +49,8 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
             <ShowDetailTabs info={showInfoData} casting={<ShowScheduleTap />} review={<ShowReviewTab />} />
           </div>
           {/* 모바일을 제외한 화면에서 우측에 고정된 상태로 떠있음 */}
-          <aside className="hidden md:block sticky top-[calc(var(--header-height)+2.5rem)] self-start">
-            <ShowTicketingCard />
+          <aside className="hidden md:block sticky top-[calc(var(--header-height)+2.5rem)]">
+            <ShowFloatingTicketingCard />
           </aside>
         </div>
       </section>

@@ -11,7 +11,9 @@ if (typeof window !== "undefined") {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com",
     person_profiles: "always", // 유저 프로필 생성 설정
     capture_pageview: false, // 단일 페이지 애플리케이션(SPA)의 정확한 측정을 위해 수동으로 트래킹합니다.
-    debug: true, // 개발 단계에서 전송 로그를 확인하기 위해 디버그 모드를 활성화합니다.
+
+    debug: false, // 개발 단계에서 전송 로그를 확인하기 위해 디버그 모드를 활성화합니다.
+    opt_out_capturing_by_default: true, // 🚨 임시로 PostHog 비활성화 🚨
   });
 }
 

@@ -3,6 +3,7 @@
 import ShowCardList from "@/features/show/ui/ShowCardList";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 export default function ActorShowListSection({
   nowShows,
@@ -20,18 +21,18 @@ export default function ActorShowListSection({
       <section>
         <div className="space-y-2 mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-tight">현재 상영중인 작품</h2>
-          <Button variant="ghost" className="gap-1 text-muted-foreground">
+          <Link href={`#`} className="gap-1 text-muted-foreground flex items-center">
             더보기 <ChevronRight className="h-4 w-4" />
-          </Button>
+          </Link>
         </div>
         <ShowCardList shows={nowShows} isLoading={isNowLoading} />
       </section>
       <section>
         <div className="space-y-2 mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-tight">지난 출연 작품</h2>
-          <Button variant="ghost" className="gap-1 text-muted-foreground">
+          <Link href={`#`} className="gap-1 text-muted-foreground flex items-center">
             더보기 <ChevronRight className="h-4 w-4" />
-          </Button>
+          </Link>
         </div>
         <ShowCardList shows={pastShows} isLoading={isPastLoading} />
       </section>

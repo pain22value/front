@@ -98,7 +98,7 @@ export default function Sidebar() {
             t
           </Button>
           <span
-            className="sidebar-label hidden text-xl font-bold whitespace-nowrap relative
+            className="sidebar-label hidden font-medium whitespace-nowrap relative
             after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 
             after:bg-black dark:after:bg-white
             after:transition-all after:duration-300 group-hover:after:w-full"
@@ -139,8 +139,8 @@ export default function Sidebar() {
 
       {/* 배우 */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
-        <div className="flex flex-col gap-5 w-full">
-          {actors.map((actor) => (
+        <div className="flex flex-col gap-4 w-full">
+          {actors.slice(0, 4).map((actor) => (
             <Link
               key={actor.id}
               href={`/actors/${actor.id}`}
@@ -163,7 +163,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="w-8">
+      <div className="w-full px-5">
         <Separator className="bg-muted-foreground" />
       </div>
 

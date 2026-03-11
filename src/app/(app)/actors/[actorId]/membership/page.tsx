@@ -1,11 +1,13 @@
-import MembershipJoinSection from "@/features/actors/ui/membership/MembershipJoinSection";
-import MembershipPayment from "@/features/actors/ui/membership/MembershipPayment";
+import ActorMembershipSubscribeSection from "@/features/actors/ui/membership/ActorMembershipSubscribeSection";
 
-export default function ActorMembershipPage() {
+type Params = Promise<{ actorId: string }>;
+
+export default async function ActorMembershipPage(props: { params: Params }) {
+  const params = await props.params;
+
   return (
-    <section>
-      <MembershipPayment />
-      <MembershipJoinSection />
+    <section className="min-h-screen py-12 px-4 transition-colors">
+      <ActorMembershipSubscribeSection actorId={params.actorId} />
     </section>
   );
 }

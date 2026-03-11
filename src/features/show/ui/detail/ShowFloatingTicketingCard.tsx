@@ -12,11 +12,11 @@ import { useSchedules } from "../../hooks/useSchedules";
 import ShowTicketOpenNoticeModal from "./ShowTicketOpenNoticeModal";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import CaptchaModal from "./CaptchaModal";
 import { usePostHog } from "posthog-js/react";
 import { useInteractionStore } from "@/shared/store/useInteractionStore";
+import CaptchaModal from "@/features/ticketing/ui/captcha/CaptchaModal";
 
-export function ShowTicketingCard() {
+export function ShowFloatingTicketingCard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [round, setRound] = useState("1");
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(true);

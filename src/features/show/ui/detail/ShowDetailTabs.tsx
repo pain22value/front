@@ -27,7 +27,7 @@ export function ShowDetailTabs({
           {/* 출연진 */}
           <div>
             <h2 className="mb-4 text-lg font-semibold">{info.cast.title}</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 /lg:grid-cols-6 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
               {info.cast.actors.map((actor) => (
                 <div key={actor.id} className="flex flex-col items-center gap-3">
                   <div className="relative">

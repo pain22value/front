@@ -18,8 +18,8 @@ export default function HomeActorsSection() {
       </div>
 
       {/* 배우 목록 */}
-      <div className="flex gap-3 overflow-x-auto pb-2">
-        {actors.map((actor) => (
+      <div className="flex gap-3 flex-wrap pb-2">
+        {actors.slice(0, 50).map((actor) => (
           <Link
             key={actor.id}
             href={`/actors/${actor.id}`}

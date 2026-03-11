@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import { rightNowShows } from "@/shared/data/shows";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
-import Link from "next/link";
-
+import { Card, CardContent } from "@/components/ui/card";
 import { formatShowPeriod } from "@/shared/utils/date";
+import { rightNowShows } from "@/shared/data/shows";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function HomeShowNowSection() {
   return (
@@ -47,27 +46,26 @@ export default function HomeShowNowSection() {
         align="start"
         showButtonsOnHover
         showPagination={false}
-        renderItem={(item: Show) => (
-          <Card className="border-0 bg-transparent shadow-none">
-            <CardContent className="p-0 space-y-3">
-              {/* 포스터 */}
-              <div className="relative aspect-3/4 overflow-hidden rounded-xl">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-300 hover:scale-105"
-                />
-              </div>
-
-              {/* 텍스트 */}
-              <div className="space-y-1">
-                <p className="text-sm font-semibold">{item.title}</p>
-                <p className="text-xs text-muted-foreground">{item.venue}</p>
-                <p className="text-xs text-muted-foreground">{formatShowPeriod(item.startTime, item.endTime)}</p>
-              </div>
-            </CardContent>
-          </Card>
+        renderItem={(show: Show) => (
+          <Link href={`/shows/${show.id}`}>
+            <Card className="border-0 bg-transparent shadow-none">
+              <CardContent className="p-0 space-y-3">
+                <div className="relative aspect-3/4 overflow-hidden rounded-xl">
+                  <Image
+                    src={show.image}
+                    alt={show.title}
+                    fill
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold">{show.title}</p>
+                  <p className="text-xs text-muted-foreground">{show.venue}</p>
+                  <p className="text-xs text-muted-foreground">{formatShowPeriod(show.startTime, show.endTime)}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         )}
       />
     </section>

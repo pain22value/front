@@ -9,45 +9,51 @@ type Show = {
   // ageLimit: number;
 };
 
-interface ShowSeatGrade {
-  id: number;
-  grade: SeatGrade;
-  name: string;
-  price: number;
-}
-
 type ShowDetail = {
-  id: number;
+  showId: number;
   title: string;
-  venue: string;
+  venue: {
+    venueId: number;
+    name: string;
+    address: string;
+  };
   runtimeMin: number;
   ageLimit: number;
   startTime: string;
   endTime: string;
   description: string;
-  posterImg: string;
-  noticeImg?: string;
+  posterUrl: string;
+  noticeUrl?: string;
   castings: Casting[];
+  schedules: Schedule[];
   seatGrades: ShowSeatGrade[];
   ranking?: string;
   truveIndex?: number;
   benefit?: string;
 };
 
-type Casting = {
-  id: number;
-  actor: Actor;
-  role: string;
-  order: number; // 출연진의 표기순서
+type Schedule = {
+  scheduleId: number;
+  showTime: string;
+  status: string;
 };
 
-type Actor = {
-  id: number;
-  name: string;
-  image: string;
-  description?: string;
-  isMember?: boolean; // 로그인한 사용자의 경우 멤버십 가입 여부
+type Casting = {
+  showCastId: number;
+  artistId: number;
+  artistName: string;
+  profileImageUrl: string;
+  roleName: string;
+  order: number;
+  isLiked?: boolean;
 };
+
+interface ShowSeatGrade {
+  showSeatGradeId: number;
+  gradeName: string;
+  colorCode: string;
+  price: number;
+}
 
 // 2/21 박영준
 // 백엔드에서 오는 데이터 타입을 미리 정의

@@ -17,20 +17,20 @@ export default function Page({ searchParams }: Props) {
   const seats = ["1층 B구역 16열 6번", "1층 B구역 16열 7번"];
 
   return (
-    <main className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
+    <main className="min-h-screen bg-white flex flex-col items-center justify-start pt-35 px-4">
       {/* 실패 아이콘 */}
       <div className="flex flex-col items-center mb-6">
         <div className="w-14 h-14 rounded-full bg-[#23222A] flex items-center justify-center mb-5">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 6L6 18M6 6L18 18" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+            <path d="M20 4L4 20M4 4L20 20" stroke="white" strokeWidth="3.5" strokeLinecap="round"/>
           </svg>
         </div>
-        <h1 className="text-[22px] font-bold text-[#23222A]">예매 실패</h1>
-        <p className="mt-1 text-[14px] font-medium text-[#68677E]">선택하신 좌석의 결제 시간이 초과되었습니다.</p>
+        <h1 className="text-[24px] font-bold text-[#23222A]">예매 실패</h1>
+        <p className="mt-1 text-[16px] font-regular text-[#68677E]">선택하신 좌석의 결제 시간이 초과되었습니다.</p>
       </div>
 
       {/* 예매 정보 카드 */}
-      <div className="w-full max-w-[360px] rounded-xl border border-[#F1F1F4] bg-white overflow-hidden">
+      <div className="w-full max-w-[504px] rounded-xl border border-[##DDDDE4] bg-white overflow-hidden">
         {/* 공연 정보 */}
         <div className="px-5 py-4 space-y-3">
           <InfoRow label="공연명" value={showTitle} />
@@ -52,9 +52,11 @@ export default function Page({ searchParams }: Props) {
         {/* 실패 사유 */}
         <div className="px-5 py-4">
           <InfoRow
-            label="실패사유"
+            label={
+              <span className="text-[16px] font-bold text-[#68677E]">실패사유</span>
+            }
             value={
-              <span className="text-[14px] font-medium text-[#F93E4B]">{failReason}</span>
+              <span className="text-[16px] font-bold text-[#F11322]">{failReason}</span>
             }
           />
         </div>
@@ -63,7 +65,7 @@ export default function Page({ searchParams }: Props) {
         <div className="px-5 pb-5 space-y-2">
           <Link
             href="/shows/1"
-            className="block w-full py-3 rounded-lg bg-[#23222A] text-center text-[15px] font-semibold text-white hover:bg-[#3a3947] active:bg-[#111118] transition-colors"
+            className="block w-full py-3 rounded-lg bg-[#23222A] text-center text-[15px] font-semibold text-white hover:bg-[#FD8C94] active:bg-[#CB0614] transition-colors"
           >
             다시 예매하기
           </Link>
@@ -79,7 +81,7 @@ export default function Page({ searchParams }: Props) {
   );
 }
 
-function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
+function InfoRow({ label, value }: { label: React.ReactNode; value: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-4">
       <span className="text-[14px] font-medium text-[#68677E] shrink-0">{label}</span>

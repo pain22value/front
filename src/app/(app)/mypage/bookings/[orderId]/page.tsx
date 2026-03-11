@@ -459,10 +459,6 @@ export default function BookingDetailPage() {
         {/* 환불 정보 - PARTIAL_CANCEL만 */}
         {booking.cancelInfo && (
           <>
-            <div className="mb-6">
-              <p className="text-[14px] font-bold text-[#F93E4B]">예매 수수료 환불 불가</p>
-              <p className="text-[14px] font-bold text-[#F93E4B]">취소 수수료: 티켓 금액의 30%(관람일 1일 전까지)</p>
-            </div>
             <div className="mb-6 rounded-lg bg-[#F1F1F4] px-4 py-4">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[16px] font-bold text-[#23222A]">최종 환불 금액</span>
@@ -496,7 +492,7 @@ export default function BookingDetailPage() {
             <hr className="border-[#F1F1F4] mb-2" />
 
             {/* 환불 정보 */}
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-2 mt-4">
               <span className="text-[16px] font-bold text-[#23222A]">환불 정보</span>
             </div>
             <div className="flex items-center gap-2 font-medium text-[14px] text-[#23222A]">

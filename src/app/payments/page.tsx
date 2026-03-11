@@ -142,18 +142,38 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-white">
       <Modal
-        message={modal === "expired" ? "결제 시간이 만료되었습니다." : modal}
-        subMessage={modal === "expired" ? "확인하면 예매 첫 화면으로 이동합니다." : undefined}
+        message={
+          modal === "expired" ? "결제 시간이 만료되었습니다." :
+          modal === "back" ? "페이지를 이동할까요?" :
+          modal === "cancel" ? "진행 중인 예매를 취소할까요?" :
+          modal
+        }
+        subMessage={
+          modal === "expired" ? "확인하면 예매 첫 화면으로 이동합니다." :
+          modal === "back" ? "이동하면 진행 중인 예매가 취소됩니다." :
+          undefined
+        }
         onClose={() => {
-          if (modal === "expired") router.push("/shows");
+          if (modal === "expired") router.push("/shows/1");
           setModal(null);
         }}
+        onConfirm={
+          modal === "back" ? () => { router.push("/shows/1"); setModal(null); } :
+          modal === "cancel" ? () => { router.push("/shows/1"); setModal(null); } :
+          undefined
+        }
+        confirmLabel={modal === "back" || modal === "cancel" ? "이동" : "확인"}
       />
       {/* Top bar */}
       <header className="border-b border-gray-100">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <div className="text-[28px] font-righteous text-[#23222A]">truve</div>
-          <div className="text-[18px] text-[#CB0614] font-semibold">예매 취소</div>
+          <button
+            className="text-[18px] text-[#CB0614] font-semibold"
+            onClick={() => setModal("cancel")}
+          >
+            예매 취소
+          </button>
         </div>
         {/* 서브헤더: 공연 정보 + 결제 가능 시간 */}
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 border-t border-b border-gray-100">
@@ -166,12 +186,12 @@ export default function CheckoutPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8">
-        <Link href="/shows/1" className="flex items-center gap-1 px-1 mb-8">
+        <button onClick={() => setModal("back")} className="flex items-center gap-1 px-1 mb-8">
           <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14.9715 1.68725C15.0617 1.59178 15.1322 1.47947 15.179 1.35674C15.2259 1.23401 15.248 1.10327 15.2443 0.971965C15.2406 0.840663 15.2111 0.711378 15.1574 0.591492C15.1037 0.471606 15.027 0.363467 14.9315 0.273249C14.836 0.183031 14.7237 0.112501 14.601 0.0656852C14.4782 0.0188697 14.3475 -0.00331434 14.2162 0.000400002C14.0849 0.00411435 13.9556 0.0336542 13.8357 0.0873329C13.7158 0.141012 13.6077 0.217778 13.5175 0.313249L5.01748 9.31325C4.84195 9.49892 4.74414 9.74474 4.74414 10.0002C4.74414 10.2558 4.84195 10.5016 5.01748 10.6872L13.5175 19.6882C13.6071 19.7858 13.7152 19.8646 13.8355 19.92C13.9559 19.9754 14.086 20.0064 14.2184 20.0111C14.3508 20.0158 14.4828 19.9942 14.6068 19.9474C14.7307 19.9007 14.8442 19.8298 14.9405 19.7388C15.0368 19.6479 15.1141 19.5387 15.1679 19.4176C15.2216 19.2965 15.2508 19.166 15.2537 19.0335C15.2566 18.9011 15.2331 18.7694 15.1847 18.6461C15.1362 18.5228 15.0638 18.4103 14.9715 18.3153L7.11948 10.0002L14.9715 1.68725Z" fill="#68677E"/>
           </svg>
           <span className="text-[18px] font-bold text-[#23222A]">티켓 결제</span>
-        </Link>
+        </button>
 
         <div className="grid grid-cols-12 gap-8">
           {/* LEFT */}

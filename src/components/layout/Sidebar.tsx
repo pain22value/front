@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Heart, LayoutGrid, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { actors } from "@/shared/data/actors";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Link from "next/link";
+import { actors } from "@/shared/data/actors";
 
 export default function Sidebar() {
   const { isExpanded, setExpanded } = useSidebarStore();
@@ -163,7 +163,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="w-full px-5">
+      <div className="w-8">
         <Separator className="bg-muted-foreground" />
       </div>
 

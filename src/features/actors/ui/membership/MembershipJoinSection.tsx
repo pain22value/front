@@ -16,7 +16,7 @@ export default function MembershipJoinSection() {
             <Image
               width={800}
               height={800}
-              src="/artist-profile.jpg"
+              src="/actor-profile.jpg"
               alt="고은성"
               className="w-full h-full object-cover"
             />

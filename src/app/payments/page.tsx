@@ -1,6 +1,6 @@
 "use client";
 
-import { useTossPayment } from "@/features/payments/hooks/useTossPayment";
+import { useTossPayment, type PayMethod } from "@/features/payments/hooks/useTossPayment";
 import { paymentService } from "@/features/payments/services/paymentService";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -13,7 +13,7 @@ export default function CheckoutPage() {
   const bookingFee = 2000;
   const total = ticketUnitPrice * ticketQty + bookingFee;
 
-  const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
+  const clientKey = "test_ck_jExPeJWYVQxDje9xG7Mj349R5gvN";
   const customerKey = "EkTWyj8AhmS5rtOMSB4Ck";
 
   const orderName = `뮤지컬 <킹키부츠> VIP석 ${ticketQty}매`;
@@ -66,7 +66,7 @@ export default function CheckoutPage() {
           // //결제수단
           // orderId,
           // amount: total,
-          // //예약자정보
+          // 예약자정보,
           // customerName: customerInfo.name,
           // customerBirth: customerInfo.birth,
           // customerEmail: customerInfo.email,
@@ -79,17 +79,33 @@ export default function CheckoutPage() {
         }),
       });
 
+      // 임시 데이터
+      sessionStorage.setItem(
+        "pendingBooking",
+        JSON.stringify({
+          showTitle: "뮤지컬 <킹키부츠>",
+          datetime: "2026.01.26(월) 오후 7:00",
+          seats: ["1층 B구역 16열 6번", "1층 B구역 16열 7번"],
+          method: payMethod,
+        }),
+      );
+
       await requestPayment({
         orderId,
         orderName,
         amountValue: total,
+        method: payMethod,
       });
     } finally {
       setPaying(false);
     }
   };
-
-  const [payMethod, setPayMethod] = useState<"CARD" | "EASY" | "TRANSFER">("CARD");
+  /* payMethod 상태 타입을 PayMethod로 : 박영준
+  const [payMethod, setPayMethod] = useState<"CARD" | "EASY" | "TRANSFER">(
+    "CARD",
+  );
+*/
+  const [payMethod, setPayMethod] = useState<PayMethod>("CARD");
   const [receipt, setReceipt] = useState<"NONE" | "PERSONAL" | "BIZ">("NONE");
 
   return (
@@ -227,21 +243,14 @@ export default function CheckoutPage() {
                   value="CARD"
                   checked={payMethod === "CARD"}
                   onChange={() => setPayMethod("CARD")}
-                  title="토스 결제"
+                  title="간편 결제·카드 결제"
                 />
                 <RadioRow
                   name="pay"
-                  value="EASY"
-                  checked={payMethod === "EASY"}
-                  onChange={() => setPayMethod("EASY")}
-                  title="카드 결제"
-                />
-                <RadioRow
-                  name="pay"
-                  value="TRANSFER"
-                  checked={payMethod === "TRANSFER"}
-                  onChange={() => setPayMethod("TRANSFER")}
-                  title="계좌 이체"
+                  value="VIRTUAL_ACCOUNT"
+                  checked={payMethod === "VIRTUAL_ACCOUNT"}
+                  onChange={() => setPayMethod("VIRTUAL_ACCOUNT")}
+                  title="무통장 입금"
                 />
               </div>
             </div>

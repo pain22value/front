@@ -1,23 +1,58 @@
-interface Show {
-  id: number | string;
+type Show = {
+  id: number;
   title: string;
   venue: string;
-  period: string;
   image: string;
+  startTime: string;
+  endTime: string;
+  // runtimeMin: number;
+  // ageLimit: number;
+};
+
+interface ShowSeatGrade {
+  id: number;
+  grade: SeatGrade;
+  name: string;
+  price: number;
 }
 
-interface Artist {
+type ShowDetail = {
+  id: number;
+  title: string;
+  venue: string;
+  runtimeMin: number;
+  ageLimit: number;
+  startTime: string;
+  endTime: string;
+  description: string;
+  posterImg: string;
+  noticeImg?: string;
+  castings: Casting[];
+  seatGrades: ShowSeatGrade[];
+  ranking?: string;
+  truveIndex?: number;
+  benefit?: string;
+};
+
+type Casting = {
+  id: number;
+  actor: Actor;
+  role: string;
+  order: number; // 출연진의 표기순서
+};
+
+type Actor = {
   id: number;
   name: string;
   image: string;
   description?: string;
-  isMember?: boolean;
-}
+  isMember?: boolean; // 로그인한 사용자의 경우 멤버십 가입 여부
+};
 
 // 2/21 박영준
 // 백엔드에서 오는 데이터 타입을 미리 정의
-type SeatStatus = 'available' | 'reserved' | 'unavailable'; // 좌석 상태
-type SeatGrade = 'VIP' | 'R' | 'S' | 'A'; // 좌석 등급
+type SeatStatus = "available" | "reserved" | "unavailable"; // 좌석 상태
+type SeatGrade = "VIP" | "R" | "S" | "A"; // 좌석 등급
 
 // 좌석 하나
 interface Seat {

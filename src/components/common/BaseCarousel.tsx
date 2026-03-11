@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/carousel";
 import { cn } from "@/shared/utils/cn";
 
-interface BaseCarouselProps<T> {
+type BaseCarouselProps<T> = {
   items: T[]; // 표시할 데이터 배열 (id 속성 필수)
   renderItem: (item: T, index: number, isSelected: boolean) => ReactNode; // 각 아이템을 렌더링할 함수
   itemsPerView?: number; // 한 번에 표시할 아이템 개수 (설정 시 flex-basis 강제 적용)
@@ -22,7 +22,7 @@ interface BaseCarouselProps<T> {
   itemClassName?: string; // CarouselItem 클래스 (반응형 basis 설정 등)
   loop?: boolean; // 무한 루프 여부
   align?: "start" | "center" | "end"; // 정렬 방식
-}
+};
 
 export function BaseCarousel<T extends { id: string | number }>({
   items,

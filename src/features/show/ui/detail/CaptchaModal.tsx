@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/shared/utils/cn";
-import { useInteractionStore } from "@/store/useInteractionStore";
+import { useInteractionStore } from "@/shared/store/useInteractionStore";
 
 export default function CaptchaModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   return (

@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import ArtistCard from "@/features/show/ui/ArtistCard";
+import ActorCard from "@/features/show/ui/ActorCard";
 import { useSearch } from "../hooks/useSearch";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatShowPeriod } from "@/shared/utils/date";
 
 export default function Search({ query }: { query?: string }) {
   const { data, isLoading } = useSearch(query || "");
@@ -13,7 +14,7 @@ export default function Search({ query }: { query?: string }) {
     return <SearchSkeleton />;
   }
 
-  const artists = data?.artists ?? [];
+  const actors = data?.actors ?? [];
   const shows = data?.shows ?? [];
 
   return (
@@ -53,11 +54,11 @@ export default function Search({ query }: { query?: string }) {
         </div>
       </section>
       <section>
-        <h2 className="text-2xl font-semibold">배우({artists.length})</h2>
+        <h2 className="text-2xl font-semibold">배우({actors.length})</h2>
         <Separator className="mt-4! mb-6!" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {artists.map((artist) => (
-            <ArtistCard key={artist.id} artist={artist} />
+          {actors.map((actor) => (
+            <ActorCard key={actor.id} actor={actor} />
           ))}
         </div>
       </section>
@@ -72,7 +73,7 @@ export default function Search({ query }: { query?: string }) {
               </div>
               <p className="font-semibold">{show.title}</p>
               <p className="text-sm text-muted-foreground">{show.venue}</p>
-              <p className="text-sm text-muted-foreground">{show.period}</p>
+              <p className="text-sm text-muted-foreground">{formatShowPeriod(show.startTime, show.endTime)}</p>
             </div>
           ))}
         </div>

@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BaseCarousel } from "@/components/common/BaseCarousel";
 import Link from "next/link";
 
+import { formatShowPeriod } from "@/shared/utils/date";
+
 export default function HomeShowNowSection() {
   return (
     <section className="max-w-[1200] mx-auto space-y-8">
@@ -45,7 +47,7 @@ export default function HomeShowNowSection() {
         align="start"
         showButtonsOnHover
         showPagination={false}
-        renderItem={(item) => (
+        renderItem={(item: Show) => (
           <Card className="border-0 bg-transparent shadow-none">
             <CardContent className="p-0 space-y-3">
               {/* 포스터 */}
@@ -62,7 +64,7 @@ export default function HomeShowNowSection() {
               <div className="space-y-1">
                 <p className="text-sm font-semibold">{item.title}</p>
                 <p className="text-xs text-muted-foreground">{item.venue}</p>
-                <p className="text-xs text-muted-foreground">{item.period}</p>
+                <p className="text-xs text-muted-foreground">{formatShowPeriod(item.startTime, item.endTime)}</p>
               </div>
             </CardContent>
           </Card>

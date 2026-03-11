@@ -4,7 +4,7 @@ import { authService } from "@/features/auth/services/authService";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-interface AuthState {
+type AuthState = {
   accessToken: string | null;
   user: string | null;
   // user: User | null;
@@ -13,7 +13,7 @@ interface AuthState {
   signout: () => Promise<void>;
   setAuth: (accessToken: string, user: string) => void;
   // setAuth: (accessToken: string, user: User) => void;
-}
+};
 
 export const useAuthStore = create(
   persist<AuthState>(
@@ -26,9 +26,7 @@ export const useAuthStore = create(
           await authService.signup(signupRequest);
         } catch (error: unknown) {
           throw new Error(
-            error instanceof Error
-              ? error.message
-              : "회원가입에 실패했습니다. 아이디와 비밀번호를 확인해주세요.",
+            error instanceof Error ? error.message : "회원가입에 실패했습니다. 아이디와 비밀번호를 확인해주세요.",
           );
         }
       },
@@ -39,9 +37,7 @@ export const useAuthStore = create(
         } catch (error: unknown) {
           set({ accessToken: null, user: null });
           throw new Error(
-            error instanceof Error
-              ? error.message
-              : "로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.",
+            error instanceof Error ? error.message : "로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.",
           );
         }
       },
@@ -68,7 +64,7 @@ export const useAuthStore = create(
 // import { authService } from "@/services/authService";
 // import { create } from "zustand";
 
-// interface AuthState {
+// type AuthState = {
 //   accessToken: string | null;
 //   user: User | null;
 //   signin: (signinRequest: SigninRequest) => Promise<void>;

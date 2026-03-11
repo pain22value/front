@@ -3,20 +3,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image"; // 1. Image 컴포넌트 임포트
+import { formatShowPeriod } from "@/shared/utils/date";
 
-export default function ShowCard({
-  id,
-  title,
-  venue,
-  period,
-  image,
-}: {
-  id: number | string;
-  title: string;
-  venue: string;
-  period: string;
-  image: string;
-}) {
+export default function ShowCard({ id, title, venue, image, startTime, endTime }: Show) {
+  const period = formatShowPeriod(startTime, endTime);
   return (
     <Link href={`/shows/${id}`} className="group">
       <Card className="bg-transparent border-none shadow-none">
@@ -38,6 +28,7 @@ export default function ShowCard({
             <p className="text-sm text-muted-foreground">{venue}</p>
             <p className="font-semibold text-base">{title}</p>
             <p className="text-sm text-muted-foreground">{period}</p>
+            {/* <p className="text-sm text-muted-foreground">{period}</p> */}
           </div>
         </CardContent>
       </Card>

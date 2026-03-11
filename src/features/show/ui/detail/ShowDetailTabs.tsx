@@ -10,7 +10,7 @@ export function ShowDetailTabs({
   review,
 }: {
   info: {
-    cast: { title: string; artists: { id: number; name: string; image: string }[] };
+    cast: { title: string; actors: { id: number; name: string; image: string }[] };
     banner: { text: string };
     showInfo: { title: string; content: string; notice: string };
     notice: { title: string; imageUrls: string[] };
@@ -28,12 +28,12 @@ export function ShowDetailTabs({
           <div>
             <h2 className="mb-4 text-lg font-semibold">{info.cast.title}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 /lg:grid-cols-6 gap-8">
-              {info.cast.artists.map((artist) => (
-                <div key={artist.id} className="flex flex-col items-center gap-3">
+              {info.cast.actors.map((actor) => (
+                <div key={actor.id} className="flex flex-col items-center gap-3">
                   <div className="relative">
                     <Avatar className="size-30/ size-full">
-                      <AvatarImage src={artist.image} alt={artist.name} className="object-cover" />
-                      <AvatarFallback>{artist.name.slice(0, 1)}</AvatarFallback>
+                      <AvatarImage src={actor.image} alt={actor.name} className="object-cover" />
+                      <AvatarFallback>{actor.name.slice(0, 1)}</AvatarFallback>
                     </Avatar>
                     <button className="absolute bottom-0 right-0 w-3/10 h-3/10 rounded-full bg-white shadow flex items-center justify-center">
                       <Heart className="w-5 h-5 text-neutral-300 fill-neutral-300" />
@@ -41,7 +41,7 @@ export function ShowDetailTabs({
                   </div>
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground">찰리</p>
-                    <p className="text-sm text-muted-foreground">{artist.name}</p>
+                    <p className="text-sm text-muted-foreground">{actor.name}</p>
                   </div>
                 </div>
               ))}

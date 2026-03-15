@@ -1,4 +1,4 @@
-import ActorSection from "@/features/actors/ui/detail/ActorSection";
+import ActorSection from "@/features/actors/ui/ActorSection";
 
 type Params = Promise<{ actorId: string }>;
 

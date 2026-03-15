@@ -1,45 +1,54 @@
+import api from "@/shared/api/axios";
+import { ENDPOINTS } from "@/shared/api/endpoints";
+
 // 목업 상태 시뮬레이션을 위한 전역 변수
-let mockQueueState = {
-  position: 2500,
-  progress: 0,
-  waitingCount: 15000,
-  reservationRate: 89,
+let mockQueueState: QueueStatusResponse = {
+  status: "WAITING",
+  rank: 2500,
+  waitingUserCount: 15000,
+  expireTime: 0,
+  pollingMs: 3000,
 };
 
 export const queueService = {
-  enterQueue: async (queueId: string | number) => {
-    try {
-      const res = await fetch(`/api/queue/${queueId}/enter`, { method: "POST" });
-      if (!res.ok) {
-        console.warn("대기열 진입 API 실패. 목업으로 진행합니다.");
-      }
-    } catch (error) {
-      console.warn("대기열 진입 요청 에러. 목업으로 진행합니다.");
-    }
+  enterQueue: async (showId: string | number) => {
+    // 실제 API 연동 시
+    // const { data } = await api.post<ApiResponse<string>>(ENDPOINTS.QUEUE.ENTER(showId));
+    // return data.data;
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     // 목업 초기화
     mockQueueState = {
-      position: 2014,
-      progress: 12,
-      waitingCount: 15000,
-      reservationRate: 89,
+      status: "WAITING",
+      rank: 2014,
+      waitingUserCount: 15000,
+      expireTime: 0,
+      pollingMs: 3000,
     };
-  },
-  getQueueStatus: async (queueId: string | number): Promise<QueueStatusResponse> => {
-    try {
-      const res = await fetch(`/api/queue/${queueId}/status`);
-      if (res.ok) {
-        return res.json();
-      }
-    } catch (error) {
-      // 에러 시 바로 목업 처리로 넘어감
-    }
 
-    // 목업 로직 시뮬레이션
-    const decrease = Math.floor(Math.random() * 100) + 50;
-    mockQueueState.position = Math.max(0, mockQueueState.position - decrease);
-    const totalStart = 2500;
-    mockQueueState.progress = Math.min(100, ((totalStart - mockQueueState.position) / totalStart) * 100);
-    mockQueueState.waitingCount = Math.max(0, mockQueueState.waitingCount - decrease);
+    return "SUCCESS_QUEUE_ENTRY_MOCK";
+  },
+
+  getQueueStatus: async (showId: string | number): Promise<QueueStatusResponse> => {
+    // 실제 API 연동 시
+    // const { data } = await api.get<QueueStatusResponse>(ENDPOINTS.QUEUE.STATUS(showId));
+    // return data;
+
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    // 목업 로직 시뮬레이션: 순번이 점점 줄어듦
+    if (mockQueueState.status === "WAITING") {
+      const decrease = Math.floor(Math.random() * 100) + 150;
+      mockQueueState.rank = Math.max(0, mockQueueState.rank - decrease);
+      mockQueueState.waitingUserCount = Math.max(0, mockQueueState.waitingUserCount - decrease * 2);
+
+      if (mockQueueState.rank === 0) {
+        mockQueueState.status = "ADMITTED";
+        mockQueueState.admissionToken = "MOCK_ADMISSION_TOKEN_" + Math.random().toString(36).substring(7);
+        mockQueueState.expireTime = Date.now() + 600000; // 10분 후 만료
+      }
+    }
 
     return { ...mockQueueState };
   },

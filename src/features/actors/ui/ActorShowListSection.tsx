@@ -1,7 +1,6 @@
 "use client";
 
 import ShowCardList from "@/features/show/ui/ShowCardList";
-import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 

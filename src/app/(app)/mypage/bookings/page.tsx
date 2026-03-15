@@ -131,8 +131,9 @@ function BookingCard({ booking }: { booking: Booking }) {
   const isWatched = booking.status === "WATCHED";
   const [showToast, setShowToast] = useState(false);
   const [isReviewed, setIsReviewed] = useState(() => {
-  const reviewed = JSON.parse(localStorage.getItem("reviewedOrders") ?? "[]");
-    return reviewed.includes(booking.orderId);
+    // const reviewed = JSON.parse(localStorage.getItem("reviewedOrders") ?? "[]");
+    // return reviewed.includes(booking.orderId);
+    return false;
   });
 
 

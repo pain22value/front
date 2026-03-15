@@ -1,3 +1,5 @@
+// 배우
+
 type Actor = {
   id: number;
   name: string;

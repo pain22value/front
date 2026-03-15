@@ -3,8 +3,8 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useEnterQueue } from "../../hooks/useQueue";
-import { CaptchaStep } from "./CaptchaStep";
-import { QueueStep } from "./QueueStep";
+import CaptchaStep from "./CaptchaStep";
+import QueueStep from "./QueueStep";
 
 export default function CaptchaModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [step, setStep] = useState<"captcha" | "queue">("captcha");

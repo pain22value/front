@@ -12,11 +12,11 @@ export const useQueueStatus = (queueId: string | number) => {
     queryKey: ["queueStatus", queueId],
     queryFn: () => queueService.getQueueStatus(queueId),
     refetchInterval: (query) => {
-      // 대기 순서가 0 이하가 되면 폴링 중지
-      if (query.state.data && query.state.data.position <= 0) {
+      // 대기 순서가 WAITING이 아니거나 rank가 0이 되면 폴링 중지
+      if (query.state.data && (query.state.data.status !== "WAITING" || query.state.data.rank <= 0)) {
         return false;
       }
-      return 1000;
+      return query.state.data?.pollingMs || 3000;
     },
   });
 };

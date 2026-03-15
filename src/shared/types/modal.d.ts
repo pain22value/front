@@ -1,3 +1,5 @@
+// 모달
+
 type ConfirmModalState = {
   open: boolean;
   title: React.ReactNode;

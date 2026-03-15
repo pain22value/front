@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import JoinSection from "./JoinSection";
+import ActorMembershipJoinSection from "./ActorMembershipJoinSection";
 
 export default function ActorHeroSection({ actor }: { actor: Actor }) {
   return (
@@ -26,7 +26,7 @@ export default function ActorHeroSection({ actor }: { actor: Actor }) {
         absolute bottom-0 left-20 right-0 
         px-4 sm:px-6 lg:px-8"
       >
-        <JoinSection actor={actor} />
+        <ActorMembershipJoinSection actor={actor} />
       </section>
     </section>
   );

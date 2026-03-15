@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetRecommendations } from "../../hooks/useGetRecommendations";
+import { useRecommendShows } from "../../hooks/useRecommendShows";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
 import { formatShowPeriod } from "@/shared/utils/date";
 import { recommendShows } from "@/shared/data/shows";
@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function HomeRecommendSection1() {
-  const { data: shows } = useGetRecommendations();
+  const { data: shows, isLoading } = useRecommendShows();
 
   return (
     <section className="max-w-[1200] mx-auto space-y-8">

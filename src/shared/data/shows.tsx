@@ -251,30 +251,123 @@ export const recommendShows2: Show[] = [
   },
 ];
 
-export const mockShow: ShowDetail = {
+export const mockShowDetail: ShowDetail = {
   showId: 1,
   title: "뮤지컬 <킹키부츠>",
+  description:
+    "파산 위기에 처한 구두 공장을 물려받은 '찰리'가 여장 남자 '롤라'를 만나 80cm 킹키부츠를 만들어 공장을 다시 살리는 과정을 그린 뮤지컬입니다.",
+  runtimeMin: 155,
+  ageLimit: 8,
+  posterUrl:
+    "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427202/%ED%82%B9%ED%82%A4%EB%B6%80%EC%B8%A0_gzd6oy.png",
+  noticeUrl: "https://example.com/notice",
+  startTime: "2025-11-29T19:00:00Z",
+  endTime: "2026-02-22T22:00:00Z",
   venue: {
     venueId: 1,
     name: "샤롯데씨어터",
     address: "서울 송파구 올림픽로 240",
   },
-  runtimeMin: 155,
-  ageLimit: 8,
-  startTime: "2025.11.29",
-  endTime: "2026.02.22",
-  description:
-    "파산 위기에 처한 구두 공장을 물려받은 '찰리'가 여장 남자 '롤라'를 만나 80cm 킹키부츠를 만들어 공장을 다시 살리는 과정을 그린 뮤지컬입니다.",
-  posterUrl:
-    "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770684684/%E1%84%8F%E1%85%B5%E1%86%BC%E1%84%8F%E1%85%B5%E1%84%87%E1%85%AE%E1%84%8E%E1%85%B3_%E1%84%8B%E1%85%AF%E1%86%AB%E1%84%87%E1%85%A9%E1%86%AB_cnanrw.png",
-  castings: [],
-  schedules: [],
+  castings: [
+    {
+      showCastId: 101,
+      artistId: 1,
+      artistName: "강홍석",
+      profileImageUrl:
+        "https://images.chosun.com/resizer/P8-2K7796P7y-E6822y87y8=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/DP75E6L6J7I7G7I7G7I7G7I7G7.jpg",
+      roleName: "롤라",
+      order: 1,
+      isLiked: true,
+    },
+    {
+      showCastId: 102,
+      artistId: 2,
+      artistName: "김호영",
+      profileImageUrl: "https://example.com/artist2.jpg",
+      roleName: "찰리",
+      order: 2,
+      isLiked: false,
+    },
+  ],
+  schedules: [
+    {
+      scheduleId: 1001,
+      showTime: "2026-03-14T14:00:00Z",
+      status: "AVAILABLE",
+      castings: [
+        {
+          showCastId: 101,
+          artistId: 1,
+          artistName: "강홍석",
+          profileImageUrl:
+            "https://images.chosun.com/resizer/P8-2K7796P7y-E6822y87y8=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/DP75E6L6J7I7G7I7G7I7G7I7G7.jpg",
+          roleName: "롤라",
+          order: 1,
+          isLiked: true,
+        },
+        {
+          showCastId: 102,
+          artistId: 2,
+          artistName: "김호영",
+          profileImageUrl: "https://example.com/artist2.jpg",
+          roleName: "찰리",
+          order: 2,
+          isLiked: false,
+        },
+      ],
+    },
+    {
+      scheduleId: 1002,
+      showTime: "2026-03-14T19:00:00Z",
+      status: "AVAILABLE",
+      castings: [
+        {
+          showCastId: 101,
+          artistId: 1,
+          artistName: "강홍석",
+          profileImageUrl:
+            "https://images.chosun.com/resizer/P8-2K7796P7y-E6822y87y8=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/DP75E6L6J7I7G7I7G7I7G7I7G7.jpg",
+          roleName: "롤라",
+          order: 1,
+          isLiked: true,
+        },
+        {
+          showCastId: 102,
+          artistId: 2,
+          artistName: "김호영",
+          profileImageUrl: "https://example.com/artist2.jpg",
+          roleName: "찰리",
+          order: 2,
+          isLiked: false,
+        },
+      ],
+    },
+  ],
   seatGrades: [
-    { showSeatGradeId: 1, colorCode: "#FF0000", gradeName: "VIP석", price: 170000 },
-    { showSeatGradeId: 2, colorCode: "#00FF00", gradeName: "R석", price: 140000 },
-    { showSeatGradeId: 3, colorCode: "#0000FF", gradeName: "S석", price: 110000 },
-    { showSeatGradeId: 4, colorCode: "#FFFF00", gradeName: "A석", price: 80000 },
-    { showSeatGradeId: 5, colorCode: "#FF00FF", gradeName: "OP석", price: 170000 },
+    {
+      showSeatGradeId: 1,
+      gradeName: "VIP석",
+      colorCode: "#FF0000",
+      price: 170000,
+    },
+    {
+      showSeatGradeId: 2,
+      gradeName: "R석",
+      colorCode: "#00FF00",
+      price: 140000,
+    },
+    {
+      showSeatGradeId: 3,
+      gradeName: "S석",
+      colorCode: "#0000FF",
+      price: 110000,
+    },
+    {
+      showSeatGradeId: 4,
+      gradeName: "A석",
+      colorCode: "#FFFF00",
+      price: 80000,
+    },
   ],
   ranking: "뮤지컬 주간 3위",
   truveIndex: 98,

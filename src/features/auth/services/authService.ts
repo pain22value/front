@@ -5,11 +5,20 @@ const signup = async (signupRequest: SignupRequest): Promise<void> => {
   await api.post(ENDPOINTS.AUTH.SIGNUP, signupRequest);
 };
 
-const signin = async (signinRequest: SigninRequest): Promise<SigninResponse> => {
-  const { data } = await api.post<SigninResponse>(ENDPOINTS.AUTH.LOGIN, signinRequest);
+const signin = async (
+  signinRequest: SigninRequest,
+): Promise<SigninResponse> => {
+  const { data } = await api.post<SigninResponse>(
+    ENDPOINTS.AUTH.LOGIN,
+    signinRequest,
+  );
   // const { data } = await api.post<ApiResponse<SigninResponse>>(ENDPOINTS.AUTH.LOGIN, signinRequest);
   if (!data) throw new Error("로그인 데이터가 없습니다.");
-  return data;
+  // return data;
+  return {
+    accessToken: "MOCK_ACCESS_TOKEN_" + Date.now(),
+    user: "트루브_테스터",
+  };
 };
 
 const signout = async (): Promise<void> => {
@@ -17,9 +26,16 @@ const signout = async (): Promise<void> => {
 };
 
 const refresh = async (): Promise<SigninResponse> => {
-  const { data } = await api.post<ApiResponse<SigninResponse>>(ENDPOINTS.AUTH.REFRESH);
-  if (!data.data) throw new Error(data.message || "토큰 갱신 데이터가 없습니다.");
-  return data.data;
+  const { data } = await api.post<ApiResponse<SigninResponse>>(
+    ENDPOINTS.AUTH.REFRESH,
+  );
+  if (!data.data)
+    throw new Error(data.message || "토큰 갱신 데이터가 없습니다.");
+  // return data.data;
+  return {
+    accessToken: "MOCK_REFRESH_TOKEN_" + Date.now(),
+    user: "트루브_테스터",
+  };
 };
 
 const sendVerificationCode = async (email: string): Promise<void> => {

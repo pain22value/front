@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { Bell, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "../common/UserMenu";
@@ -56,8 +55,6 @@ export default function Header() {
           </Button>
           <UserMenu />
         </div>
-
-        {/* <SearchForm className="w-full sm:ml-auto sm:w-auto" /> */}
       </div>
     </header>
   );

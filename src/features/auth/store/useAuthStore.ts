@@ -19,8 +19,8 @@ export const useAuthStore = create(
   persist<AuthState>(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (set, get) => ({
-      accessToken: null,
-      user: null,
+      accessToken: "MOCK_SESSION_ACTIVE",
+      user: "트루브_테스터",
       signup: async (signupRequest) => {
         try {
           await authService.signup(signupRequest);

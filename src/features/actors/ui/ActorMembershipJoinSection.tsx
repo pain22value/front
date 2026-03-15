@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function JoinSection({ actor }: { actor: Actor }) {
+export default function ActorMembershipJoinSection({ actor }: { actor: Actor }) {
   return (
     <div className="space-y-6 py-6 font-geist">
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-medium">{actor.name}</h1>

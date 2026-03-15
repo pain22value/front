@@ -1,6 +1,12 @@
-interface QueueStatusResponse {
-  position: number;
-  progress: number;
-  waitingCount: number;
-  reservationRate: number;
-}
+// 대기열
+
+type QueueStatus = "WAITING" | "ADMITTED" | "EXPIRED";
+
+type QueueStatusResponse = {
+  status: QueueStatus;
+  rank: number;
+  admissionToken?: string;
+  expireTime: number;
+  waitingUserCount: number;
+  pollingMs: number;
+};

@@ -6,7 +6,7 @@ import { ShieldCheck } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { useState } from "react";
 
-export function CaptchaStep({
+export default function CaptchaStep({
   onComplete,
 }: {
   onComplete: () => void; // 캡차 풀기 성공 시 호출되는 핸들러

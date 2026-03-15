@@ -2,6 +2,7 @@
 
 import { useShows } from "@/features/show/hooks/useShows";
 import ShowCardList from "@/features/show/ui/ShowCardList";
+import { shows as allShows } from "@/shared/data/shows";
 
 export default function ShowNowPage() {
   const { data: shows, isLoading } = useShows("now");
@@ -12,8 +13,8 @@ export default function ShowNowPage() {
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold">지금 예매 가능</h2>
         </div>
-        <ShowCardList shows={shows} isLoading={isLoading} />
-      </section>{" "}
+        <ShowCardList shows={shows || allShows} isLoading={isLoading} />
+      </section>
     </section>
   );
 }

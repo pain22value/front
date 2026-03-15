@@ -1,3 +1,5 @@
+// 인증
+
 type User = {
   email: string;
   name: string;

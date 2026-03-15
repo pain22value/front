@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-export default function NoticeSection({ notices }: { notices: string[] }) {
+export default function ActorNoticeSection({ notices }: { notices: string[] }) {
   if (!notices || notices.length === 0) return null;
 
   return (

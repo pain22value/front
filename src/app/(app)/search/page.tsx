@@ -1,4 +1,4 @@
-import Search from "@/features/show/search/Search";
+import SearchResultSection from "@/features/search/ui/SearchResultSection";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -8,7 +8,7 @@ export default async function SearchPage(props: { searchParams: SearchParams }) 
 
   return (
     <section className="pl-20">
-      <Search query={query as string} />
+      <SearchResultSection query={query as string} />
     </section>
   );
 }

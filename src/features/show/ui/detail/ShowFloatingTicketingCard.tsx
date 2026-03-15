@@ -50,10 +50,10 @@ export function ShowFloatingTicketingCard() {
       console.log("PostHog: 10초 트래킹 구간 종료");
     }, 10000);
 
-    if (!accessToken) {
-      router.push("/signin");
-      return;
-    }
+    // if (!accessToken) {
+    //   router.push("/signin");
+    //   return;
+    // }
     setIsCaptchaModalOpen(true); // 모달이 떠도 위에서 설정한 10초 타이머는 계속 돌아갑니다.
   };
 
@@ -81,32 +81,40 @@ export function ShowFloatingTicketingCard() {
         />
         <Separator />
         {/* 회차 선택 */}
-        <RadioGroup value={round} onValueChange={setRound} className="space-y-3/">
+        <RadioGroup
+          value={round}
+          onValueChange={setRound}
+          className="space-y-3/"
+        >
           {isLoading ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">일정을 불러오는 중입니다...</div>
+            <div className="py-8 text-center text-sm text-muted-foreground">
+              일정을 불러오는 중입니다...
+            </div>
           ) : (
-            schedules?.map((schedule) => (
-              <label key={schedule.id} htmlFor={`round-${schedule.id}`}>
+            schedules?.map((schedule, index) => (
+              <label key={schedule.scheduleId} htmlFor={`round-${schedule.scheduleId}`}>
                 <Card
                   className={cn(
                     "flex flex-row items-start gap-3 p-4 cursor-pointer rounded-xl border transition",
-                    round === schedule.id ? "border-red-500" : "border-muted",
+                    round === schedule.scheduleId.toString() ? "border-red-500" : "border-muted",
                   )}
                 >
                   <RadioGroupItem
-                    id={`round-${schedule.id}`}
-                    value={schedule.id}
+                    id={`round-${schedule.scheduleId}`}
+                    value={schedule.scheduleId.toString()}
                     className={cn(
                       "mt-1",
-                      round === schedule.id &&
+                      round === schedule.scheduleId.toString() &&
                         "border-red-500 text-red-500 [&_[data-slot=radio-group-indicator]_svg]:fill-red-500",
                     )}
                   />
                   <div>
                     <p className="font-semibold">
-                      {schedule.round}회차 {schedule.time}
+                      {index + 1}회차 {schedule.showTime}
                     </p>
-                    <p className="text-sm text-muted-foreground">{schedule.cast}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {schedule.castings.map((c) => c.artistName).join(", ")}
+                    </p>
                   </div>
                 </Card>
               </label>
@@ -115,12 +123,21 @@ export function ShowFloatingTicketingCard() {
         </RadioGroup>
       </div>
 
-      <Button onClick={handleTicketing} className="w-full h-12 bg-red-500 hover:bg-red-600 text-white">
+      <Button
+        onClick={handleTicketing}
+        className="w-full h-12 bg-red-500 hover:bg-red-600 text-white"
+      >
         예매하기
       </Button>
 
-      <ShowTicketOpenNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} />
-      <CaptchaModal open={isCaptchaModalOpen} onOpenChange={setIsCaptchaModalOpen} />
+      <ShowTicketOpenNoticeModal
+        open={isNoticeModalOpen}
+        onOpenChange={setIsNoticeModalOpen}
+      />
+      <CaptchaModal
+        open={isCaptchaModalOpen}
+        onOpenChange={setIsCaptchaModalOpen}
+      />
     </div>
   );
 }

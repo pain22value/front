@@ -3,19 +3,22 @@
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import ActorCard from "@/features/show/ui/ActorCard";
-import { useSearch } from "../hooks/useSearch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatShowPeriod } from "@/shared/utils/date";
+import { shows as allShows } from "@/shared/data/shows";
+import { actors as allActors } from "@/shared/data/actors";
+import { useSearch } from "../hooks/useSearch";
 
-export default function Search({ query }: { query?: string }) {
+export default function SearchResultSection({ query }: { query?: string }) {
   const { data, isLoading } = useSearch(query || "");
+  console.log({ data });
 
   if (isLoading) {
     return <SearchSkeleton />;
   }
 
-  const actors = data?.actors ?? [];
-  const shows = data?.shows ?? [];
+  const actorsList = data?.actors || allActors.slice(0, 4);
+  const showsList = data?.shows || allShows.slice(0, 4);
 
   return (
     <section className="max-w-[1200] mx-auto px-2 sm:px-4 md:px-8 space-y-10 md:space-y-16 mt-8">
@@ -54,19 +57,19 @@ export default function Search({ query }: { query?: string }) {
         </div>
       </section>
       <section>
-        <h2 className="text-2xl font-semibold">배우({actors.length})</h2>
+        <h2 className="text-2xl font-semibold">배우({actorsList.length})</h2>
         <Separator className="mt-4! mb-6!" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {actors.map((actor) => (
+          {actorsList.map((actor: Actor) => (
             <ActorCard key={actor.id} actor={actor} />
           ))}
         </div>
       </section>
       <section>
-        <h2 className="text-2xl font-semibold">티켓({shows.length})</h2>
+        <h2 className="text-2xl font-semibold">티켓({showsList.length})</h2>
         <Separator className="mt-4 my-6" />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {shows.map((show) => (
+          {showsList.map((show: Show) => (
             <div key={show.id}>
               <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden mb-4">
                 <Image src={show.image} alt={show.title} fill className="object-cover" />

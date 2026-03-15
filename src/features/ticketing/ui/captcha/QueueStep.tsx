@@ -8,23 +8,28 @@ import { Separator } from "@/components/ui/separator";
 import { useInteractionStore } from "@/shared/store/useInteractionStore";
 import { useQueueStatus } from "../../hooks/useQueue";
 
-export function QueueStep({
+export default function QueueStep({
   onOpenChange,
 }: {
   onOpenChange: (open: boolean) => void; // 큐 모달 닫기 핸들러
 }) {
   const stopTicketingFlow = useInteractionStore((state) => state.stopTicketingFlow);
 
-  // 리액트 쿼리 커스텀 훅을 사용하여 1초 단위로 대기 상태 폴링
-  const { data: queueData = { position: 2014, progress: 12, waitingCount: 15000, reservationRate: 89 } } =
-    useQueueStatus(1);
+  // 리액트 쿼리 커스텀 훅을 사용하여 대기 상태 폴링
+  const { data: queueData } = useQueueStatus(1);
+
+  const currentRank = queueData?.rank ?? 0;
+  const waitingCount = queueData?.waitingUserCount ?? 0;
+  const pollingStatus = queueData?.status ?? "WAITING";
 
   useEffect(() => {
-    if (queueData.position <= 0) {
+    if (!queueData) return;
+
+    if (pollingStatus === "ADMITTED" || currentRank <= 0) {
       stopTicketingFlow(); // 예매 프로세스 진입 완료 시 트래킹 종료
       onOpenChange(false); // 모달 닫기 및 좌석 선택 화면 진입 로직 처리
     }
-  }, [queueData.position, onOpenChange, stopTicketingFlow]);
+  }, [queueData, pollingStatus, currentRank, onOpenChange, stopTicketingFlow]);
 
   return (
     <div className="p-6">
@@ -39,26 +44,26 @@ export function QueueStep({
       <div className="mt-6 rounded-2xl border border-red-200 pt-6">
         <div className="text-center">
           <p className="text-sm text-muted-foreground">현재 대기 순서</p>
-          <p className="mt-1 text-4xl font-bold text-red-500">{queueData.position.toLocaleString()}</p>
+          <p className="mt-1 text-4xl font-bold text-red-500">{currentRank.toLocaleString()}</p>
         </div>
         <div className="px-6 py-4">
-          <Progress value={queueData.progress} className="h-2" />
+          <Progress value={Math.max(0, 100 - (currentRank / 2500) * 100)} className="h-2" />
         </div>
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-4">
         <Card className="rounded-2xl bg-red-50 border-none shadow-none">
           <CardContent className="flex flex-col items-center gap-2 p-5">
-            <Check className="h-5 w-5 text-red-500" />
-            <p className="text-sm text-muted-foreground">예매율</p>
-            <p className="text-xl font-semibold text-red-500">{queueData.reservationRate}%</p>
+            <Bell className="h-5 w-5 text-red-500" />
+            <p className="text-sm text-muted-foreground">예상 대기시간</p>
+            <p className="text-xl font-semibold text-red-500">약 {Math.ceil(currentRank / 50)}분</p>
           </CardContent>
         </Card>
         <Card className="rounded-2xl bg-cyan-50 border-none shadow-none">
           <CardContent className="flex flex-col items-center gap-2 p-5">
             <Users className="h-5 w-5 text-cyan-600" />
             <p className="text-sm text-muted-foreground">대기 인원</p>
-            <p className="text-xl font-semibold text-cyan-600">{queueData.waitingCount.toLocaleString()}명</p>
+            <p className="text-xl font-semibold text-cyan-600">{(waitingCount || 0).toLocaleString()}명</p>
           </CardContent>
         </Card>
       </div>

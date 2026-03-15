@@ -72,3 +72,9 @@ export const actors: Actor[] = [
     isMember: true,
   },
 ];
+
+// 랜덤 배우 반환 (목업용 폴백)
+export const getRandomActor = (): Actor => {
+  const randomIndex = Math.floor(Math.random() * actors.length);
+  return actors[randomIndex];
+};

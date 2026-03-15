@@ -10,18 +10,21 @@ import ShowReviewMeta from "./ShowReviewMeta";
 import ShowReviewItem from "./ShowReviewItem";
 import ShowReviewPagination from "./ShowReviewPagination";
 import ShowReviewFilter from "./ShowReviewFilter";
+import { reviews } from "@/shared/data/reviews";
 
 export default function ShowReviewTab() {
   const [isWriting, setIsWriting] = useState(false);
   const [page, setPage] = useState(1);
   const [sentimentFilter, setSentimentFilter] = useState("all"); // 'all', 'good', 'bad'
 
-  const { data, status, error } = useReviews(page, sentimentFilter);
+  const { data, status } = useReviews(page, sentimentFilter);
 
   const handleFilterChange = (value: string) => {
     setSentimentFilter(value);
     setPage(1); // Reset to first page on filter change
   };
+
+  const currentReviews = data?.reviews || reviews.slice(0, 5);
 
   return (
     <section className="mx-auto max-w-4xl space-y-6">
@@ -66,10 +69,8 @@ export default function ShowReviewTab() {
               </div>
             </div>
           ))
-        ) : status === "error" ? (
-          <div className="py-10 text-center text-destructive">오류가 발생했습니다: {error?.message}</div>
-        ) : data?.reviews && data.reviews.length > 0 ? (
-          data.reviews.map((review) => <ShowReviewItem key={review.id} review={review} />)
+        ) : currentReviews.length > 0 ? (
+          currentReviews.map((review: Review) => <ShowReviewItem key={review.id} review={review} />)
         ) : (
           <div className="py-10 text-center text-muted-foreground">작성된 리뷰가 없습니다.</div>
         )}

@@ -1,3 +1,5 @@
+// 공연
+
 type Show = {
   id: number;
   title: string;
@@ -25,18 +27,26 @@ type ShowDetail = {
   posterUrl: string;
   noticeUrl?: string;
   castings: Casting[];
-  schedules: Schedule[];
+  schedules: ShowSchedule[];
   seatGrades: ShowSeatGrade[];
   ranking?: string;
   truveIndex?: number;
   benefit?: string;
 };
 
-type Schedule = {
+type ShowSchedule = {
   scheduleId: number;
   showTime: string;
   status: string;
+  castings: Casting[];
 };
+
+interface ShowSeatGrade {
+  showSeatGradeId: number;
+  gradeName: string;
+  colorCode: string;
+  price: number;
+}
 
 type Casting = {
   showCastId: number;
@@ -47,13 +57,6 @@ type Casting = {
   order: number;
   isLiked?: boolean;
 };
-
-interface ShowSeatGrade {
-  showSeatGradeId: number;
-  gradeName: string;
-  colorCode: string;
-  price: number;
-}
 
 // 2/21 박영준
 // 백엔드에서 오는 데이터 타입을 미리 정의

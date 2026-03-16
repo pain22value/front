@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Heart, LayoutGrid, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";

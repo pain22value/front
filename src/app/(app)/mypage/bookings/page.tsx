@@ -133,7 +133,9 @@ function BookingCard({ booking }: { booking: Booking }) {
   const [isReviewed, setIsReviewed] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const reviewed = JSON.parse(localStorage.getItem("reviewedOrders") ?? "[]");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsReviewed(reviewed.includes(booking.orderId));
   }, [booking.orderId]);
 

@@ -130,11 +130,14 @@ function BookingCard({ booking }: { booking: Booking }) {
   const isPendingPayment = booking.status === "PENDING_PAYMENT";
   const isWatched = booking.status === "WATCHED";
   const [showToast, setShowToast] = useState(false);
-  const [isReviewed, setIsReviewed] = useState(() => {
-    // const reviewed = JSON.parse(localStorage.getItem("reviewedOrders") ?? "[]");
-    // return reviewed.includes(booking.orderId);
-    return false;
-  });
+  const [isReviewed, setIsReviewed] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const reviewed = JSON.parse(localStorage.getItem("reviewedOrders") ?? "[]");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsReviewed(reviewed.includes(booking.orderId));
+  }, [booking.orderId]);
 
 
   return (
@@ -219,7 +222,9 @@ function BookingCard({ booking }: { booking: Booking }) {
                   </Link>
                 )
           ) : booking.status !== "PARTIAL_CANCEL" && booking.status !== "CANCELED" ? (
-            <button className="flex-1 rounded-md py-2 text-[16px] font-semibold text-[#22212B] hover:bg-gray-50 transition-colors">예매 취소</button>
+            <Link href={`/mypage/bookings/${booking.orderId}/cancel`} className="flex-1">
+              <button className="w-full rounded-md py-2 text-[16px] font-semibold text-[#22212B] hover:bg-gray-50 transition-colors">예매 취소</button>
+            </Link>
           ) : null}
         </div>
       </div>

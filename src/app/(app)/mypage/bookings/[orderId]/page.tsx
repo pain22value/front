@@ -115,6 +115,12 @@ const MOCK_BOOKINGS: Record<string, BookingDetail> = {
       "본인 확인을 위해 신분증을 지참해주세요",
       "QR코드 캡처 화면은 입장 불가",
     ],
+    cancelInfo: {
+      refundAmount: 112000,
+      cancelFee: 48000,
+      canceledSeats: ["1층 B구역 15열 6번"],
+      canceledAt: "2026.01.25.(일) 12:40:07",
+    },
   },
 
   // WATCHED
@@ -450,6 +456,62 @@ export default function BookingDetailPage() {
           </p>
         )}
 
+        {/* 환불 정보 - PARTIAL_CANCEL만 */}
+        {booking.cancelInfo && (
+          <>
+            <div className="mb-6 rounded-lg bg-[#F1F1F4] px-4 py-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[16px] font-bold text-[#23222A]">최종 환불 금액</span>
+              <span className="text-[16px] font-bold text-[#F11322]">
+                {formatAmount(booking.cancelInfo.refundAmount)}
+              </span>
+            </div>
+            <hr className="border-[#DDDDE4] mb-2" />
+
+            <p className="text-[14px] font-bold text-[#F93E4B] mb-2">취소 내역</p>
+            <hr className="border-[#DDDDE4] mb-2" />
+
+            <div className="space-y-1 mb-2">
+              {booking.cancelInfo.canceledSeats.map((seat, idx) => (
+                <div key={idx} className="flex justify-between text-[14px] text-[#68677E] font-medium">
+                  <span>취소 좌석</span>
+                  <span>{seat}</span>
+                </div>
+              ))}
+              <div className="flex justify-between text-[14px] text-[#68677E] font-medium">
+                <span>취소 수수료</span>
+                <span>{formatAmount(booking.cancelInfo.cancelFee)}</span>
+              </div>
+              <hr className="border-[#DDDDE4] mb-2" />
+
+              <div className="flex justify-between text-[14px] text-[#23222A] font-medium">
+                <span>환불 금액</span>
+                <span>{formatAmount(booking.cancelInfo.refundAmount)}</span>
+              </div>
+            </div>
+            <hr className="border-[#F1F1F4] mb-2" />
+
+            {/* 환불 정보 */}
+            <div className="flex justify-between items-center mb-2 mt-4">
+              <span className="text-[16px] font-bold text-[#23222A]">환불 정보</span>
+            </div>
+            <div className="flex items-center gap-2 font-medium text-[14px] text-[#23222A]">
+              <span className="w-1 h-5 bg-[#3182F6]" />
+              <span>
+                {"method" in booking.paymentInfo ? booking.paymentInfo.method : "토스페이"}
+              </span>
+              <span className="ml-auto text-[14px] text-[#23222A]">
+                {formatAmount(booking.cancelInfo.refundAmount)}
+              </span>
+            </div>
+            <div className="flex justify-between text-[14px] font-medium text-[#68677E] mt-1">
+              <span>취소 일시</span>
+              <span>{booking.cancelInfo.canceledAt}</span>
+            </div>
+          </div>
+          </>
+        )}
+
         {/* 안내 박스 */}
         <GuideBox title={booking.guideTitle} items={booking.guideItems} />
 
@@ -468,7 +530,7 @@ export default function BookingDetailPage() {
               className="px-12 py-2 rounded-md border text-[16px] font-semibold text-[#23222A] border-[#9E9DAF] hover:bg-gray-50 transition-colors"
               onClick={() => router.push("/shows")}
             >
-              다른 뮤지컬 둘러보기
+              홈으로 가기
             </button>
           )}
         </div>

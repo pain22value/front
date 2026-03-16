@@ -1,5 +1,5 @@
 import Providers from "@/components/providers/Providers";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Righteous } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import ModalRoot from "@/components/common/modals/ModalRoot";
 import type { Metadata } from "next";
@@ -7,6 +7,7 @@ import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const righteous = Righteous({ variable: "--font-righteous", weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Truve",
@@ -27,7 +28,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${righteous.variable} antialiased`}
         style={{ fontFamily: "Pretendard, sans-serif" }}
       >
         <Providers>

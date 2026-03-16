@@ -28,7 +28,14 @@ export const ENDPOINTS = {
   // 백엔드한테 요청 보낼 주소를 저장해둔것
   // seatService.ts에서 api.get(`${ENDPOINTS.SEATS.LIST}/${showId}/seats`) 이런 식으로 쓰임
   SEATS: {
-    LIST: "/shows",        // /shows/{showId}/seats : 2/21/박영준
-    RESERVE: "/shows",     // /shows/{showId}/seats/{seatId}/reserve : 2/21/박영준
+    LIST: "/shows", // /shows/{showId}/seats : 2/21/박영준
+    RESERVE: "/shows", // /shows/{showId}/seats/{seatId}/reserve : 2/21/박영준
+  },
+  QUEUE: {
+    ENTER: (showId: number | string) => `/queue/${showId}/enter`,
+    STATUS: (showId: number | string) => `/queue/${showId}/status`,
+  },
+  SEARCH: {
+    LIST: "/search",
   },
 } as const;

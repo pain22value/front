@@ -1,3 +1,5 @@
+// 홈
+
 // 홈 히어로 이미지
 type HomeHeroImage = {
   musicalId: number;

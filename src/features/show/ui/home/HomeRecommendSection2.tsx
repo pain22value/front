@@ -14,14 +14,14 @@ export default function HomeRecommendSection2() {
         showButtonsOnHover
         showPagination={true}
         renderItem={(item) => (
-          <div className={`h-[254] group relative overflow-hidden rounded-xl transition-all duration-300 ease-in-out`}>
+          <div className={`h-[254] group relative overflow-hidden rounded-3xl transition-all duration-300 ease-in-out`}>
             {/* 포스터 */}
             <Image
               src={item.image}
               alt={item.title}
               width={591}
               height={254}
-              className="/w-full w-full max-w-[591] h-full object-contain rounded-xl"
+              className="/w-full w-full max-w-[591] h-full object-cover rounded-xl"
             />
           </div>
         )}

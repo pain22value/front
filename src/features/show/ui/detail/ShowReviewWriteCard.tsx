@@ -11,12 +11,12 @@ import { toast } from "sonner";
 
 const selectedStyle = "border-red-500 bg-red-50 text-red-500 hover:bg-red-50 hover:text-red-500";
 
-interface ReviewData {
+type ReviewData = {
   sentiment: "good" | "bad";
   charmPoints: string[];
   emotionPoints: string[];
   content: string;
-}
+};
 
 export default function ShowReviewWriteCard({ onWriteSuccess }: { onWriteSuccess?: () => void }) {
   // 리뷰 작성 모드 상태 (작성 중 / 작성 완료)

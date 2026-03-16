@@ -1,6 +1,6 @@
 "use client";
 
-import { useModalStore } from "@/store/modalStore";
+import { useModalStore } from "@/shared/store/modalStore";
 import ConfirmModal from "./ConfirmModal";
 import AlertModal from "./AlertModal";
 

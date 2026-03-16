@@ -1,23 +1,67 @@
-interface Show {
-  id: number | string;
+// 공연
+
+type Show = {
+  id: number;
   title: string;
   venue: string;
-  period: string;
   image: string;
+  startTime: string;
+  endTime: string;
+  // runtimeMin: number;
+  // ageLimit: number;
+};
+
+type ShowDetail = {
+  showId: number;
+  title: string;
+  venue: {
+    venueId: number;
+    name: string;
+    address: string;
+  };
+  runtimeMin: number;
+  ageLimit: number;
+  startTime: string;
+  endTime: string;
+  description: string;
+  posterUrl: string;
+  noticeUrl?: string;
+  castings: Casting[];
+  schedules: ShowSchedule[];
+  seatGrades: ShowSeatGrade[];
+  ranking?: string;
+  truveIndex?: number;
+  benefit?: string;
+};
+
+type ShowSchedule = {
+  scheduleId: number;
+  showTime: string;
+  status: string;
+  castings: Casting[];
+};
+
+interface ShowSeatGrade {
+  showSeatGradeId: number;
+  gradeName: string;
+  colorCode: string;
+  price: number;
 }
 
-interface Artist {
-  id: number;
-  name: string;
-  image: string;
-  description?: string;
-  isMember?: boolean;
-}
+type Casting = {
+  showCastId: number;
+  artistId: number;
+  artistName: string;
+  profileImageUrl: string;
+  roleName: string;
+  order: number;
+  isLiked?: boolean;
+};
 
 // 2/21 박영준
 // 백엔드에서 오는 데이터 타입을 미리 정의
-type SeatStatus = 'available' | 'reserved' | 'unavailable'; // 좌석 상태
-type SeatGrade = 'VIP' | 'R' | 'S' | 'A'; // 좌석 등급
+type SeatStatus = "available" | "reserved" | "unavailable"; // 좌석 상태
+type SeatGrade = "VIP" | "R" | "S" | "A"; // 좌석 등급
 
 // 좌석 하나
 interface Seat {

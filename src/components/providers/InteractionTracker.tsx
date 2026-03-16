@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePostHog } from "posthog-js/react";
+import { useInteractionStore } from "@/shared/store/useInteractionStore";
 
 /**
  * [자체 서버 전송 가이드]
@@ -32,8 +33,6 @@ const flushToMyServer = async () => {
     console.error("자체 서버로 분석 데이터를 전송하는 데 실패했습니다.", e);
   }
 }; */
-
-import { useInteractionStore } from "@/store/useInteractionStore";
 
 export function InteractionTracker() {
   const posthog = usePostHog();

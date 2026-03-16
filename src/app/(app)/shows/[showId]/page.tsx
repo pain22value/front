@@ -1,11 +1,9 @@
 import { ShowDetailCard } from "@/features/show/ui/detail/ShowDetailCard";
-import ShowScheduleTap from "@/features/show/ui/detail/ShowScheduleTap";
 import { ShowDetailTabs } from "@/features/show/ui/detail/ShowDetailTabs";
-import { ShowTicketingCard } from "@/features/show/ui/detail/ShowTicketingCard";
-import { mockShow } from "@/shared/data/shows";
-import { showInfoData } from "@/shared/data/tabs";
-import ShowReviewTab from "@/features/show/ui/detail/ShowReviewTab";
-// import { ENDPOINTS } from "@/shared/api/endpoints";
+import { ShowFloatingTicketingCard } from "@/features/show/ui/detail/ShowFloatingTicketingCard";
+// import { notFound } from "next/navigation";
+import { ENDPOINTS } from "@/shared/api/endpoints";
+import { mockShowDetail } from "@/shared/data/shows";
 
 // export const revalidate = 60; // 재검증시간설정 : n초동안캐시
 
@@ -18,50 +16,36 @@ export async function generateStaticParams() {
     return [{ showId: "1" }, { showId: "2" }, { showId: "3" }];
   } catch (error) {
     console.error("Failed to generate static params:", error);
-    return [{ showId: "1" }, { showId: "2" }, { showId: "3" }];
+    return [];
   }
 }
 
-// async function fetchShowDetail(showId: string) {
-//   try {
-//     const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.DETAIL}/${showId}`);
-//     if (!res.ok) throw new Error("Failed to fetch show detail");
-//     return res.json();
-//   } catch (error) {
-//     console.error(`fetchShowDetail error for ${showId}:`, error);
-//     return null;
-//   }
-// }
+// 공연 상세 정보 조회
+async function fetchShowDetail(showId: string) {
+  try {
+    const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.DETAIL}/${showId}`);
+    if (!res.ok) throw new Error("Failed to fetch show detail");
+    return res.json();
+  } catch (error) {
+    console.error(`fetchShowDetail error for ${showId}:`, error);
+    return null;
+  }
+}
 
 export default async function ShowDetailPage({ params }: { params: Promise<{ showId: string }> }) {
   const { showId } = await params;
-  console.log(showId);
-  // const show = await fetchShowDetail(showId);
-  // const displayShow = show ?? mockShow;
-  // const displayInfo = displayShow.info ?? showInfoData;
-  // console.log({ show, displayShow });
-
+  const show = (await fetchShowDetail(showId)) || mockShowDetail;
+  // if (!show) notFound();
   return (
     <section className="pl-20">
       <section className="max-w-[1200] mx-auto p-0 xs:p-2 sm:p-4 md:p-6 lg:p-10 border border-dashed">
-        <div className="grid grid-cols-1 md:grid-cols-[minmax(550px,65%)_minmax(300px,35%)] gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(550px,65%)_minmax(300px,35%)]/ md:grid-cols-[minmax(550px,1fr)_300px] gap-8">
           <div className="col-span-[100%] md:col-span-[65%] space-y-20">
-            {/* 상단 뮤지컬 정보 */}
-            <ShowDetailCard {...mockShow} />
-            {/* <ShowDetailCard {...displayShow} /> */}
-
-            {/* 탭 부분 */}
-            <ShowDetailTabs
-              // info={displayInfo}
-              info={showInfoData}
-              casting={<ShowScheduleTap />}
-              review={<ShowReviewTab />}
-            />
+            <ShowDetailCard {...show} />
+            <ShowDetailTabs show={show} />
           </div>
-
-          {/* 모바일을 제외한 화면에서 우측에 고정된 상태로 떠있음 */}
-          <aside className="hidden md:block sticky top-[calc(var(--header-height)+2.5rem)] self-start">
-            <ShowTicketingCard />
+          <aside className="hidden md:block sticky top-[calc(var(--header-height)+2.5rem)]">
+            <ShowFloatingTicketingCard />
           </aside>
         </div>
       </section>

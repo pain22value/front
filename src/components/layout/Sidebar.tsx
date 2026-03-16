@@ -10,7 +10,6 @@ import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Link from "next/link";
-import { LayoutGrid, Heart, MessageSquare } from "lucide-react";
 import { actors } from "@/shared/data/actors";
 
 export default function Sidebar() {

@@ -7,9 +7,9 @@ import ActorShowListSection from "./ActorShowListSection";
 import { getRandomActor } from "@/shared/data/actors";
 import ActorNoticeSection from "./ActorNoticeSection";
 import ActorHeroSection from "./ActorHeroSection";
-import { notices } from "@/shared/data/notices";
+import { NOTICE_LIST } from "@/shared/data/notices";
 import { useActor } from "../hooks/useActors";
-import { shows } from "@/shared/data/shows";
+import { SHOW_LIST } from "@/shared/data/shows";
 
 export default function ActorSection({ actorId }: { actorId: string }) {
   const { data: actor, isLoading: isActorLoading } = useActor(actorId);
@@ -24,12 +24,12 @@ export default function ActorSection({ actorId }: { actorId: string }) {
       <section className="pl-20">
         <section className="max-w-[1200] mx-auto px-4 py-8 space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ActorNoticeSection notices={notices} />
+            <ActorNoticeSection notices={NOTICE_LIST} />
             <ActorLiveChatSection />
           </div>
           <ActorShowListSection
-            nowShows={nowShows || shows.slice(0, 2)}
-            pastShows={pastShows || shows.slice(2, 6)}
+            nowShows={nowShows || SHOW_LIST.slice(0, 2)}
+            pastShows={pastShows || SHOW_LIST.slice(2, 6)}
             isNowLoading={isNowLoading}
             isPastLoading={isPastLoading}
           />

@@ -5,8 +5,8 @@ import { Separator } from "@/components/ui/separator";
 import ActorCard from "@/features/show/ui/ActorCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatShowPeriod } from "@/shared/utils/date";
-import { shows as allShows } from "@/shared/data/shows";
-import { actors as allActors } from "@/shared/data/actors";
+import { SHOW_LIST } from "@/shared/data/shows";
+import { ACTOR_LIST } from "@/shared/data/actors";
 import { useSearch } from "../hooks/useSearch";
 
 export default function SearchResultSection({ query }: { query?: string }) {
@@ -17,8 +17,8 @@ export default function SearchResultSection({ query }: { query?: string }) {
     return <SearchSkeleton />;
   }
 
-  const actorsList = data?.actors || allActors.slice(0, 4);
-  const showsList = data?.shows || allShows.slice(0, 4);
+  const actorsList = data?.actors || ACTOR_LIST.slice(0, 4);
+  const showsList = data?.shows || SHOW_LIST.slice(0, 4);
 
   return (
     <section className="max-w-[1200] mx-auto px-2 sm:px-4 md:px-8 space-y-10 md:space-y-16 mt-8">

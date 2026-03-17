@@ -12,9 +12,10 @@ import { useSchedules } from "../../hooks/useSchedules";
 import ShowTicketOpenNoticeModal from "./ShowTicketOpenNoticeModal";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { usePostHog } from "posthog-js/react";
+// import { usePostHog } from "posthog-js/react"; // 🚨 PostHog 일시중단
 import { useInteractionStore } from "@/shared/store/useInteractionStore";
 import CaptchaModal from "@/features/ticketing/ui/captcha/CaptchaModal";
+import { SHOW_SCHEDULE_LIST } from "@/shared/data/schedules";
 
 export function ShowFloatingTicketingCard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -24,22 +25,22 @@ export function ShowFloatingTicketingCard() {
 
   const { data: schedules, isLoading } = useSchedules(date);
   const router = useRouter();
-  const posthog = usePostHog();
+  // const posthog = usePostHog(); // 🚨 PostHog 일시중단
   const accessToken = useAuthStore((state) => state.accessToken);
   const { startTicketingFlow, stopTicketingFlow } = useInteractionStore();
   // const user = useAuthStore((state) => state.user);
 
   const handleTicketing = () => {
-    console.log("티켓팅 버튼 클릭됨. PostHog 준비 상태:", !!posthog);
+    // console.log("티켓팅 버튼 클릭됨. PostHog 준비 상태:", !!posthog); // 🚨 PostHog 일시중단
 
-    // PostHog 이벤트 수집
-    if (posthog) {
-      posthog.capture("ticketing_button_clicked", {
-        selected_date: date?.toISOString(),
-        selected_round_id: round,
-      });
-      console.log("PostHog: ticketing_button_clicked 이벤트 전송 시도됨");
-    }
+    // 🚨 PostHog 일시중단 - 재개 시 주석 해제
+    // if (posthog) {
+    //   posthog.capture("ticketing_button_clicked", {
+    //     selected_date: date?.toISOString(),
+    //     selected_round_id: round,
+    //   });
+    //   console.log("PostHog: ticketing_button_clicked 이벤트 전송 시도됨");
+    // }
 
     startTicketingFlow(); // 고정밀 트래킹 구간 시작 (is_ticketing_flow: true)
 
@@ -81,17 +82,11 @@ export function ShowFloatingTicketingCard() {
         />
         <Separator />
         {/* 회차 선택 */}
-        <RadioGroup
-          value={round}
-          onValueChange={setRound}
-          className="space-y-3/"
-        >
+        <RadioGroup value={round} onValueChange={setRound} className="space-y-3/">
           {isLoading ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">
-              일정을 불러오는 중입니다...
-            </div>
+            <div className="py-8 text-center text-sm text-muted-foreground">일정을 불러오는 중입니다...</div>
           ) : (
-            schedules?.map((schedule, index) => (
+            (schedules || SHOW_SCHEDULE_LIST).map((schedule, index) => (
               <label key={schedule.scheduleId} htmlFor={`round-${schedule.scheduleId}`}>
                 <Card
                   className={cn(
@@ -123,21 +118,12 @@ export function ShowFloatingTicketingCard() {
         </RadioGroup>
       </div>
 
-      <Button
-        onClick={handleTicketing}
-        className="w-full h-12 bg-red-500 hover:bg-red-600 text-white"
-      >
+      <Button onClick={handleTicketing} className="w-full h-12 bg-red-500 hover:bg-red-600 text-white">
         예매하기
       </Button>
 
-      <ShowTicketOpenNoticeModal
-        open={isNoticeModalOpen}
-        onOpenChange={setIsNoticeModalOpen}
-      />
-      <CaptchaModal
-        open={isCaptchaModalOpen}
-        onOpenChange={setIsCaptchaModalOpen}
-      />
+      <ShowTicketOpenNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} />
+      <CaptchaModal open={isCaptchaModalOpen} onOpenChange={setIsCaptchaModalOpen} />
     </div>
   );
 }

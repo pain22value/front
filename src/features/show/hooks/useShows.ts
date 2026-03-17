@@ -5,7 +5,7 @@ export const useShows = (category: ShowCategory = "all") => {
   return useQuery({
     queryKey: ["shows", category],
     queryFn: () => showService.getShows({ category }),
-    retry: 0,
+    retry: 1,
   });
 };
 
@@ -13,6 +13,7 @@ export const useActorShows = (actorId: string, category?: ShowCategory) => {
   return useQuery({
     queryKey: ["shows", "actor", actorId, category],
     queryFn: () => showService.getShows({ actorId, category }),
-    retry: 0,
+    enabled: !!actorId,
+    retry: 1,
   });
 };

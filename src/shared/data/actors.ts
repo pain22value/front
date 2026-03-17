@@ -1,4 +1,4 @@
-export const actors: Actor[] = [
+export const ACTOR_LIST: Actor[] = [
   {
     id: 1,
     name: "김호영",
@@ -75,6 +75,6 @@ export const actors: Actor[] = [
 
 // 랜덤 배우 반환 (목업용 폴백)
 export const getRandomActor = (): Actor => {
-  const randomIndex = Math.floor(Math.random() * actors.length);
-  return actors[randomIndex];
+  const randomIndex = Math.floor(Math.random() * ACTOR_LIST.length);
+  return ACTOR_LIST[randomIndex];
 };

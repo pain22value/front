@@ -1,4 +1,4 @@
-export const reviews: Review[] = Array.from({ length: 25 }).map((_, i) => ({
+export const REVIEW_LIST: Review[] = Array.from({ length: 25 }).map((_, i) => ({
   id: i + 1,
   title: `관람평 제목 ${i + 1}`,
   content: `정말 멋진 공연이었습니다. 배우들의 연기가 인상 깊었어요. ${i + 1}`,

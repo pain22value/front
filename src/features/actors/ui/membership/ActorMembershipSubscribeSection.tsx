@@ -6,14 +6,14 @@ import MembershipSelectStep from "@/features/actors/ui/membership/MembershipSele
 import MembershipPaymentStep from "@/features/actors/ui/membership/MembershipPaymentStep";
 import ArtistCarousel from "@/features/actors/ui/membership/ArtistCarousel";
 import MembershipActorProfile from "@/features/actors/ui/membership/MembershipActorProfile";
-import { actors } from "@/shared/data/actors";
+import { ACTOR_LIST } from "@/shared/data/actors";
 import MembershipCompleteStep from "./MembershipCompleteStep";
 
 export default function ActorMembershipSubscribeSection({ actorId }: { actorId: string }) {
   const [currentStep, setCurrentStep] = useState(1);
 
   // URL 에서 전달받은 actorId를 숫자로 변환하여 찾아오는 구조 (fallback 포함)
-  const currentActor = actors.find((a) => a.id === Number(actorId)) || actors[0];
+  const currentActor = ACTOR_LIST.find((a) => a.id === Number(actorId)) || ACTOR_LIST[0];
 
   const handleNextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
   const handlePrevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));

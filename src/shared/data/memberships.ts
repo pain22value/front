@@ -1,10 +1,10 @@
-import { actors } from "./actors";
+import { ACTOR_LIST } from "./actors";
 
-export const memberships = [
+export const MEMBERSHIP_LIST = [
   {
     id: 1,
-    name: actors[0].name,
-    imageUrl: actors[0].image,
+    name: ACTOR_LIST[0].name,
+    imageUrl: ACTOR_LIST[0].image,
     joinDate: "2025.01.15",
     nextPaymentDate: "2026.04.15",
     daysLeft: "D-40",
@@ -12,8 +12,8 @@ export const memberships = [
   },
   {
     id: 2,
-    name: actors[1].name,
-    imageUrl: actors[1].image,
+    name: ACTOR_LIST[1].name,
+    imageUrl: ACTOR_LIST[1].image,
     joinDate: "2025.03.01",
     nextPaymentDate: "2026.04.01",
     daysLeft: "D-26",
@@ -21,8 +21,8 @@ export const memberships = [
   },
   {
     id: 3,
-    name: actors[2].name,
-    imageUrl: actors[2].image,
+    name: ACTOR_LIST[2].name,
+    imageUrl: ACTOR_LIST[2].image,
     joinDate: "2025.06.10",
     nextPaymentDate: "2026.04.10",
     daysLeft: "D-35",

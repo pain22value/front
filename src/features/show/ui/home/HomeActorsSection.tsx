@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { actors } from "@/shared/data/actors";
+import { ACTOR_LIST } from "@/shared/data/actors";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
@@ -19,7 +19,7 @@ export default function HomeActorsSection() {
 
       {/* 배우 목록 */}
       <div className="flex gap-3 flex-wrap pb-2">
-        {actors.slice(0, 50).map((actor) => (
+        {ACTOR_LIST.slice(0, 50).map((actor) => (
           <Link
             key={actor.id}
             href={`/actors/${actor.id}`}

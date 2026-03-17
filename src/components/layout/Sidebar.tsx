@@ -8,7 +8,7 @@ import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Link from "next/link";
-import { actors } from "@/shared/data/actors";
+import { ACTOR_LIST } from "@/shared/data/actors";
 
 export default function Sidebar() {
   const { isExpanded, setExpanded } = useSidebarStore();
@@ -140,7 +140,7 @@ export default function Sidebar() {
       {/* 배우 */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
         <div className="flex flex-col gap-4 w-full">
-          {actors.slice(0, 4).map((actor) => (
+          {ACTOR_LIST.slice(0, 4).map((actor) => (
             <Link
               key={actor.id}
               href={`/actors/${actor.id}`}

@@ -1,9 +1,9 @@
-import { memberships } from "@/shared/data/memberships";
+import { MEMBERSHIP_LIST } from "@/shared/data/memberships";
 import MembershipCard from "./MembershipCard";
 
 export default function MembershipDashboard() {
   // 목업 데이터 기준 요약 정보
-  const activeMemberships: number = memberships.length;
+  const activeMemberships: number = MEMBERSHIP_LIST.length;
   const monthlyPayment: string = "15,000";
 
   return (
@@ -21,12 +21,12 @@ export default function MembershipDashboard() {
       <section>
         <h2 className="text-xl font-bold mb-8">멤버십 목록</h2>
         <ul className="space-y-6">
-          {memberships.length === 0 ? (
+          {MEMBERSHIP_LIST.length === 0 ? (
             <div className="border-t border-gray-100 py-24 flex flex-col items-center justify-center">
               <p className="text-gray-500 text-lg font-medium">내 멤버십 내역이 없습니다.</p>
             </div>
           ) : (
-            memberships.map((item) => <MembershipCard key={item.id} {...item} />)
+            MEMBERSHIP_LIST.map((item) => <MembershipCard key={item.id} {...item} />)
           )}
         </ul>
       </section>

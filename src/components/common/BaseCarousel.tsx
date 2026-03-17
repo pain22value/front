@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   type CarouselApi,
   Carousel,
@@ -9,6 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import { cn } from "@/shared/utils/cn";
 
 type BaseCarouselProps<T> = {
@@ -22,6 +23,10 @@ type BaseCarouselProps<T> = {
   itemClassName?: string; // CarouselItem 클래스 (반응형 basis 설정 등)
   loop?: boolean; // 무한 루프 여부
   align?: "start" | "center" | "end"; // 정렬 방식
+  autoplay?: boolean; // 자동 플레이 여부
+  autoplayDelay?: number; // 자동 플레이 딜레이 (ms)
+  stopOnInteraction?: boolean; // 사용자 인터랙션 시 자동 플레이 정지 여부
+  stopOnMouseEnter?: boolean; // 마우스 진입 시 자동 플레이 정지 여부
 };
 
 export function BaseCarousel<T extends { id: string | number }>({
@@ -35,10 +40,19 @@ export function BaseCarousel<T extends { id: string | number }>({
   itemClassName,
   loop = true,
   align = "center",
+  autoplay = false,
+  autoplayDelay = 3000,
+  stopOnInteraction = true,
+  stopOnMouseEnter = false,
 }: BaseCarouselProps<T>) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+
+  // 자동 플레이 플러그인 인스턴스 (리렌더링 시 재생성 방지)
+  const autoplayPlugin = useRef(
+    autoplay ? Autoplay({ delay: autoplayDelay, stopOnInteraction, stopOnMouseEnter }) : null,
+  );
 
   useEffect(() => {
     // api가 초기화되지 않았으면 실행하지 않음
@@ -73,6 +87,7 @@ export function BaseCarousel<T extends { id: string | number }>({
           align,
           loop,
         }}
+        plugins={autoplayPlugin.current ? [autoplayPlugin.current] : []}
         className="w-full"
       >
         {/* 컨텐트 */}

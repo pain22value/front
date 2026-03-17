@@ -19,8 +19,8 @@ export const useAuthStore = create(
   persist<AuthState>(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (set, get) => ({
-      accessToken: "MOCK_SESSION_ACTIVE",
-      user: "트루브_테스터",
+      accessToken: null,
+      user: null,
       signup: async (signupRequest) => {
         try {
           await authService.signup(signupRequest);
@@ -47,7 +47,7 @@ export const useAuthStore = create(
         } catch (error: unknown) {
           console.error("서버 로그아웃 요청에 실패했습니다:", error);
         } finally {
-          // set({ accessToken: null, user: null });
+          set({ accessToken: null, user: null });
         }
       },
       setAuth: (accessToken, user) => set({ accessToken, user }),

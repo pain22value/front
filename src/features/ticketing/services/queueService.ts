@@ -1,5 +1,5 @@
-import api from "@/shared/api/axios";
-import { ENDPOINTS } from "@/shared/api/endpoints";
+// import api from "@/shared/api/axios";
+// import { ENDPOINTS } from "@/shared/api/endpoints";
 
 // 목업 상태 시뮬레이션을 위한 전역 변수
 let mockQueueState: QueueStatusResponse = {

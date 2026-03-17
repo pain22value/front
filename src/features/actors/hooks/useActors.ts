@@ -5,6 +5,7 @@ export const useActor = (actorId: number | string) => {
   return useQuery({
     queryKey: ["actor", actorId],
     queryFn: () => actorService.getActorDetail(actorId),
-    retry: 0,
+    enabled: !!actorId,
+    retry: 1,
   });
 };

@@ -3,7 +3,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ShowCardList from "@/features/show/ui/ShowCardList";
 import { useShows } from "@/features/show/hooks/useShows";
-import { shows as allShows } from "@/shared/data/shows";
+import { SHOW_LIST } from "@/shared/data/shows";
 
 export default function ShowListPage() {
   const { data: shows, isLoading } = useShows("all");
@@ -37,7 +37,7 @@ export default function ShowListPage() {
           </Select>
         </div>
 
-        <ShowCardList shows={shows || allShows} isLoading={isLoading} />
+        <ShowCardList shows={shows || SHOW_LIST} isLoading={isLoading} />
       </section>
     </section>
   );

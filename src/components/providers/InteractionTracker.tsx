@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { usePostHog } from "posthog-js/react";
+// import { usePostHog } from "posthog-js/react"; // 🚨 PostHog 일시중단
 import { useInteractionStore } from "@/shared/store/useInteractionStore";
 
 /**
@@ -35,7 +35,7 @@ const flushToMyServer = async () => {
 }; */
 
 export function InteractionTracker() {
-  const posthog = usePostHog();
+  // const posthog = usePostHog(); // 🚨 PostHog 일시중단
   const isTicketingFlow = useInteractionStore((state) => state.isTicketingFlow);
 
   // 리렌더링 없이 상태를 추적하기 위한 Refs
@@ -46,7 +46,8 @@ export function InteractionTracker() {
   const clickPath = useRef<{ x: number; y: number; t: number }[]>([]);
 
   useEffect(() => {
-    if (!posthog) return;
+    // 🚨 PostHog 일시중단 - posthog 의존성 제거
+    // if (!posthog) return;
 
     // 공통 트래킹 함수
     const track = (eventName: string, properties: Record<string, unknown>) => {
@@ -58,8 +59,8 @@ export function InteractionTracker() {
         is_ticketing_flow: isTicketingFlow, // 요청한 특정 구간 트래킹 여부 태깅
       };
 
-      // 1. PostHog로 전송
-      posthog.capture(eventName, enhancedProperties);
+      // 1. PostHog로 전송 (🚨 일시중단)
+      // posthog.capture(eventName, enhancedProperties);
 
       // 2. 자체 서버 큐에 추가 (주석 해제 시 동작)
       /* EVENT_QUEUE.push({ event: eventName, properties: enhancedProperties, timestamp: Date.now() });
@@ -170,7 +171,7 @@ export function InteractionTracker() {
       window.removeEventListener("blur", handleBlur);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [posthog, isTicketingFlow]);
+  }, [isTicketingFlow]); // 🚨 posthog 의존성 제거 (일시중단)
 
   return null;
 }

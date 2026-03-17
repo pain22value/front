@@ -69,15 +69,15 @@ export default function CheckoutPage() {
     try {
       const orderId = crypto.randomUUID();
 
-      await fetch("http://api.truve.site:8080/api/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId,
-          amount: total,
-          method: payMethod,
-        }),
-      });
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId,
+        amount: total,
+        method: payMethod,
+      }),
+    });
 
       sessionStorage.setItem("pendingBooking", JSON.stringify({
         showTitle: "뮤지컬 <킹키부츠>",

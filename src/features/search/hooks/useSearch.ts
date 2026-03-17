@@ -6,6 +6,6 @@ export const useSearch = (query: string) => {
     queryKey: ["search", query],
     queryFn: () => searchService.getSearchResults(query),
     enabled: !!query,
-    retry: 0,
+    retry: 1,
   });
 };

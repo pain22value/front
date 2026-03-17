@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { Clock, Heart, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { actors } from "@/shared/data/actors";
+import { ACTOR_LIST } from "@/shared/data/actors";
 
 export default function ShowInfoTab({ show }: { show: ShowDetail }) {
   const info = {
-    cast: { title: "캐스팅", actors },
+    cast: { title: "캐스팅", actors: ACTOR_LIST },
     banner: {
       text: `배우를 선택하면 아티스트 페이지로 이동할 수 있습니다.
     관심 배우를 설정하고 소식을 미리 받아보세요.`,

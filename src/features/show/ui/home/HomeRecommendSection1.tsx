@@ -3,7 +3,7 @@
 import { useRecommendShows } from "../../hooks/useRecommendShows";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
 import { formatShowPeriod } from "@/shared/utils/date";
-import { recommendShows } from "@/shared/data/shows";
+import { RECOMMEND_SHOW_LIST } from "@/shared/data/shows";
 import { cn } from "@/shared/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,11 +15,14 @@ export default function HomeRecommendSection1() {
     <section className="max-w-[1200] mx-auto space-y-8">
       <h1 className="font-semibold text-2xl">이 뮤지컬 어떠세요?</h1>
       <BaseCarousel
-        items={shows || recommendShows}
+        items={shows || RECOMMEND_SHOW_LIST}
         className="max-w-7xl mx-auto"
         itemClassName="sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
         showPagination
         showButtonsOnHover
+        autoplay
+        stopOnInteraction={false}
+        stopOnMouseEnter
         renderItem={(item: Show, index, isSelected) => (
           <Link
             href={`/shows/${item.id}`}

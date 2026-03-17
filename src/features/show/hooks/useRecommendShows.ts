@@ -5,5 +5,6 @@ export const useRecommendShows = () => {
   return useQuery({
     queryKey: ["recommendations"],
     queryFn: showService.getRecommendedShows,
+    retry: 1,
   });
 };

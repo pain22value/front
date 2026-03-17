@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { actors } from "@/shared/data/actors";
+import { ACTOR_LIST } from "@/shared/data/actors";
 import { Heart } from "lucide-react"; // 하트 아이콘을 위해 lucide-react 사용
 
 export default function ActorList() {
@@ -9,7 +9,7 @@ export default function ActorList() {
     <div className="w-full max-w-[850] mx-auto mt-10">
       <h2 className="text-2xl font-bold p-4">즐겨찾기</h2>
       <div className="divide-y divide-gray-100 mt-8">
-        {actors.map((actor) => (
+        {ACTOR_LIST.map((actor) => (
           <div key={actor.id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
             <div className="flex items-center space-x-4">
               <Avatar className="h-12 w-12 border">

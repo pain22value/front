@@ -5,20 +5,21 @@ import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-// 브라우저 환경(window)에서만 PostHog를 초기화합니다.
-if (typeof window !== "undefined") {
+// 🚨 PostHog 일시중단 - 사용 재개 시 아래 주석 해제
+/* if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_TOKEN || "", {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com",
-    person_profiles: "always", // 유저 프로필 생성 설정
-    capture_pageview: false, // 단일 페이지 애플리케이션(SPA)의 정확한 측정을 위해 수동으로 트래킹합니다.
-
-    debug: false, // 개발 단계에서 전송 로그를 확인하기 위해 디버그 모드를 활성화합니다.
-    opt_out_capturing_by_default: true, // 🚨 임시로 PostHog 비활성화 🚨
+    person_profiles: "always",
+    capture_pageview: false,
+    debug: false,
+    opt_out_capturing_by_default: true,
   });
-}
+} */
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  return <PHProvider client={posthog}>{children}</PHProvider>;
+  // 🚨 PostHog 일시중단 - PHProvider 대신 Fragment로 대체
+  // return <PHProvider client={posthog}>{children}</PHProvider>;
+  return <>{children}</>;
 }
 
 /**
@@ -36,9 +37,8 @@ export function PostHogPageView() {
         url = url + "?" + searchParams.toString();
       }
       // $pageview 이벤트를 현재 URL 정보와 함께 전송합니다.
-      posthog.capture("$pageview", {
-        $current_url: url,
-      });
+      // 🚨 PostHog 일시중단 - 재개 시 주석 해제
+      // posthog.capture("$pageview", { $current_url: url });
     }
   }, [pathname, searchParams]);
 

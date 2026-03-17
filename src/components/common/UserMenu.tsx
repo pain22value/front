@@ -46,7 +46,7 @@ export function UserMenu() {
         <div className="flex flex-col mt-2">
           <DropdownMenuItem asChild className="p-0 focus:bg-transparent">
             <Button variant="ghost" asChild className="w-full justify-start text-lg font-medium h-12 px-2">
-              <Link href="/my/bookings">마이 티켓</Link>
+              <Link href="/mypage/bookings">마이 티켓</Link>
             </Button>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="p-0 focus:bg-transparent">

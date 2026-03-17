@@ -1,4 +1,4 @@
-export const shows: Show[] = [
+export const SHOW_LIST: Show[] = [
   {
     id: 1,
     title: "렌트",
@@ -82,9 +82,9 @@ export const shows: Show[] = [
   },
 ];
 
-export const rightNowShows: Show[] = shows;
+export const RIGHT_NOW_SHOW_LIST: Show[] = SHOW_LIST;
 
-export const recommendShows: Show[] = [
+export const RECOMMEND_SHOW_LIST: Show[] = [
   {
     id: 1,
     title: "안나 카레니나",
@@ -167,7 +167,7 @@ export const recommendShows: Show[] = [
   },
 ];
 
-export const recommendShows2: Show[] = [
+export const RECOMMEND_SHOW_LIST_2: Show[] = [
   {
     id: 1,
     title: "킹키부츠",
@@ -251,7 +251,7 @@ export const recommendShows2: Show[] = [
   },
 ];
 
-export const mockShowDetail: ShowDetail = {
+export const MOCK_SHOW_DETAIL: ShowDetail = {
   showId: 1,
   title: "뮤지컬 <킹키부츠>",
   description:

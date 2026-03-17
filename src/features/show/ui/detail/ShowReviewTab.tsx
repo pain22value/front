@@ -10,7 +10,7 @@ import ShowReviewMeta from "./ShowReviewMeta";
 import ShowReviewItem from "./ShowReviewItem";
 import ShowReviewPagination from "./ShowReviewPagination";
 import ShowReviewFilter from "./ShowReviewFilter";
-import { reviews } from "@/shared/data/reviews";
+import { REVIEW_LIST } from "@/shared/data/reviews";
 
 export default function ShowReviewTab() {
   const [isWriting, setIsWriting] = useState(false);
@@ -24,7 +24,7 @@ export default function ShowReviewTab() {
     setPage(1); // Reset to first page on filter change
   };
 
-  const currentReviews = data?.reviews || reviews.slice(0, 5);
+  const currentReviews = data?.reviews || REVIEW_LIST.slice(0, 5);
 
   return (
     <section className="mx-auto max-w-4xl space-y-6">

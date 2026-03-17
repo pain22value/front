@@ -1,6 +1,6 @@
-import { reviews } from "@/shared/data/reviews";
-import { actors } from "@/shared/data/actors";
-import { shows } from "@/shared/data/shows";
+import { REVIEW_LIST } from "@/shared/data/reviews";
+import { ACTOR_LIST } from "@/shared/data/actors";
+import { SHOW_LIST } from "@/shared/data/shows";
 
 // 날짜 비교를 통한 공연 상태 카테고리 필터링
 export const filterShowsByCategory = (items: Show[], category: "all" | "now" | "tobe" | "closed" = "all"): Show[] => {
@@ -27,8 +27,8 @@ export const filterShowsByActor = (items: Show[], actorId: number | string): Sho
 // 검색어 매칭 필터링
 export const filterSearchResults = (query: string) => {
   const lower = query.toLowerCase();
-  const filteredShows = shows.filter((show) => show.title.toLowerCase().includes(lower));
-  const filteredActors = actors.filter((actor) => actor.name.toLowerCase().includes(lower));
+  const filteredShows = SHOW_LIST.filter((show) => show.title.toLowerCase().includes(lower));
+  const filteredActors = ACTOR_LIST.filter((actor) => actor.name.toLowerCase().includes(lower));
 
   return {
     shows: filteredShows,
@@ -38,7 +38,7 @@ export const filterSearchResults = (query: string) => {
 
 // 리뷰 평점/감성 필터링 및 페이징
 export const filterAndPaginateReviews = (
-  items: typeof reviews,
+  items: typeof REVIEW_LIST,
   { page, sentiment }: { page: number; sentiment: string },
 ) => {
   const REVIEWS_PER_PAGE = 5;

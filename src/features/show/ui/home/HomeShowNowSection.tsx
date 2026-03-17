@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BaseCarousel } from "@/components/common/BaseCarousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatShowPeriod } from "@/shared/utils/date";
-import { rightNowShows } from "@/shared/data/shows";
+import { RIGHT_NOW_SHOW_LIST } from "@/shared/data/shows";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -40,12 +40,15 @@ export default function HomeShowNowSection() {
       </div>
 
       <BaseCarousel
-        items={rightNowShows}
+        items={RIGHT_NOW_SHOW_LIST}
         itemsPerView={6}
         loop
         align="start"
         showButtonsOnHover
         showPagination={false}
+        autoplay
+        stopOnInteraction={false}
+        stopOnMouseEnter
         renderItem={(show: Show) => (
           <Link href={`/shows/${show.id}`}>
             <Card className="border-0 bg-transparent shadow-none">

@@ -5,5 +5,6 @@ export const useReviews = (page: number, sentiment: string) => {
   return useQuery({
     queryKey: ["reviews", { page, sentiment }],
     queryFn: () => reviewService.getReviews({ page, sentiment }),
+    retry: 1,
   });
 };

@@ -55,19 +55,21 @@ export default function ShowTicketOpenNoticeModal({
         <div className="mx-6 mb-6 rounded-xl bg-pink-50 p-4">
           <div className="flex items-center gap-2 mb-2 font-medium">
             <ShieldCheck className="text-red-500" />
-            공정 티켓팅 시스템
+            공정성 티켓팅 시스템
           </div>
           <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
-            <li>AI 기반 봇 차단 (생성형 캡차)</li>
-            <li>랜덤 대기열 배정</li>
-            <li>1인 2매 구매 제한</li>
-            <li>본인 인증 필수</li>
+            <li>생성형 AI 기반 보안 퀴즈로 매크로·봇 차단</li>
+            <li>접속 순서대로 대기열 자동 배정</li>
+            <li>1인 회차당 최대 4매 예매 가능</li>
+            <li>복수 계정 부정 예매 탐지 및 제한</li>
           </ul>
         </div>
 
         {/* Footer */}
         <div className="p-6 pt-0">
-          <Button className="w-full rounded-xl bg-red-500 hover:bg-red-600">캘린더에 추가하기</Button>
+          <Button className="w-full rounded-xl bg-red-500 hover:bg-red-600" onClick={() => onOpenChange(false)}>
+            확인
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

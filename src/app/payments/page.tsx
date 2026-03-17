@@ -69,7 +69,7 @@ export default function CheckoutPage() {
     try {
       const orderId = crypto.randomUUID();
 
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payments`, {
+    await fetch(`${process.env.API_URL}/api/payments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -11,13 +11,12 @@ import { Separator } from "@/components/ui/separator";
 import { useSchedules } from "../../hooks/useSchedules";
 import ShowTicketOpenNoticeModal from "./ShowTicketOpenNoticeModal";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/features/auth/store/useAuthStore";
-// import { usePostHog } from "posthog-js/react"; // 🚨 PostHog 일시중단
-import { useInteractionStore } from "@/shared/store/useInteractionStore";
+// import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 import CaptchaModal from "@/features/ticketing/ui/captcha/CaptchaModal";
 import { SHOW_SCHEDULE_LIST } from "@/shared/data/schedules";
 
-export function ShowFloatingTicketingCard() {
+export function ShowFloatingTicketingCard({ show }: { show?: ShowDetail }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [round, setRound] = useState("1");
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(true);
@@ -25,31 +24,12 @@ export function ShowFloatingTicketingCard() {
 
   const { data: schedules, isLoading } = useSchedules(date);
   const router = useRouter();
-  // const posthog = usePostHog(); // 🚨 PostHog 일시중단
-  const accessToken = useAuthStore((state) => state.accessToken);
-  const { startTicketingFlow, stopTicketingFlow } = useInteractionStore();
+  const { startTracking, setPageStage } = useTelemetryStore();
   // const user = useAuthStore((state) => state.user);
 
   const handleTicketing = () => {
-    // console.log("티켓팅 버튼 클릭됨. PostHog 준비 상태:", !!posthog); // 🚨 PostHog 일시중단
-
-    // 🚨 PostHog 일시중단 - 재개 시 주석 해제
-    // if (posthog) {
-    //   posthog.capture("ticketing_button_clicked", {
-    //     selected_date: date?.toISOString(),
-    //     selected_round_id: round,
-    //   });
-    //   console.log("PostHog: ticketing_button_clicked 이벤트 전송 시도됨");
-    // }
-
-    startTicketingFlow(); // 고정밀 트래킹 구간 시작 (is_ticketing_flow: true)
-
-    // 모달 표시와 상관없이 지금부터 정확히 10초 동안만 트래킹을 유지합니다.
-    // 10초가 지나면 자동으로 stopTicketingFlow가 호출되어 수집이 중단됩니다.
-    setTimeout(() => {
-      stopTicketingFlow();
-      console.log("PostHog: 10초 트래킹 구간 종료");
-    }, 10000);
+    startTracking();
+    setPageStage("captcha");
 
     // if (!accessToken) {
     //   router.push("/signin");
@@ -108,7 +88,7 @@ export function ShowFloatingTicketingCard() {
                       {index + 1}회차 {schedule.showTime}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {schedule.castings.map((c) => c.artistName).join(", ")}
+                      {show?.castings?.map((c) => c.artistName).join(", ")}
                     </p>
                   </div>
                 </Card>

@@ -15,9 +15,9 @@ export const ENDPOINTS = {
     VERIFY: "/auth/email/verify",
   },
   SHOWS: {
-    RECOMMENDATIONS: "/shows/recommendations",
-    LIST: "/shows",
-    DETAIL: "/shows", // 뒤에 /{showId}를 붙여서 사용
+    RECOMMENDATIONS: "/musical/shows/recommendations",
+    LIST: "/musical/shows",
+    DETAIL: "/musical/shows", // 뒤에 /{showId}를 붙여서 사용
   },
   PAYMENTS: {
     SAVE: "/payments",
@@ -37,5 +37,9 @@ export const ENDPOINTS = {
   },
   SEARCH: {
     LIST: "/search",
+  },
+  HOME: {
+    SHOWS: "/musical/home/shows",
+    BANNERS: "/musical/home/banners",
   },
 } as const;

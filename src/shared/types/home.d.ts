@@ -1,40 +1,37 @@
-// 홈
+// 공연
 
-// 홈 히어로 이미지
-type HomeHeroImage = {
-  musicalId: number;
+type HomeShow = {
+  showId: number;
   posterUrl: string;
-  title: string;
-  dailyRank: number;
-  location: string;
-  period: string;
-  isActivate: boolean;
+  showTitle: string;
+  venueName: string;
+  date: string;
 };
 
-// 홈 랭킹 아이템
-type HomeShowRankItem = {
+type Page = {
+  currentPage: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+};
+
+type HomeShowsData = {
+  shows: HomeShow[];
+  page: Page;
+};
+
+// 배너
+
+type HomeBanner = {
   bannerId: number;
-  musicalId: number;
-  imageUrl: string;
-  isActive: boolean;
-  startAt: string;
-  endAt: string;
-};
-
-// 홈 랭킹 리스트
-type HomeShowRankList = HomeShowRankItem[];
-
-// 홈 추천 아이템
-type HomeRecommendItem = {
-  musicalId: number;
+  showId: number;
+  showTitle: string;
+  venueName: string;
+  date: string;
   posterUrl: string;
-  title: string;
-  location: string;
-  period: string;
-  isActive: boolean;
-  startAt: string;
-  endAt: string;
+  displayOrder: number;
 };
 
-// 홈 추천 리스트
-type HomeRecommendList = HomeRecommendItem[];
+type HomeBannersData = {
+  banners: HomeBanner[];
+};

@@ -14,11 +14,11 @@ export default function ActorHeroSection({ actor }: { actor: Actor }) {
           <Image
             src="https://res.cloudinary.com/dfiaqyaug/image/upload/v1773122721/image_45_zlkipp.png"
             alt="고은성"
-            width={800}
-            height={800}
+            fill
             className="object-contain object-bottom"
+            // src={actor.image}
+            // alt={actor.name}
           />
-          {/* <Image src={actor.image} alt={actor.name} fill className="object-contain object-bottom" priority /> */}
         </div>
       </section>
       <section

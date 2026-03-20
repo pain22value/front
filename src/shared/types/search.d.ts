@@ -1,6 +1,6 @@
 // search.d.ts
 
-interface SearchResponse {
+type SearchResponse = {
   shows: Show[];
   actors: Actor[];
-}
+};

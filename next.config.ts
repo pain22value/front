@@ -14,8 +14,19 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**", // 또는 특정 패턴: '**.domain.com'
-        pathname: "/**", // 전체 경로 허용
+        hostname: "**",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localstack",
+        port: "4566",
+        pathname: "/**",
       },
     ],
   },

@@ -3,6 +3,7 @@
 import AutoScroll from "embla-carousel-auto-scroll";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useRef } from "react";
+import Image from "next/image";
 
 const artists = [
   {
@@ -67,10 +68,11 @@ export default function ArtistCarousel() {
             >
               <div className="group relative overflow-hidden rounded-lg bg-slate-200 dark:bg-zinc-900 transition-all duration-500">
                 <div className="aspect-3/4 w-full relative">
-                  <img
+                  <Image
                     src={artist.img}
                     alt={artist.name}
-                    className="h-full w-full object-cover grayscale-[0.3] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
+                    fill
+                    className="object-cover grayscale-[0.3] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-90" />
                   <div className="absolute bottom-4 left-4 right-4 translate-y-2 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">

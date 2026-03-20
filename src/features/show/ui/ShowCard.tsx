@@ -12,7 +12,7 @@ export default function ShowCard({ id, title, venue, image, startTime, endTime }
       <Card className="bg-transparent border-none shadow-none">
         <CardContent className="p-0 space-y-3">
           {/* 포스터 */}
-          <div className="aspect-[3/4] relative overflow-hidden rounded-xl">
+          <div className="aspect-3/4 relative overflow-hidden rounded-xl">
             {/* 2. img를 Image로 교체 */}
             <Image
               src={image}

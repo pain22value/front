@@ -1,20 +1,18 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Bell, Check } from "lucide-react";
+import { Users, Bell } from "lucide-react";
 import { useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { useInteractionStore } from "@/shared/store/useInteractionStore";
 import { useQueueStatus } from "../../hooks/useQueue";
+import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 
 export default function QueueStep({
   onOpenChange,
 }: {
   onOpenChange: (open: boolean) => void; // 큐 모달 닫기 핸들러
 }) {
-  const stopTicketingFlow = useInteractionStore((state) => state.stopTicketingFlow);
-
   // 리액트 쿼리 커스텀 훅을 사용하여 대기 상태 폴링
   const { data: queueData } = useQueueStatus(1);
 
@@ -22,14 +20,21 @@ export default function QueueStep({
   const waitingCount = queueData?.waitingUserCount ?? 0;
   const pollingStatus = queueData?.status ?? "WAITING";
 
+  const { setPageStage } = useTelemetryStore();
+
+  useEffect(() => {
+    // 큐 화면 진입 시 page_stage를 queue로 변경
+    setPageStage("queue");
+  }, [setPageStage]);
+
   useEffect(() => {
     if (!queueData) return;
 
     if (pollingStatus === "ADMITTED" || currentRank <= 0) {
-      stopTicketingFlow(); // 예매 프로세스 진입 완료 시 트래킹 종료
+      setPageStage("seatmap"); // 좌석 선택 화면 진입하므로 상태 변경
       onOpenChange(false); // 모달 닫기 및 좌석 선택 화면 진입 로직 처리
     }
-  }, [queueData, pollingStatus, currentRank, onOpenChange, stopTicketingFlow]);
+  }, [queueData, pollingStatus, currentRank, onOpenChange, setPageStage]);
 
   return (
     <div className="p-6">

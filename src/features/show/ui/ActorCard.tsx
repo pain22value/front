@@ -11,7 +11,7 @@ export default function ActorCard({ actor }: { actor: Actor }) {
         <CardContent className="flex flex-col gap-6 p-0">
           {/* 이미지 */}
           <div className="relative aspect-3/4 shrink-0 overflow-hidden rounded-2xl transition-transform hover:scale-[1.02]">
-            <Image src={actor.image} alt={actor.name} fill className="object-cover" sizes="220px" priority />
+            <Image src={actor.image} alt={actor.name} fill className="object-cover" sizes="220px" />
           </div>
 
           {/* 텍스트 영역 */}

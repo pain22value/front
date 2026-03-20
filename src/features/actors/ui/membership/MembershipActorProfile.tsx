@@ -6,7 +6,7 @@ export default function MembershipActorProfile({ actor }: { actor: Actor }) {
     <Card className="mb-6 overflow-hidden shadow-none transition-colors">
       <CardContent className="flex flex-col sm:flex-row gap-6">
         <div className="relative w-32 h-40 bg-slate-100 dark:bg-zinc-800 rounded-xl overflow-hidden shrink-0 mx-auto sm:mx-0">
-          <Image src={actor.image} alt={actor.name} fill className="object-cover" sizes="128px" />
+          <Image src={actor.image} alt={actor.name} fill className="object-cover" />
         </div>
         <div className="flex flex-col justify-center text-center sm:text-left">
           <h2 className="text-2xl font-extrabold mb-1 text-slate-900 dark:text-white">{actor.name}</h2>

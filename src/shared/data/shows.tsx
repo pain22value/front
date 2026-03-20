@@ -167,87 +167,106 @@ export const RECOMMEND_SHOW_LIST: Show[] = [
   },
 ];
 
-export const RECOMMEND_SHOW_LIST_2: Show[] = [
+export const HOME_SHOW_RECOMMEND_LIST: HomeShow[] = RECOMMEND_SHOW_LIST.map((s) => ({
+  showId: s.id,
+  showTitle: s.title,
+  posterUrl: s.image,
+  venueName: s.venue,
+  date: `${s.startTime} ~ ${s.endTime}`,
+}));
+
+
+
+export const HOME_BANNER_RECOMMEND_LIST: HomeBanner[] = [
   {
-    id: 1,
-    title: "킹키부츠",
-    image:
+    bannerId: 1,
+    showId: 1,
+    showTitle: "킹키부츠",
+    posterUrl:
       "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427210/%ED%82%B9%ED%82%A4%EB%B6%80%EC%B8%A0_%EB%B0%B0%EB%84%88_yvj1wg.png",
-    venue: "샤롯데씨어터",
-    startTime: "2025.11.29",
-    endTime: "2026.02.22",
+    venueName: "샤롯데씨어터",
+    date: "2025.11.29 ~ 2026.02.22",
+    displayOrder: 1,
   },
   {
-    id: 2,
-    title: "데스노트",
-    image:
+    bannerId: 2,
+    showId: 2,
+    showTitle: "데스노트",
+    posterUrl:
       "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427209/%EB%8D%B0%EC%8A%A4%EB%85%B8%ED%8A%B8_%EB%B0%B0%EB%84%88_luffkx.png",
-    venue: "샤롯데씨어터",
-    startTime: "2025.11.29",
-    endTime: "2026.02.22",
+    venueName: "샤롯데씨어터",
+    date: "2025.11.29 ~ 2026.02.22",
+    displayOrder: 2,
   },
   {
-    id: 3,
-    title: "뮤지컬 스윙 데이즈 암호명 A",
-    image:
+    bannerId: 3,
+    showId: 3,
+    showTitle: "뮤지컬 스윙 데이즈 암호명 A",
+    posterUrl:
       "https://res.cloudinary.com/dfiaqyaug/image/upload/v1773110475/%E1%84%89%E1%85%B3%E1%84%8B%E1%85%B1%E1%86%BC%E1%84%83%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%8C%E1%85%B3_%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5_%E1%84%92%E1%85%B5%E1%84%8B%E1%85%A5%E1%84%85%E1%85%A9%E1%84%89%E1%85%A6%E1%86%A8%E1%84%89%E1%85%A7%E1%86%AB_fckdeq.png",
-    venue: "충주 아트센터 대극장",
-    startTime: "2025.11.29",
-    endTime: "2026.02.22",
+    venueName: "충주 아트센터 대극장",
+    date: "2025.11.29 ~ 2026.02.22",
+    displayOrder: 3,
   },
   {
-    id: 4,
-    title: "킹키부츠",
-    image:
+    bannerId: 4,
+    showId: 4,
+    showTitle: "킹키부츠",
+    posterUrl:
       "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427210/%ED%82%B9%ED%82%A4%EB%B6%80%EC%B8%A0_%EB%B0%B0%EB%84%88_yvj1wg.png",
-    venue: "샤롯데씨어터",
-    startTime: "2025.11.29",
-    endTime: "2026.02.22",
+    venueName: "샤롯데씨어터",
+    date: "2025.11.29 ~ 2026.02.22",
+    displayOrder: 4,
   },
   {
-    id: 5,
-    title: "데스노트",
-    image:
+    bannerId: 5,
+    showId: 5,
+    showTitle: "데스노트",
+    posterUrl:
       "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427209/%EB%8D%B0%EC%8A%A4%EB%85%B8%ED%8A%B8_%EB%B0%B0%EB%84%88_luffkx.png",
-    venue: "샤롯데씨어터",
-    startTime: "2025.11.29",
-    endTime: "2026.02.22",
+    venueName: "샤롯데씨어터",
+    date: "2025.11.29 ~ 2026.02.22",
+    displayOrder: 5,
   },
   {
-    id: 6,
-    title: "뮤지컬 스윙 데이즈 암호명 A",
-    image:
+    bannerId: 6,
+    showId: 6,
+    showTitle: "뮤지컬 스윙 데이즈 암호명 A",
+    posterUrl:
       "https://res.cloudinary.com/dfiaqyaug/image/upload/v1773110475/%E1%84%89%E1%85%B3%E1%84%8B%E1%85%B1%E1%86%BC%E1%84%83%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%8C%E1%85%B3_%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5_%E1%84%92%E1%85%B5%E1%84%8B%E1%85%A5%E1%84%85%E1%85%A9%E1%84%89%E1%85%A6%E1%86%A8%E1%84%89%E1%85%A7%E1%86%AB_fckdeq.png",
-    venue: "샤롯데씨어터",
-    startTime: "2025.11.29",
-    endTime: "2026.02.22",
+    venueName: "샤롯데씨어터",
+    date: "2025.11.29 ~ 2026.02.22",
+    displayOrder: 6,
   },
   {
-    id: 7,
-    title: "안나 카레니나",
-    image:
+    bannerId: 7,
+    showId: 7,
+    showTitle: "안나 카레니나",
+    posterUrl:
       "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427210/%ED%82%B9%ED%82%A4%EB%B6%80%EC%B8%A0_%EB%B0%B0%EB%84%88_yvj1wg.png",
-    venue: "샤롯데씨어터",
-    startTime: "2025.11.29",
-    endTime: "2026.02.22",
+    venueName: "샤롯데씨어터",
+    date: "2025.11.29 ~ 2026.02.22",
+    displayOrder: 7,
   },
   {
-    id: 8,
-    title: "제임스 바이런 딘",
-    image:
+    bannerId: 8,
+    showId: 8,
+    showTitle: "제임스 바이런 딘",
+    posterUrl:
       "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427209/%EB%8D%B0%EC%8A%A4%EB%85%B8%ED%8A%B8_%EB%B0%B0%EB%84%88_luffkx.png",
-    venue: "샤롯데씨어터",
-    startTime: "2025.11.29",
-    endTime: "2026.02.22",
+    venueName: "샤롯데씨어터",
+    date: "2025.11.29 ~ 2026.02.22",
+    displayOrder: 8,
   },
   {
-    id: 9,
-    title: "킹키부츠",
-    image:
+    bannerId: 9,
+    showId: 9,
+    showTitle: "킹키부츠",
+    posterUrl:
       "https://res.cloudinary.com/dfiaqyaug/image/upload/v1773110475/%E1%84%89%E1%85%B3%E1%84%8B%E1%85%B1%E1%86%BC%E1%84%83%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%8C%E1%85%B3_%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5_%E1%84%92%E1%85%B5%E1%84%8B%E1%85%A5%E1%84%85%E1%85%A9%E1%84%89%E1%85%A6%E1%86%A8%E1%84%89%E1%85%A7%E1%86%AB_fckdeq.png",
-    venue: "샤롯데씨어터",
-    startTime: "2025.11.29",
-    endTime: "2026.02.22",
+    venueName: "샤롯데씨어터",
+    date: "2025.11.29 ~ 2026.02.22",
+    displayOrder: 9,
   },
 ];
 
@@ -260,7 +279,12 @@ export const MOCK_SHOW_DETAIL: ShowDetail = {
   ageLimit: 8,
   posterUrl:
     "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427202/%ED%82%B9%ED%82%A4%EB%B6%80%EC%B8%A0_gzd6oy.png",
-  noticeUrl: "https://example.com/notice",
+  noticeImgs: [
+    "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770690953/image_5_yghiiq.png",
+    "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770690678/image_6_x7pmhf.png",
+  ],
+  detailImgs: ["https://res.cloudinary.com/dfiaqyaug/image/upload/v1770690953/image_5_yghiiq.png"],
+  date: "2025.11.29 ~ 2026.02.22",
   startTime: "2025-11-29T19:00:00Z",
   endTime: "2026-02-22T22:00:00Z",
   venue: {
@@ -294,53 +318,11 @@ export const MOCK_SHOW_DETAIL: ShowDetail = {
       scheduleId: 1001,
       showTime: "2026-03-14T14:00:00Z",
       status: "AVAILABLE",
-      castings: [
-        {
-          showCastId: 101,
-          artistId: 1,
-          artistName: "강홍석",
-          profileImageUrl:
-            "https://images.chosun.com/resizer/P8-2K7796P7y-E6822y87y8=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/DP75E6L6J7I7G7I7G7I7G7I7G7.jpg",
-          roleName: "롤라",
-          order: 1,
-          isLiked: true,
-        },
-        {
-          showCastId: 102,
-          artistId: 2,
-          artistName: "김호영",
-          profileImageUrl: "https://example.com/artist2.jpg",
-          roleName: "찰리",
-          order: 2,
-          isLiked: false,
-        },
-      ],
     },
     {
       scheduleId: 1002,
       showTime: "2026-03-14T19:00:00Z",
       status: "AVAILABLE",
-      castings: [
-        {
-          showCastId: 101,
-          artistId: 1,
-          artistName: "강홍석",
-          profileImageUrl:
-            "https://images.chosun.com/resizer/P8-2K7796P7y-E6822y87y8=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/DP75E6L6J7I7G7I7G7I7G7I7G7.jpg",
-          roleName: "롤라",
-          order: 1,
-          isLiked: true,
-        },
-        {
-          showCastId: 102,
-          artistId: 2,
-          artistName: "김호영",
-          profileImageUrl: "https://example.com/artist2.jpg",
-          roleName: "찰리",
-          order: 2,
-          isLiked: false,
-        },
-      ],
     },
   ],
   seatGrades: [

@@ -11,7 +11,7 @@ import { useSearch } from "../hooks/useSearch";
 
 export default function SearchResultSection({ query }: { query?: string }) {
   const { data, isLoading } = useSearch(query || "");
-  console.log({ data });
+  // console.log({ data });
 
   if (isLoading) {
     return <SearchSkeleton />;
@@ -29,7 +29,6 @@ export default function SearchResultSection({ query }: { query?: string }) {
             src="https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427942/Frame_2085665719_r3hpi9.png"
             alt="데스노트 더 뮤지컬"
             fill
-            priority
             className="object-contain object-bottom"
           />
         </div>

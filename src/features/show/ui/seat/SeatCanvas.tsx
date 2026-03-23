@@ -26,14 +26,36 @@ const SELECTED_COLOR = 0xf11322;
 
 type Align = "left" | "right" | "center";
 
-const SECTION_CONFIG: Record<string, { label: string; align: Align; getColor: (i: number) => number }> = {
-  "OP":   { label: "OP", align: "center", getColor: () => GRADE_COLOR.VIP },
-  "1F-A": { label: "A",  align: "right",  getColor: (i) => i < 13 ? GRADE_COLOR.R : GRADE_COLOR.S },
-  "1F-B": { label: "B",  align: "center", getColor: (i) => i < 13 ? GRADE_COLOR.R : GRADE_COLOR.S },
-  "1F-C": { label: "C",  align: "left",   getColor: (i) => i < 13 ? GRADE_COLOR.R : GRADE_COLOR.S },
-  "2F-A": { label: "A",  align: "right",  getColor: () => GRADE_COLOR.A2 },
-  "2F-B": { label: "B",  align: "center", getColor: () => GRADE_COLOR.A },
-  "2F-C": { label: "C",  align: "left",   getColor: () => GRADE_COLOR.A2 },
+const SECTION_CONFIG: Record<string, { 
+  label: string; 
+  align: Align; 
+  getStyle: (rowName: string, col: number, rowMaxCol: number) => { fill: number; stroke?: number }
+}> = {
+  "OP":   { label: "OP", align: "center", 
+    getStyle: () => ({ fill: 0xDECFFB, stroke: 0x783CF1 }) 
+  },
+  "1F-A": { label: "A", align: "right",  
+    getStyle: (rowName, col, rowMaxCol) => {
+      if (Number(rowName) > 15) return { fill: 0xC2F2D8, stroke: 0x25B07D };
+      if (col > rowMaxCol - 3) return { fill: 0xDECFFB, stroke: 0x783CF1 }; // 마지막 3개 VIP
+      return { fill: 0xC2F2D8, stroke: 0x25B07D };
+    }
+  },
+  "1F-B": { label: "B",  align: "center", 
+    getStyle: (rowName) => Number(rowName) <= 15
+      ? { fill: 0xDECFFB, stroke: 0x783CF1 }
+      : { fill: 0xC2F2D8, stroke: 0x25B07D }
+  },
+  "1F-C": { label: "C",  align: "left",   
+    getStyle: (rowName, col) => {
+      if (Number(rowName) > 15) return { fill: 0xC2F2D8, stroke: 0x25B07D }; // 16행~
+      if (col <= 3) return { fill: 0xDECFFB, stroke: 0x783CF1 };             // 1~3번 VIP
+      return { fill: 0xC2F2D8, stroke: 0x25B07D };                           // 나머지 R
+    }
+  },
+  "2F-A": { label: "A",  align: "right",  getStyle: () => ({ fill: 0xfbbf24 }) },
+  "2F-B": { label: "B",  align: "center", getStyle: () => ({ fill: 0x86efac }) },
+  "2F-C": { label: "C",  align: "left",   getStyle: () => ({ fill: 0xfbbf24 }) },
 };
 
 const makeText = (text: string, style: Partial<PIXI.TextStyle>, x: number, y: number): PIXI.Text => {
@@ -143,7 +165,9 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
           const color = selectedIds.has(seat.seatId)
             ? SELECTED_COLOR
             : STATUS_OVERRIDE[seat.status] ?? GRADE_COLOR.VIP;
-          g.roundRect(0, 0, SS, SS, 2).fill({ color });
+            g.roundRect(0, 0, SS, SS, 2)
+              .fill({ color: selectedIds.has(seat.seatId) ? SELECTED_COLOR : 0xDECFFB })
+              .stroke({ color: 0x783CF1, width: 1 });
           g.x = rx + (seat.col - 1) * STEP; g.y = ry;
           if (seat.status === "available") {
             g.eventMode = "static"; g.cursor = "pointer";
@@ -176,7 +200,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
             return;
           }
 
-          const maxCol = Math.max(...row.seats.map((s) => s.col));
+          const maxCol = Math.max(...row.seats.map((s) => s.col));  // ← 이 행의 최대 col
 
           let rx: number;
           if (align === "right")       rx = baseX + (maxCols - maxCol) * STEP;
@@ -193,10 +217,24 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
 
           row.seats.forEach((seat) => {
             const g = new PIXI.Graphics();
-            const color = selectedIds.has(seat.seatId)
-              ? SELECTED_COLOR
-              : STATUS_OVERRIDE[seat.status] ?? cfg.getColor(ri);
-            g.roundRect(0, 0, SS, SS, 2).fill({ color });
+            const isSelected = selectedIds.has(seat.seatId);
+
+            if (isSelected) {
+              g.roundRect(0, 0, SS, SS, 2).fill({ color: SELECTED_COLOR });
+            } else {
+              const style = STATUS_OVERRIDE[seat.status]
+                ? { fill: STATUS_OVERRIDE[seat.status]! }
+                : cfg.getStyle(row.rowName, seat.col, maxCol);  // ← maxCol 전달
+
+              if (style.stroke) {
+                g.roundRect(0, 0, SS, SS, 2)
+                  .fill({ color: style.fill })
+                  .stroke({ color: style.stroke, width: 1 });
+              } else {
+                g.roundRect(0, 0, SS, SS, 2).fill({ color: style.fill });
+              }
+            }
+
             g.x = rx + (seat.col - 1) * STEP;
             g.y = ry;
             if (seat.status === "available") {

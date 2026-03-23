@@ -19,63 +19,71 @@ const GRADE_COLOR: Record<string, number> = {
 
 const STATUS_OVERRIDE: Partial<Record<SeatStatus, number>> = {
   reserved:    0xaaaaaa,
-  unavailable: 0xd1d5db,
+  unavailable: 0xF1F1F4,
+};
+
+// fill 색 기준 hover 색 매핑
+const FILL_TO_HOVER: Record<number, number> = {
+  0xDECFFB: 0xBDA0F8,  // VIP
+  0xC2F2D8: 0xA0EEC3,  // R
+  0xCCEBF6: 0xA8D8F0,  // S
+  0xFDE5BE: 0xFFD580,  // A
 };
 
 const SELECTED_COLOR = 0xf11322;
 
 type Align = "left" | "right" | "center";
 
-const SECTION_CONFIG: Record<string, { 
-  label: string; 
-  align: Align; 
+const SECTION_CONFIG: Record<string, {
+  label: string;
+  align: Align;
   getStyle: (rowName: string, col: number, rowMaxCol: number) => { fill: number; stroke?: number }
 }> = {
-  "OP":   { label: "OP", align: "center", 
-    getStyle: () => ({ fill: 0xDECFFB, stroke: 0x783CF1 }) 
+  "OP":   { label: "OP", align: "center",
+    getStyle: () => ({ fill: 0xDECFFB, stroke: 0x783CF1 })
   },
-  "1F-A": { label: "A", align: "right",  
+  "1F-A": { label: "A", align: "right",
     getStyle: (rowName, col, rowMaxCol) => {
       if (Number(rowName) > 15) return { fill: 0xC2F2D8, stroke: 0x25B07D };
-      if (col > rowMaxCol - 3) return { fill: 0xDECFFB, stroke: 0x783CF1 }; // 마지막 3개 VIP
+      if (col > rowMaxCol - 3) return { fill: 0xDECFFB, stroke: 0x783CF1 };
       return { fill: 0xC2F2D8, stroke: 0x25B07D };
     }
   },
-  "1F-B": { label: "B",  align: "center", 
+  "1F-B": { label: "B", align: "center",
     getStyle: (rowName) => Number(rowName) <= 15
       ? { fill: 0xDECFFB, stroke: 0x783CF1 }
       : { fill: 0xC2F2D8, stroke: 0x25B07D }
   },
-  "1F-C": { label: "C",  align: "left",   
+  "1F-C": { label: "C", align: "left",
     getStyle: (rowName, col) => {
-      if (Number(rowName) > 15) return { fill: 0xC2F2D8, stroke: 0x25B07D }; // 16행~
-      if (col <= 3) return { fill: 0xDECFFB, stroke: 0x783CF1 };             // 1~3번 VIP
-      return { fill: 0xC2F2D8, stroke: 0x25B07D };                           // 나머지 R
+      if (Number(rowName) > 15) return { fill: 0xC2F2D8, stroke: 0x25B07D };
+      if (col <= 3) return { fill: 0xDECFFB, stroke: 0x783CF1 };
+      return { fill: 0xC2F2D8, stroke: 0x25B07D };
     }
   },
   "2F-A": { label: "A", align: "right",
     getStyle: (rowName) => {
       const row = Number(rowName);
-      if (row <= 2) return { fill: 0xC2F2D8, stroke: 0x25B07D }; // 1~2행 R석
-      if (row <= 4) return { fill: 0xCCEBF6, stroke: 0x1D7CD0 }; // 3~4행 S석
-      return { fill: 0xFDE5BE, stroke: 0xC59805 };                // 5~6행 A석
+      if (row <= 2) return { fill: 0xC2F2D8, stroke: 0x25B07D };
+      if (row <= 4) return { fill: 0xCCEBF6, stroke: 0x1D7CD0 };
+      return { fill: 0xFDE5BE, stroke: 0xC59805 };
     }
   },
   "2F-B": { label: "B", align: "center",
     getStyle: (rowName) => {
       const row = Number(rowName);
-      if (row <= 1) return { fill: 0xDECFFB, stroke: 0x783CF1 }; // 1행 VIP석
-      if (row <= 2) return { fill: 0xC2F2D8, stroke: 0x25B07D }; // 2행 R석
-      if (row <= 4) return { fill: 0xCCEBF6, stroke: 0x1D7CD0 }; // 3~4행 S석
-      return { fill: 0xFDE5BE, stroke: 0xC59805 };                // 5~6행 A석
+      if (row <= 1) return { fill: 0xDECFFB, stroke: 0x783CF1 };
+      if (row <= 2) return { fill: 0xC2F2D8, stroke: 0x25B07D };
+      if (row <= 4) return { fill: 0xCCEBF6, stroke: 0x1D7CD0 };
+      return { fill: 0xFDE5BE, stroke: 0xC59805 };
     }
   },
   "2F-C": { label: "C", align: "left",
     getStyle: (rowName) => {
       const row = Number(rowName);
-      if (row <= 2) return { fill: 0xC2F2D8, stroke: 0x25B07D }; // 1~2행 R석
-      if (row <= 4) return { fill: 0xCCEBF6, stroke: 0x1D7CD0 }; // 3~4행 S석
-      return { fill: 0xFDE5BE, stroke: 0xC59805 };                // 5~6행 A석
+      if (row <= 2) return { fill: 0xC2F2D8, stroke: 0x25B07D };
+      if (row <= 4) return { fill: 0xCCEBF6, stroke: 0x1D7CD0 };
+      return { fill: 0xFDE5BE, stroke: 0xC59805 };
     }
   },
 };
@@ -100,7 +108,6 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
     if (!wrapperRef.current) return;
     const wrapper = wrapperRef.current;
 
-    // ── 실제 콘텐츠 높이 미리 계산 ───────────────────────────
     const opRows   = sections.find((s) => s.sectionId === "OP")?.rows.length   ?? 3;
     const rows1F   = Math.max(
       sections.find((s) => s.sectionId === "1F-A")?.rows.length ?? 20,
@@ -111,16 +118,15 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       sections.find((s) => s.sectionId === "2F-B")?.rows.length ?? 6,
     );
 
-    // 각 구역 높이 (px)
-    const STAGE_H    = 12 + 22 + 4;           // Stage 바
-    const OP_H       = 10 + opRows * STEP;    // OP 라벨 + 좌석
+    const STAGE_H    = 12 + 22 + 4;
+    const OP_H       = 10 + opRows * STEP;
     const GAP_OP_1F  = 16;
-    const SEC1_H     = 12 + rows1F * STEP;    // 1F 섹션 라벨 + 좌석
-    const CONSOLE_H  = 8 + 16 + 8;            // 여백 + Console 바 + 여백
-    const BOX1_PAD   = 12 + 8;               // 박스 상하 패딩
-    const BADGE_H    = 14 + 22 + 16;         // 뱃지 간격
-    const SEC2_H     = 12 + rows2F * STEP;    // 2F 섹션 라벨 + 좌석
-    const BOX2_PAD   = 12 + 24;              // 2F 박스 상하 패딩
+    const SEC1_H     = 12 + rows1F * STEP;
+    const CONSOLE_H  = 8 + 16 + 8;
+    const BOX1_PAD   = 12 + 8;
+    const BADGE_H    = 14 + 22 + 16;
+    const SEC2_H     = 12 + rows2F * STEP;
+    const BOX2_PAD   = 12 + 24;
     const BADGE2_H   = 14 + 22;
 
     const LOGICAL_H =
@@ -146,7 +152,6 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       const CX     = LOGICAL_W / 2;
       const BOX_PX = 55;
 
-      // ── 좌표 계산 ─────────────────────────────────────────
       const b1 = sections.find((s) => s.sectionId === "1F-B");
       const b1MaxCols = Math.max(...(b1?.rows.flatMap((r) => r.seats.map((s) => s.col)) ?? [16]));
       const B_startX  = CX - (b1MaxCols * STEP - SG) / 2;
@@ -164,37 +169,83 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       app.stage.addChild(stageBar);
       app.stage.addChild(makeText("Stage", { fontSize: 11, fill: 0x888888 }, CX - 17, 17));
 
-      // ── 1F 박스 시작 Y ────────────────────────────────────
       const BOX1_Y = 42;
 
       // ── OP ────────────────────────────────────────────────
       const OP_Y = BOX1_Y + 18;
       const opSecRows = sections.find((s) => s.sectionId === "OP")?.rows ?? [];
 
-      const opLabel = makeText("OP", { fontSize: 10, fill: 0x555555, fontWeight: "bold" }, 0, OP_Y - 10);
+      const opLabel = makeText("OP", { fontSize: 10, fill: 0x555555, fontWeight: "bold" }, 0, OP_Y - 16);
       opLabel.x = CX - opLabel.width / 2;
       app.stage.addChild(opLabel);
 
-      opSecRows.forEach((row, ri) => {
+      opSecRows.forEach((row) => {
         const TOTAL_OP_COLS = 33;
         const rx = CX - (TOTAL_OP_COLS * STEP - SG) / 2;
-        const ry = OP_Y + ri * STEP;
+        const ry = OP_Y + (opSecRows.indexOf(row)) * STEP;
         const rn = makeText(row.rowName, { fontSize: 7, fill: 0x999999 }, rx - 4, ry + 1);
         rn.anchor.set(1, 0);
         app.stage.addChild(rn);
-        row.seats.forEach((seat, ci) => {
+
+        row.seats.forEach((seat) => {
           const g = new PIXI.Graphics();
-          const color = selectedIds.has(seat.seatId)
-            ? SELECTED_COLOR
-            : STATUS_OVERRIDE[seat.status] ?? GRADE_COLOR.VIP;
-            g.roundRect(0, 0, SS, SS, 2)
-              .fill({ color: selectedIds.has(seat.seatId) ? SELECTED_COLOR : 0xDECFFB })
-              .stroke({ color: 0x783CF1, width: 1 });
-          g.x = rx + (seat.col - 1) * STEP; g.y = ry;
-          if (seat.status === "available") {
-            g.eventMode = "static"; g.cursor = "pointer";
+          const isSelected = selectedIds.has(seat.seatId);
+          const style = STATUS_OVERRIDE[seat.status] !== undefined
+            ? { fill: STATUS_OVERRIDE[seat.status]! }
+            : { fill: 0xDECFFB, stroke: 0x783CF1 };
+
+            if (isSelected) {
+              const hoverFill = FILL_TO_HOVER[style.fill] ?? style.fill;
+              if (style.stroke) {
+                g.roundRect(0, 0, SS, SS, 2)
+                  .fill({ color: hoverFill })
+                  .stroke({ color: style.stroke, width: 1 });
+              } else {
+                g.roundRect(0, 0, SS, SS, 2).fill({ color: hoverFill });
+              }
+            } else {
+              if (style.stroke) {
+                g.roundRect(0, 0, SS, SS, 2)
+                  .fill({ color: style.fill })
+                  .stroke({ color: style.stroke, width: 1 });
+              } else {
+                g.roundRect(0, 0, SS, SS, 2).fill({ color: style.fill });
+              }
+            }
+
+          g.x = rx + (seat.col - 1) * STEP;
+          g.y = ry;
+
+          if (seat.status === "available" && !isSelected) {
+            g.eventMode = "static";
+            g.cursor = "pointer";
+
+            g.on("pointerover", () => {
+              g.clear();
+              const hoverFill = FILL_TO_HOVER[style.fill] ?? style.fill;
+              if (style.stroke) {
+                g.roundRect(0, 0, SS, SS, 2)
+                  .fill({ color: hoverFill })
+                  .stroke({ color: style.stroke, width: 1 });
+              } else {
+                g.roundRect(0, 0, SS, SS, 2).fill({ color: hoverFill });
+              }
+            });
+
+            g.on("pointerout", () => {
+              g.clear();
+              if (style.stroke) {
+                g.roundRect(0, 0, SS, SS, 2)
+                  .fill({ color: style.fill })
+                  .stroke({ color: style.stroke, width: 1 });
+              } else {
+                g.roundRect(0, 0, SS, SS, 2).fill({ color: style.fill });
+              }
+            });
+
             g.on("pointerdown", () => onSeatClick(seat));
           }
+
           app.stage.addChild(g);
         });
       });
@@ -211,10 +262,9 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
         if (!sec) return;
         const cfg = SECTION_CONFIG[sectionId];
 
-        sec.rows.forEach((row, ri) => {
-          const ry = startY + ri * STEP;
+        sec.rows.forEach((row) => {
+          const ry = startY + sec.rows.indexOf(row) * STEP;
 
-          // 빈 행 (통로)
           if (row.seats.length === 0) {
             const rn = makeText(row.rowName, { fontSize: 7, fill: 0x999999 }, baseX - 4, ry + 1);
             rn.anchor.set(1, 0);
@@ -222,7 +272,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
             return;
           }
 
-          const maxCol = Math.max(...row.seats.map((s) => s.col));  // ← 이 행의 최대 col
+          const maxCol = Math.max(...row.seats.map((s) => s.col));
 
           let rx: number;
           if (align === "right")       rx = baseX + (maxCols - maxCol) * STEP;
@@ -241,13 +291,20 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
             const g = new PIXI.Graphics();
             const isSelected = selectedIds.has(seat.seatId);
 
-            if (isSelected) {
-              g.roundRect(0, 0, SS, SS, 2).fill({ color: SELECTED_COLOR });
-            } else {
-              const style = STATUS_OVERRIDE[seat.status]
-                ? { fill: STATUS_OVERRIDE[seat.status]! }
-                : cfg.getStyle(row.rowName, seat.col, maxCol);  // ← maxCol 전달
+            const style = STATUS_OVERRIDE[seat.status] !== undefined
+              ? { fill: STATUS_OVERRIDE[seat.status]! }
+              : cfg.getStyle(row.rowName, seat.col, maxCol);
 
+              if (isSelected) {
+                const hoverFill = FILL_TO_HOVER[style.fill] ?? style.fill;
+                if (style.stroke) {
+                  g.roundRect(0, 0, SS, SS, 2)
+                    .fill({ color: hoverFill })
+                    .stroke({ color: style.stroke, width: 1 });
+                } else {
+                  g.roundRect(0, 0, SS, SS, 2).fill({ color: hoverFill });
+                }
+              } else {
               if (style.stroke) {
                 g.roundRect(0, 0, SS, SS, 2)
                   .fill({ color: style.fill })
@@ -259,10 +316,37 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
 
             g.x = rx + (seat.col - 1) * STEP;
             g.y = ry;
-            if (seat.status === "available") {
-              g.eventMode = "static"; g.cursor = "pointer";
+
+            if (seat.status === "available" && !isSelected) {
+              g.eventMode = "static";
+              g.cursor = "pointer";
+
+              g.on("pointerover", () => {
+                g.clear();
+                const hoverFill = FILL_TO_HOVER[style.fill] ?? style.fill;
+                if (style.stroke) {
+                  g.roundRect(0, 0, SS, SS, 2)
+                    .fill({ color: hoverFill })
+                    .stroke({ color: style.stroke, width: 1 });
+                } else {
+                  g.roundRect(0, 0, SS, SS, 2).fill({ color: hoverFill });
+                }
+              });
+
+              g.on("pointerout", () => {
+                g.clear();
+                if (style.stroke) {
+                  g.roundRect(0, 0, SS, SS, 2)
+                    .fill({ color: style.fill })
+                    .stroke({ color: style.stroke, width: 1 });
+                } else {
+                  g.roundRect(0, 0, SS, SS, 2).fill({ color: style.fill });
+                }
+              });
+
               g.on("pointerdown", () => onSeatClick(seat));
             }
+
             app.stage.addChild(g);
           });
         });
@@ -277,7 +361,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
         "1F-C": C_startX + (a1MaxCols * STEP) / 2,
       };
       ["1F-A", "1F-B", "1F-C"].forEach((sid) => {
-        const lbl = makeText(SECTION_CONFIG[sid].label, { fontSize: 10, fill: 0x555555, fontWeight: "bold" }, 0, SEC1_Y - 12);
+        const lbl = makeText(SECTION_CONFIG[sid].label, { fontSize: 10, fill: 0x555555, fontWeight: "bold" }, 0, SEC1_Y - 16);
         lbl.x = labelPos1F[sid] - lbl.width / 2;
         app.stage.addChild(lbl);
       });
@@ -312,7 +396,6 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
 
       const b2 = sections.find((s) => s.sectionId === "2F-B");
       const b2MaxCols = Math.max(...(b2?.rows.map((r) => r.seats.length) ?? [14]));
-      const a2 = sections.find((s) => s.sectionId === "2F-A");
       const a2MaxCols = Math.max(
         ...(sections.find((s) => s.sectionId === "2F-A")
           ?.rows.flatMap((r) => r.seats.map((s) => s.col)) ?? [5])
@@ -324,7 +407,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
         "2F-C": C_startX + (a2MaxCols * STEP) / 2,
       };
       ["2F-A", "2F-B", "2F-C"].forEach((sid) => {
-        const lbl = makeText(SECTION_CONFIG[sid].label, { fontSize: 10, fill: 0x555555, fontWeight: "bold" }, 0, SEC2_Y - 12);
+        const lbl = makeText(SECTION_CONFIG[sid].label, { fontSize: 10, fill: 0x555555, fontWeight: "bold" }, 0, SEC2_Y - 16);
         lbl.x = labelPos2F[sid] - lbl.width / 2;
         app.stage.addChild(lbl);
       });
@@ -346,14 +429,12 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       app.stage.addChild(b2g);
       app.stage.addChild(makeText("2F", { fontSize: 9, fill: 0xffffff, fontWeight: "bold" }, CX - 6, BADGE2_Y - 5));
 
-      // ── ResizeObserver: wrapper에 맞게 캔버스 스케일 ──────
-      // 핵심: LOGICAL_H(실제 콘텐츠 높이) 기준으로 scaleY 계산
+      // ── ResizeObserver ────────────────────────────────────
       const applyScale = () => {
         const { clientWidth, clientHeight } = wrapper;
         if (!clientWidth || !clientHeight) return;
         const scaleX = clientWidth  / LOGICAL_W;
         const scaleY = clientHeight / LOGICAL_H;
-        // 세로를 꽉 채우되 가로가 넘치면 가로 기준
         const scale = Math.min(scaleX, scaleY);
         canvas.style.width  = `${LOGICAL_W * scale}px`;
         canvas.style.height = `${LOGICAL_H * scale}px`;

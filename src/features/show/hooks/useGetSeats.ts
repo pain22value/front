@@ -55,7 +55,12 @@ const makeRow = (
 });
 
 const MOCK_SECTIONS: SeatSection[] = [
-  { sectionId: "OP",   sectionName: "OP", grade: "VIP", price: 150000, rows: [makeRow("OP", 1, 16, "VIP", 150000), makeRow("OP", 2, 18, "VIP", 150000), makeRow("OP", 3, 18, "VIP", 150000)] },
+  { sectionId: "OP",   sectionName: "OP", grade: "VIP", price: 150000, rows: [
+    makeRow("OP", 1, 12, "VIP", 150000),  // 양쪽 여백 생김
+    makeRow("OP", 2, 14, "VIP", 150000),
+    makeRow("OP", 3, 20, "VIP", 150000),  // 제일 넓은 행 기준으로 중앙정렬됨
+    makeRow("OP", 4, 20, "VIP", 150000),
+  ] },
   { sectionId: "1F-A", sectionName: "A",  grade: "R",   price: 110000, rows: Array.from({ length: 20 }, (_, i) => makeRow("1F-A", i + 1, [6,7,7,7,7,8,8,8,8,8,9,9,9,7,7,6,6,5,4,3][i], i < 10 ? "R" : "S", i < 10 ? 110000 : 80000)) },
   { sectionId: "1F-B", sectionName: "B",  grade: "R",   price: 110000, rows: Array.from({ length: 20 }, (_, i) => makeRow("1F-B", i + 1, [14,15,15,15,15,16,16,16,16,16,16,16,16,16,16,16,16,15,14,13][i], i < 10 ? "R" : "S", i < 10 ? 110000 : 80000)) },
   { sectionId: "1F-C", sectionName: "C",  grade: "R",   price: 110000, rows: Array.from({ length: 20 }, (_, i) => makeRow("1F-C", i + 1, [6,7,7,7,7,8,8,8,8,8,9,9,9,7,7,6,6,5,4,3][i], i < 10 ? "R" : "S", i < 10 ? 110000 : 80000)) },

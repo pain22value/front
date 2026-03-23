@@ -94,6 +94,47 @@ const makeText = (text: string, style: Partial<PIXI.TextStyle>, x: number, y: nu
   return t;
 };
 
+const drawCurvedBox = (
+  g: PIXI.Graphics,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  topCurve: number,
+  bottomCurve: number,
+) => {
+  // 위쪽 - 오목 (안으로 들어가게)
+  g.moveTo(x, y);
+  g.quadraticCurveTo(x + w / 2, y + topCurve, x + w, y); // ← 제어점이 아래로
+  g.lineTo(x + w, y + h);
+  // 아래쪽 - 볼록 (밖으로 나오게)
+  g.quadraticCurveTo(x + w / 2, y + h + bottomCurve, x, y + h); // ← 제어점이 더 아래로
+  g.closePath();
+  g.fill({ color: 0xffffff });
+};
+
+const drawCurvedBoxWithCut = (
+  g: PIXI.Graphics,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  topCurve: number,
+  bottomCurve: number,
+) => {
+  const cutSize = topCurve * 2;
+
+  g.moveTo(x + cutSize, y);
+  g.lineTo(x, y + cutSize);
+  g.lineTo(x, y + h);
+  g.quadraticCurveTo(x + w / 2, y + h + bottomCurve, x + w, y + h);
+  g.lineTo(x + w, y + cutSize);
+  g.lineTo(x + w - cutSize, y);
+  g.quadraticCurveTo(x + w / 2, y + topCurve, x + cutSize, y);
+  g.closePath();
+  g.fill({ color: 0xffffff });
+};
+
 interface SeatCanvasProps {
   sections: SeatSection[];
   selectedSeats: Seat[];
@@ -139,7 +180,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
     app.init({
       width:      LOGICAL_W,
       height:     LOGICAL_H,
-      background: 0xf3f4f6,
+      background: 0xEDEEF4,
       antialias:  true,
     }).then(() => {
       if (!wrapperRef.current) return;
@@ -169,10 +210,10 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       app.stage.addChild(stageBar);
       app.stage.addChild(makeText("Stage", { fontSize: 11, fill: 0xffffff }, CX - 17, 17));
 
-      const BOX1_Y = 42;
+      const BOX1_Y = 20;
 
       // ── OP ────────────────────────────────────────────────
-      const OP_Y = BOX1_Y + 18;
+      const OP_Y = BOX1_Y + 40;
       const opSecRows = sections.find((s) => s.sectionId === "OP")?.rows ?? [];
 
       const opLabel = makeText("OP", { fontSize: 10, fill: 0x555555, fontWeight: "bold" }, 0, OP_Y - 16);
@@ -378,9 +419,9 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       app.stage.addChild(makeText("Console", { fontSize: 10, fill: 0xffffff }, CX - 22, CONSOLE_Y + 3));
 
       // 1F 흰 박스
-      const BOX1_H = CONSOLE_Y + 24 - BOX1_Y;
+      const BOX1_H = CONSOLE_Y + 40 - BOX1_Y;
       const box1F  = new PIXI.Graphics();
-      box1F.roundRect(BOX_PX, BOX1_Y, LOGICAL_W - BOX_PX * 2, BOX1_H, 16).fill({ color: 0xffffff });
+      drawCurvedBoxWithCut(box1F, BOX_PX, BOX1_Y, LOGICAL_W - BOX_PX * 2, BOX1_H, 40, 50);
       app.stage.addChildAt(box1F, 0);
 
       // 1F 뱃지
@@ -392,7 +433,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
 
       // ── 2F ───────────────────────────────────────────────
       const BOX2_Y = BADGE1_Y + 16;
-      const SEC2_Y = BOX2_Y + 18;
+      const SEC2_Y = BOX2_Y + 55;
 
       const b2 = sections.find((s) => s.sectionId === "2F-B");
       const b2MaxCols = Math.max(...(b2?.rows.map((r) => r.seats.length) ?? [14]));
@@ -417,9 +458,9 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       renderSection("2F-C", C_startX, "left",   a2MaxCols, SEC2_Y);
 
       // 2F 흰 박스
-      const BOX2_H = rows2F * STEP + 36;
+      const BOX2_H = rows2F * STEP + 90;
       const box2F  = new PIXI.Graphics();
-      box2F.roundRect(BOX_PX, BOX2_Y, LOGICAL_W - BOX_PX * 2, BOX2_H, 16).fill({ color: 0xffffff });
+      drawCurvedBox(box2F, BOX_PX, BOX2_Y, LOGICAL_W - BOX_PX * 2, BOX2_H, 50, 50);
       app.stage.addChildAt(box2F, app.stage.getChildIndex(box1F) + 1);
 
       // 2F 뱃지
@@ -455,7 +496,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
   return (
     <div
       ref={wrapperRef}
-      className="w-full h-full flex items-center justify-center bg-[#f3f4f6]"
+      className="w-full h-full flex items-center justify-center bg-[#EDEEF4]"
     />
   );
 };

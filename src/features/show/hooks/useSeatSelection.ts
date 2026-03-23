@@ -1,65 +1,57 @@
-/* API 나오면 이 코드 사용
 import { useState } from "react";
 import { seatService } from "../services/seatService";
 
-export const useSeatSelection = (showId: number) => {
-  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
-  const [expiredAt, setExpiredAt] = useState<string | null>(null);
+const MAX_SEATS = 4;
 
-  // 좌석 선택 시 → 임시 점유 요청
-  const selectSeat = async (seat: Seat) => {
-    if (seat.status !== "available") return; // 예매 불가 좌석은 무시
-
-    const response = await seatService.reserveSeat(showId, seat.seatId);
-    setSelectedSeat(seat);
-    setExpiredAt(response?.expiredAt ?? null); // 7분 타이머용
-  };
-
-  // 좌석 선택 해제 시 → 임시 점유 취소 요청
-  const cancelSeat = async () => {
-    if (!selectedSeat) return;
-
-    await seatService.cancelReserveSeat(showId, selectedSeat.seatId);
-    setSelectedSeat(null);
-    setExpiredAt(null);
-  };
-
-  return { selectedSeat, expiredAt, selectSeat, cancelSeat };
-};
-*/
-
-import { useState } from "react";
-import { seatService } from "../services/seatService";
-
-export const useSeatSelection = (showId: number) => {
-  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
+export const useSeatSelection = (showScheduleId: number) => {
+  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [expiredAt, setExpiredAt] = useState<string | null>(null);
 
   const selectSeat = async (seat: Seat) => {
     if (seat.status !== "available") return;
+    if (selectedSeats.some((s) => s.seatId === seat.seatId)) return; // 이미 선택됨
+    if (selectedSeats.length >= MAX_SEATS) return; // 최대 4개
+
+    const next = [...selectedSeats, seat];
 
     try {
-      const response = await seatService.reserveSeat(showId, seat.seatId);
-      setSelectedSeat(seat);
-      setExpiredAt(response?.expiredAt ?? null);
+      await seatService.holdSeats(
+        showScheduleId,
+        next.map((s) => Number(s.seatId))
+      );
     } catch {
-      // API 없을 때는 그냥 선택 상태만 변경
-      setSelectedSeat(seat);
+      // mock 환경에서는 무시
+    } finally {
+      setSelectedSeats(next);
     }
   };
 
-  const cancelSeat = async () => {
-    if (!selectedSeat) return;
+  const cancelSeat = async (seatId: string) => {
+    const next = selectedSeats.filter((s) => s.seatId !== seatId);
 
     try {
-      await seatService.cancelReserveSeat(showId, selectedSeat.seatId);
+      await seatService.releaseSeats(showScheduleId, [Number(seatId)]);
     } catch {
-      // API 없을 때는 무시
+      // mock 환경에서는 무시
     } finally {
-      setSelectedSeat(null);
+      setSelectedSeats(next);
+      if (next.length === 0) setExpiredAt(null);
+    }
+  };
+
+  const cancelAll = async () => {
+    try {
+      await seatService.releaseSeats(
+        showScheduleId,
+        selectedSeats.map((s) => Number(s.seatId))
+      );
+    } catch {
+      // mock 환경에서는 무시
+    } finally {
+      setSelectedSeats([]);
       setExpiredAt(null);
     }
   };
 
-  return { selectedSeat, expiredAt, selectSeat, cancelSeat };
+  return { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll };
 };

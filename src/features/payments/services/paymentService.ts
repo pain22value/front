@@ -1,96 +1,157 @@
-import api from '@/shared/api/axios';
-import { ENDPOINTS } from '@/shared/api/endpoints';
+import api from "@/shared/api/axios";
+import { ENDPOINTS } from "@/shared/api/endpoints";
+import { v4 as uuidv4 } from "uuid";
 
 const withOrderId = (path: string, orderId: string) =>
-  path.replace(':orderId', encodeURIComponent(orderId));
+  path.replace(":orderId", encodeURIComponent(orderId));
 
-export type SavePaymentInfoRequest = {
-  orderName?: string;
-  amount: number;
-};
+// ─── 공통 응답 래퍼 ───────────────────────────────────────────
+interface ApiResponse<T> {
+  code: string;
+  message: string;
+  data: T;
+}
 
-export type SavePaymentInfoResponse = {
+// ─── 결제 승인 ────────────────────────────────────────────────
+export interface ConfirmPaymentRequest {
   orderId: string;
-  orderName: string;
-  amount: number;
-  status: 'PENDING';
-};
-
-export type ConfirmPaymentRequest = {
   paymentKey: string;
   amount: number;
-};
+}
 
-export type ConfirmPaymentResponse = {
+export interface ConfirmPaymentResponse {
   orderId: string;
-  status: 'CONFIRMED' | 'FAILED';
-  approvedAt?: string;
-  method?: string;
+  // 백엔드 확인 필요 - Swagger 스펙에는 없지만 실제 응답에 포함될 수 있음
   totalAmount?: number;
-  code?: string;
-  message?: string;
-  // 무통장 입금 전용
+  method?: string;
   bankAccount?: string;
   depositDeadline?: string;
-};
+}
 
-export type CancelPaymentRequest = {
-  reason?: string;
-};
+// ─── 결제 상세 조회 ───────────────────────────────────────────
+export type PaymentStatus =
+  | "READY"
+  | "IN_PROGRESS"
+  | "WAITING_FOR_DEPOSIT"
+  | "DONE"
+  | "CANCELED"
+  | "PARTIAL_CANCELED"
+  | "ABORTED"
+  | "EXPIRED";
 
-export type CancelPaymentResponse = {
+export interface VirtualAccount {
+  accountNumber: string;
+  bankName: string;
+  customerName: string;
+  dueDate: string;
+  displayDueDate: string;
+  remainingTime: string;
+}
+
+export interface Card {
+  cardCompanyName: string;
+  number: string;
+  installmentPlanMonths: number;
+}
+
+export interface CancelDetail {
+  requestAmount: number;
+  refundFee: number;
+  refundAmount: number;
+  cancelReason: string;
+  canceledAt: string;
+  transactionKey: string;
+  cancelStatus: string;
+}
+
+export interface PaymentDetail {
   orderId: string;
-  status: 'CANCELED';
-  canceledAt?: string;
-};
+  paymentKey: string;
+  amount: number;
+  method: string;
+  status: PaymentStatus;
+  cancelableAmount: number;
+  virtualAccount?: VirtualAccount;
+  card?: Card;
+  easyPay?: { provider: string; discountAmount: number };
+  failReason?: string;
+  requestedAt: string;
+  approvedAt: string;
+  cancels: CancelDetail[];
+}
 
-export type GetPaymentResponse = {
-  orderId: string;
-  status: 'PENDING' | 'CONFIRMED' | 'FAILED' | 'CANCELED';
-  orderName?: string;
-  amount?: number;
-  approvedAt?: string;
-  method?: string;
-  totalAmount?: number;
-};
+// ─── 결제 취소 ────────────────────────────────────────────────
+export interface RefundReceiveAccount {
+  bankCode: string;
+  accountNumber: string;
+  holderName: string;
+}
 
-const saveInfo = async (
-  body: SavePaymentInfoRequest,
-): Promise<SavePaymentInfoResponse> => {
-  const { data } = await api.post<SavePaymentInfoResponse>(
-    ENDPOINTS.PAYMENTS.SAVE,
-    body,
-  );
-  return data;
-};
+export interface CancelPaymentRequest {
+  cancelReason: string;
+  cancelAmount: number;
+  refundReceiveAccount?: RefundReceiveAccount; // 가상계좌 취소 시 필수
+}
 
+export type CancelPaymentResponse = CancelDetail;
+
+// ─── 은행 목록 ────────────────────────────────────────────────
+export interface Bank {
+  bankCode: string;
+  bankName: string;
+}
+
+// ─── API 함수 ─────────────────────────────────────────────────
+
+// 결제 승인 (Toss 콜백 후 호출)
 const confirm = async (
-  orderId: string,
-  body: ConfirmPaymentRequest,
+  body: ConfirmPaymentRequest
 ): Promise<ConfirmPaymentResponse> => {
-  const { data } = await api.post<ConfirmPaymentResponse>(
-    withOrderId(ENDPOINTS.PAYMENTS.CONFIRM, orderId),
-    body,
+  const { data } = await api.post<ApiResponse<ConfirmPaymentResponse>>(
+    ENDPOINTS.PAYMENTS.CONFIRM,
+    body
   );
-  return data;
+  return data.data;
 };
 
-const get = async (orderId: string): Promise<GetPaymentResponse> => {
-  const { data } = await api.get<GetPaymentResponse>(
-    withOrderId(ENDPOINTS.PAYMENTS.GET, orderId),
+// 결제 상세 조회
+const get = async (orderId: string): Promise<PaymentDetail> => {
+  const { data } = await api.get<ApiResponse<PaymentDetail>>(
+    withOrderId(ENDPOINTS.PAYMENTS.GET, orderId)
   );
-  return data;
+  return data.data;
 };
 
+// 결제 취소
 const cancel = async (
   orderId: string,
-  body?: CancelPaymentRequest,
+  body: CancelPaymentRequest
 ): Promise<CancelPaymentResponse> => {
-  const { data } = await api.post<CancelPaymentResponse>(
+  const { data } = await api.post<ApiResponse<CancelPaymentResponse>>(
     withOrderId(ENDPOINTS.PAYMENTS.CANCEL, orderId),
-    body ?? {},
+    body,
+    {
+      headers: { "Idempotency-Key": uuidv4() },
+    }
   );
-  return data;
+  return data.data;
 };
 
-export const paymentService = { saveInfo, confirm, get, cancel };
+// 은행 목록 조회
+const getBanks = async (): Promise<Bank[]> => {
+  const { data } = await api.get<ApiResponse<Bank[]>>(
+    ENDPOINTS.PAYMENTS.BANKS
+  );
+  return data.data;
+};
+
+export interface SavePaymentRequest {
+  orderId: string;
+  amount: number;
+}
+
+const save = async (body: SavePaymentRequest): Promise<void> => {
+  await api.post(ENDPOINTS.PAYMENTS.SAVE, body);
+};
+
+export const paymentService = { save, confirm, get, cancel, getBanks };

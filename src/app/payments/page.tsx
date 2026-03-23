@@ -56,7 +56,7 @@ export default function CheckoutPage() {
     const hasInfoError = Object.values(newErrors).some(Boolean);
     const hasReceiptError = receipt === null;
     const hasPayMethodError = payMethod === undefined;
-    const hasAgreeError = !agrees[0] || !agrees[1]; // 필수 약관 2개
+    const hasAgreeError = !agrees[0] || !agrees[1];
 
     if (hasInfoError || hasReceiptError || hasPayMethodError || hasAgreeError) {
       setModal("필수 입력 항목을 입력해주세요.");
@@ -69,24 +69,20 @@ export default function CheckoutPage() {
     try {
       const orderId = crypto.randomUUID();
 
-    await fetch(`${process.env.API_URL}/api/payments`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        orderId,
-        amount: total,
-        method: payMethod,
-      }),
-    });
+      // Toss 결제 전 사전 등록
+      await paymentService.save({ orderId, amount: total });
 
+      // fetch 직접 호출 제거 → Toss SDK에 orderId만 넘기면 됨
+      // 결제 승인은 success 페이지(/payments/success)에서 paymentService.confirm() 호출
       sessionStorage.setItem("pendingBooking", JSON.stringify({
         showTitle: "뮤지컬 <킹키부츠>",
         datetime: "2026.01.26(월) 오후 7:00",
         seats: ["1층 B구역 16열 6번", "1층 B구역 16열 7번"],
         method: payMethod,
+        orderId,
+        amount: total,
       }));
 
-      if (!payMethod) return;
       await requestPayment({
         orderId,
         orderName,

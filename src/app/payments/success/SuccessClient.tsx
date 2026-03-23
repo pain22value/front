@@ -39,7 +39,7 @@ export default function SuccessClient({ searchParams }: Props) {
       try {
         setConfirming(true);
         setErrorMsg(null);
-        const result = await paymentService.confirm(orderId, { paymentKey, amount });
+        const result = await paymentService.confirm({ paymentKey, orderId, amount });
         setPaymentResult(result);
         setConfirmed(true);
       } catch (e) {

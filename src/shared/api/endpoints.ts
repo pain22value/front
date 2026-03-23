@@ -21,9 +21,10 @@ export const ENDPOINTS = {
   },
   PAYMENTS: {
     SAVE: "/payments",
-    CONFIRM: "/payments/:orderId/confirm",
-    GET: "/payments/:orderId",
-    CANCEL: "/payments/:orderId/cancel",
+    CONFIRM: "/payments/confirm",        // POST, body에 orderId 포함
+    GET: "/payments/:orderId",           // GET
+    CANCEL: "/payments/:orderId/cancel", // POST
+    BANKS: "/payments/banks",            // GET
   },
   // 백엔드한테 요청 보낼 주소를 저장해둔것
   // seatService.ts에서 api.get(`${ENDPOINTS.SEATS.LIST}/${showId}/seats`) 이런 식으로 쓰임

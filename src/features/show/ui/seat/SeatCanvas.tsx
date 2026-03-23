@@ -458,7 +458,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       renderSection("2F-C", C_startX, "left",   a2MaxCols, SEC2_Y);
 
       // 2F 흰 박스
-      const BOX2_H = rows2F * STEP + 90;
+      const BOX2_H = rows2F * STEP + 60;
       const box2F  = new PIXI.Graphics();
       drawCurvedBox(box2F, BOX_PX, BOX2_Y, LOGICAL_W - BOX_PX * 2, BOX2_H, 50, 50);
       app.stage.addChildAt(box2F, app.stage.getChildIndex(box1F) + 1);

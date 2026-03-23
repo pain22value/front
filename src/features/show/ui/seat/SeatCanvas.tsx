@@ -165,9 +165,9 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
 
       // ── Stage ─────────────────────────────────────────────
       const stageBar = new PIXI.Graphics();
-      stageBar.roundRect(CX - 170, 12, 340, 22, 6).fill({ color: 0xd1d5db });
+      stageBar.roundRect(CX - 170, 12, 340, 22, 6).fill({ color: 0xDDDDE4 });
       app.stage.addChild(stageBar);
-      app.stage.addChild(makeText("Stage", { fontSize: 11, fill: 0x888888 }, CX - 17, 17));
+      app.stage.addChild(makeText("Stage", { fontSize: 11, fill: 0xffffff }, CX - 17, 17));
 
       const BOX1_Y = 42;
 
@@ -373,9 +373,9 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       // Console
       const CONSOLE_Y = SEC1_Y + rows1F * STEP + 8;
       const consolebar = new PIXI.Graphics();
-      consolebar.roundRect(CX - 120, CONSOLE_Y, 240, 16, 4).fill({ color: 0xd1d5db });
+      consolebar.roundRect(CX - 120, CONSOLE_Y, 240, 16, 4).fill({ color: 0xDDDDE4 });
       app.stage.addChild(consolebar);
-      app.stage.addChild(makeText("Console", { fontSize: 10, fill: 0x888888 }, CX - 22, CONSOLE_Y + 3));
+      app.stage.addChild(makeText("Console", { fontSize: 10, fill: 0xffffff }, CX - 22, CONSOLE_Y + 3));
 
       // 1F 흰 박스
       const BOX1_H = CONSOLE_Y + 24 - BOX1_Y;
@@ -455,7 +455,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
   return (
     <div
       ref={wrapperRef}
-      className="w-full h-full flex items-center justify-center"
+      className="w-full h-full flex items-center justify-center bg-[#f3f4f6]"
     />
   );
 };

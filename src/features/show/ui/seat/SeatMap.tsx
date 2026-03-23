@@ -28,7 +28,7 @@ export const SeatMap = ({ showScheduleId }: SeatMapProps) => {
 
   return (
     <div className="flex h-full">
-      <div className="flex flex-col flex-1 items-center overflow-auto relative p-4">
+     <div className="flex flex-col flex-1 items-center overflow-hidden relative">
         <SeatCanvas
           sections={sections}
           selectedSeats={selectedSeats}

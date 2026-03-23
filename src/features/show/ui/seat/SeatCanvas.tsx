@@ -210,10 +210,10 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       app.stage.addChild(stageBar);
       app.stage.addChild(makeText("Stage", { fontSize: 11, fill: 0xffffff }, CX - 17, 17));
 
-      const BOX1_Y = 20;
+      const BOX1_Y = 32;
 
       // ── OP ────────────────────────────────────────────────
-      const OP_Y = BOX1_Y + 40;
+      const OP_Y = BOX1_Y + 60;
       const opSecRows = sections.find((s) => s.sectionId === "OP")?.rows ?? [];
 
       const opLabel = makeText("OP", { fontSize: 10, fill: 0x555555, fontWeight: "bold" }, 0, OP_Y - 16);

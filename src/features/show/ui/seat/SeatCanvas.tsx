@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
 
 const SS = 8;
-const SG = 2;
+const SG = 3;
 const STEP = SS + SG;
 
 const LOGICAL_W = 720;
@@ -53,9 +53,31 @@ const SECTION_CONFIG: Record<string, {
       return { fill: 0xC2F2D8, stroke: 0x25B07D };                           // 나머지 R
     }
   },
-  "2F-A": { label: "A",  align: "right",  getStyle: () => ({ fill: 0xfbbf24 }) },
-  "2F-B": { label: "B",  align: "center", getStyle: () => ({ fill: 0x86efac }) },
-  "2F-C": { label: "C",  align: "left",   getStyle: () => ({ fill: 0xfbbf24 }) },
+  "2F-A": { label: "A", align: "right",
+    getStyle: (rowName) => {
+      const row = Number(rowName);
+      if (row <= 2) return { fill: 0xC2F2D8, stroke: 0x25B07D }; // 1~2행 R석
+      if (row <= 4) return { fill: 0xCCEBF6, stroke: 0x1D7CD0 }; // 3~4행 S석
+      return { fill: 0xFDE5BE, stroke: 0xC59805 };                // 5~6행 A석
+    }
+  },
+  "2F-B": { label: "B", align: "center",
+    getStyle: (rowName) => {
+      const row = Number(rowName);
+      if (row <= 1) return { fill: 0xDECFFB, stroke: 0x783CF1 }; // 1행 VIP석
+      if (row <= 2) return { fill: 0xC2F2D8, stroke: 0x25B07D }; // 2행 R석
+      if (row <= 4) return { fill: 0xCCEBF6, stroke: 0x1D7CD0 }; // 3~4행 S석
+      return { fill: 0xFDE5BE, stroke: 0xC59805 };                // 5~6행 A석
+    }
+  },
+  "2F-C": { label: "C", align: "left",
+    getStyle: (rowName) => {
+      const row = Number(rowName);
+      if (row <= 2) return { fill: 0xC2F2D8, stroke: 0x25B07D }; // 1~2행 R석
+      if (row <= 4) return { fill: 0xCCEBF6, stroke: 0x1D7CD0 }; // 3~4행 S석
+      return { fill: 0xFDE5BE, stroke: 0xC59805 };                // 5~6행 A석
+    }
+  },
 };
 
 const makeText = (text: string, style: Partial<PIXI.TextStyle>, x: number, y: number): PIXI.Text => {

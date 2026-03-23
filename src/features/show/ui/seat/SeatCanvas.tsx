@@ -104,12 +104,12 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
 
       // ── 좌표 계산 ─────────────────────────────────────────
       const b1 = sections.find((s) => s.sectionId === "1F-B");
-      const b1MaxCols = Math.max(...(b1?.rows.map((r) => r.seats.length) ?? [16]));
+      const b1MaxCols = Math.max(...(b1?.rows.flatMap((r) => r.seats.map((s) => s.col)) ?? [16]));
       const B_startX  = CX - (b1MaxCols * STEP - SG) / 2;
       const B_endX    = B_startX + b1MaxCols * STEP - SG;
 
       const a1 = sections.find((s) => s.sectionId === "1F-A");
-      const a1MaxCols = Math.max(...(a1?.rows.map((r) => r.seats.length) ?? [9]));
+      const a1MaxCols = Math.max(...(a1?.rows.flatMap((r) => r.seats.map((s) => s.col)) ?? [9]));
       const SIDE_GAP  = 20;
       const A_startX  = B_startX - SIDE_GAP - a1MaxCols * STEP + SG;
       const C_startX  = B_endX + SIDE_GAP + SG;
@@ -132,8 +132,8 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       app.stage.addChild(opLabel);
 
       opSecRows.forEach((row, ri) => {
-        const count = row.seats.length;
-        const rx = CX - (count * STEP - SG) / 2;
+        const TOTAL_OP_COLS = 33;
+        const rx = CX - (TOTAL_OP_COLS * STEP - SG) / 2;
         const ry = OP_Y + ri * STEP;
         const rn = makeText(row.rowName, { fontSize: 7, fill: 0x999999 }, rx - 4, ry + 1);
         rn.anchor.set(1, 0);
@@ -144,7 +144,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
             ? SELECTED_COLOR
             : STATUS_OVERRIDE[seat.status] ?? GRADE_COLOR.VIP;
           g.roundRect(0, 0, SS, SS, 2).fill({ color });
-          g.x = rx + ci * STEP; g.y = ry;
+          g.x = rx + (seat.col - 1) * STEP; g.y = ry;
           if (seat.status === "available") {
             g.eventMode = "static"; g.cursor = "pointer";
             g.on("pointerdown", () => onSeatClick(seat));
@@ -166,28 +166,39 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
         const cfg = SECTION_CONFIG[sectionId];
 
         sec.rows.forEach((row, ri) => {
-          const count = row.seats.length;
           const ry = startY + ri * STEP;
+
+          // 빈 행 (통로)
+          if (row.seats.length === 0) {
+            const rn = makeText(row.rowName, { fontSize: 7, fill: 0x999999 }, baseX - 4, ry + 1);
+            rn.anchor.set(1, 0);
+            app.stage.addChild(rn);
+            return;
+          }
+
+          const maxCol = Math.max(...row.seats.map((s) => s.col));
+
           let rx: number;
-          if (align === "right")       rx = baseX + (maxCols - count) * STEP;
-          else if (align === "center") rx = CX - (count * STEP - SG) / 2;
+          if (align === "right")       rx = baseX + (maxCols - maxCol) * STEP;
+          else if (align === "center") rx = CX - (maxCol * STEP - SG) / 2;
           else                         rx = baseX;
 
           if (align === "left") {
-            app.stage.addChild(makeText(row.rowName, { fontSize: 7, fill: 0x999999 }, rx + count * STEP + 3, ry + 1));
+            app.stage.addChild(makeText(row.rowName, { fontSize: 7, fill: 0x999999 }, rx + maxCol * STEP + 3, ry + 1));
           } else {
             const rn = makeText(row.rowName, { fontSize: 7, fill: 0x999999 }, rx - 4, ry + 1);
             rn.anchor.set(1, 0);
             app.stage.addChild(rn);
           }
 
-          row.seats.forEach((seat, ci) => {
+          row.seats.forEach((seat) => {
             const g = new PIXI.Graphics();
             const color = selectedIds.has(seat.seatId)
               ? SELECTED_COLOR
               : STATUS_OVERRIDE[seat.status] ?? cfg.getColor(ri);
             g.roundRect(0, 0, SS, SS, 2).fill({ color });
-            g.x = rx + ci * STEP; g.y = ry;
+            g.x = rx + (seat.col - 1) * STEP;
+            g.y = ry;
             if (seat.status === "available") {
               g.eventMode = "static"; g.cursor = "pointer";
               g.on("pointerdown", () => onSeatClick(seat));
@@ -242,7 +253,10 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       const b2 = sections.find((s) => s.sectionId === "2F-B");
       const b2MaxCols = Math.max(...(b2?.rows.map((r) => r.seats.length) ?? [14]));
       const a2 = sections.find((s) => s.sectionId === "2F-A");
-      const a2MaxCols = Math.max(...(a2?.rows.map((r) => r.seats.length) ?? [6]));
+      const a2MaxCols = Math.max(
+        ...(sections.find((s) => s.sectionId === "2F-A")
+          ?.rows.flatMap((r) => r.seats.map((s) => s.col)) ?? [5])
+      );
 
       const labelPos2F: Record<string, number> = {
         "2F-A": A_startX + (a2MaxCols * STEP) / 2,

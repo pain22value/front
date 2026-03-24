@@ -4,14 +4,24 @@ import { authService } from "@/features/auth/services/authService";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+export type SignupTerms = {
+  serviceTermsAgreed: boolean;
+  electronicFinanceTermsAgreed: boolean;
+  privacyCollectionAgreed: boolean;
+  marketingInfoAgreed: boolean;
+  over14Agreed: boolean;
+};
+
 type AuthState = {
   accessToken: string | null;
   user: string | null;
+  signupTerms: SignupTerms | null;
   // user: User | null;
   signup: (signupRequest: SignupRequest) => Promise<void>;
   signin: (signinRequest: SigninRequest) => Promise<void>;
   signout: () => Promise<void>;
   setAuth: (accessToken: string, user: string) => void;
+  setSignupTerms: (terms: SignupTerms | null) => void;
   // setAuth: (accessToken: string, user: User) => void;
 };
 
@@ -21,6 +31,7 @@ export const useAuthStore = create(
     (set, get) => ({
       accessToken: null,
       user: null,
+      signupTerms: null,
       signup: async (signupRequest) => {
         try {
           await authService.signup(signupRequest);
@@ -51,6 +62,7 @@ export const useAuthStore = create(
         }
       },
       setAuth: (accessToken, user) => set({ accessToken, user }),
+      setSignupTerms: (terms) => set({ signupTerms: terms }),
     }),
     {
       name: "auth-storage",

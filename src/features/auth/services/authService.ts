@@ -1,8 +1,9 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
 
-const signup = async (signupRequest: SignupRequest): Promise<void> => {
-  await api.post(ENDPOINTS.AUTH.SIGNUP, signupRequest);
+const signup = async (signupRequest: SignupRequest): Promise<string | null> => {
+  const { data } = await api.post<ApiResponse<string>>(ENDPOINTS.AUTH.SIGNUP, signupRequest);
+  return data.data;
 };
 
 const signin = async (signinRequest: SigninRequest): Promise<SigninResponse> => {
@@ -18,8 +19,9 @@ const signin = async (signinRequest: SigninRequest): Promise<SigninResponse> => 
   return data;
 };
 
-const signout = async (): Promise<void> => {
-  await api.delete(ENDPOINTS.AUTH.LOGOUT);
+const signout = async (): Promise<string | null> => {
+  const { data } = await api.delete<ApiResponse<string>>(ENDPOINTS.AUTH.LOGOUT);
+  return data.data;
 };
 
 const refresh = async (): Promise<SigninResponse> => {

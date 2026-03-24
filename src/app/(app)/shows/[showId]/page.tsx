@@ -1,9 +1,9 @@
+import { showService } from "@/features/show/services/showService";
 import { ShowDetailCard } from "@/features/show/ui/detail/ShowDetailCard";
 import { ShowDetailTabs } from "@/features/show/ui/detail/ShowDetailTabs";
-import { ShowFloatingTicketingCard } from "@/features/show/ui/detail/ShowFloatingTicketingCard";
-// import { notFound } from "next/navigation";
+import { ShowDetailScheduleCard } from "@/features/show/ui/detail/ShowDetailScheduleCard";
 import { ENDPOINTS } from "@/shared/api/endpoints";
-import { MOCK_SHOW_DETAIL } from "@/shared/data/shows";
+// import { notFound } from "next/navigation";
 
 // export const revalidate = 60; // 재검증시간설정 : n초동안캐시
 
@@ -20,22 +20,9 @@ export async function generateStaticParams() {
   }
 }
 
-async function fetchShowDetail(showId: string): Promise<ShowDetail> {
-  try {
-    const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.DETAIL}/${showId}`);
-    if (!res.ok) throw new Error(`Failed to fetch show detail: ${res.status}`);
-    const result: ApiResponse<ShowDetail> = await res.json();
-    // console.log({ result });
-    return result.data || MOCK_SHOW_DETAIL;
-  } catch (error) {
-    console.log(error);
-    return MOCK_SHOW_DETAIL;
-  }
-}
-
 export default async function ShowDetailPage({ params }: { params: Promise<{ showId: string }> }) {
   const { showId } = await params;
-  const show = await fetchShowDetail(showId);
+  const show = await showService.getShowDetail(showId);
   // console.log({ show });
   // if (!show) notFound();
   return (
@@ -47,7 +34,7 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
             <ShowDetailTabs show={show} />
           </div>
           <aside className="hidden md:block sticky top-[calc(var(--header-height)+2.5rem)]">
-            <ShowFloatingTicketingCard show={show} />
+            <ShowDetailScheduleCard show={show} />
           </aside>
         </div>
       </section>

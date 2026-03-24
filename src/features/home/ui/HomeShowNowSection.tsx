@@ -4,25 +4,17 @@ import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatShowPeriod } from "@/shared/utils/date";
 import Image from "next/image";
 import Link from "next/link";
 import useHomeShows from "../hooks/useHomeShows";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomeShowNowSection() {
-  const [order, setOrder] = useState<HomeShowsOrder>("DAILY_BOOKING");
-  const [region, setRegion] = useState<HomeShowsRegion>("SEOUL");
+  const [order, setOrder] = useState<ShowsOrder>("DAILY_BOOKING");
+  const [region, setRegion] = useState<ShowsRegion>("SEOUL");
 
   const { data, isLoading } = useHomeShows(order, region, 1, 12);
-  const shows = data?.shows.map((show: HomeShow) => ({
-    id: show.showId,
-    title: show.showTitle,
-    image: show.posterUrl,
-    venue: show.venueName,
-    startTime: show.date.split(" ~ ")[0],
-    endTime: show.date.split(" ~ ")[1] || show.date.split(" ~ ")[0],
-  }));
+  const displayShows = data?.shows && data.shows.length > 0 ? data.shows : [];
 
   return (
     <section className="w-full max-w-[1200] mx-auto space-y-8">
@@ -37,7 +29,7 @@ export default function HomeShowNowSection() {
         <Select
           value={order}
           onValueChange={(value) => {
-            setOrder(value as HomeShowsOrder);
+            setOrder(value as ShowsOrder);
           }}
         >
           <SelectTrigger className="w-32">
@@ -51,7 +43,7 @@ export default function HomeShowNowSection() {
         <Select
           value={region}
           onValueChange={(value) => {
-            setRegion(value as HomeShowsRegion);
+            setRegion(value as ShowsRegion);
           }}
         >
           <SelectTrigger className="w-32">
@@ -76,7 +68,7 @@ export default function HomeShowNowSection() {
         <CarouselSkeleton />
       ) : (
         <BaseCarousel
-          items={shows || []}
+          items={displayShows || []}
           itemsPerView={6}
           loop
           align="start"
@@ -86,21 +78,21 @@ export default function HomeShowNowSection() {
           stopOnInteraction={false}
           stopOnMouseEnter
           renderItem={(show: Show) => (
-            <Link href={`/shows/${show.id}`}>
+            <Link href={`/shows/${show.showId}`}>
               <Card className="border-0 bg-transparent shadow-none">
                 <CardContent className="p-0 space-y-3">
                   <div className="relative aspect-3/4 overflow-hidden rounded-xl">
                     <Image
-                      src={show.image}
-                      alt={show.title}
+                      src={show.posterUrl}
+                      alt={show.showTitle}
                       fill
                       className="object-cover transition-transform duration-300 hover:scale-105"
                     />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-semibold">{show.title}</p>
-                    <p className="text-xs text-muted-foreground">{show.venue}</p>
-                    <p className="text-xs text-muted-foreground">{formatShowPeriod(show.startTime, show.endTime)}</p>
+                    <p className="text-sm font-semibold">{show.showTitle}</p>
+                    <p className="text-xs text-muted-foreground">{show.venueName}</p>
+                    <p className="text-xs text-muted-foreground">{show.date}</p>
                   </div>
                 </CardContent>
               </Card>

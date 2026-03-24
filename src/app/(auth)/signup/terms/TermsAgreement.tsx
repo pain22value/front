@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -10,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function TermsAgreement() {
   const router = useRouter();
+  const setSignupTerms = useAuthStore((state) => state.setSignupTerms);
 
   const [agreed, setAgreed] = useState({
     service: false,
@@ -51,13 +53,21 @@ export default function TermsAgreement() {
 
   // 가입하기 클릭
   const handleSubmit = () => {
-    const { service, finance, privacy, age } = agreed;
+    const { service, finance, privacy, marketing, age } = agreed;
 
     // 필수 항목 체크
     if (!service || !finance || !privacy || !age) {
       alert("필수 약관에 모두 동의해야 합니다.");
       return;
     }
+
+    setSignupTerms({
+      serviceTermsAgreed: service,
+      electronicFinanceTermsAgreed: finance,
+      privacyCollectionAgreed: privacy,
+      marketingInfoAgreed: marketing,
+      over14Agreed: age,
+    });
 
     router.push("/signup");
   };

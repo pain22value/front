@@ -1,17 +1,42 @@
 // 리뷰
 
 type Review = {
-  id: number;
-  title: string;
+  reviewId: number;
+  userId: string;
+  userNickname: string;
+  title: string;          // Note: The swagger return has it, but post request body does not. 
   content: string;
-  date: string;
-  author: string;
-  round?: string;
-  sentiment: "좋았어요" | "아쉬워요" | string;
+  createdAt: string;
+  positive: boolean;
 };
 
 type ReviewListResponse = {
-  reviews: Review[];
+  content: Review[];
+  totalCount: number;
   totalPages: number;
-  currentPage: number;
+  page: number;
+  size: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+};
+
+type ReviewPostRequest = {
+  isPositive: boolean;
+  emotionPoints: string[];
+  charmPoints: string[];
+  content: string;
+};
+
+type ReviewPointScore = {
+  name: string;
+  label: string;
+  score: number;
+};
+
+type ReviewMetaResponse = {
+  weeklyRanking: number;
+  truveScore: number;
+  showId: number;
+  charmPointScores: ReviewPointScore[];
+  emotionPointScores: ReviewPointScore[];
 };

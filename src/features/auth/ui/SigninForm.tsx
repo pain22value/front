@@ -112,7 +112,7 @@ export default function SigninForm() {
           {/* 중간의 링크부분 */}
           <div className="flex items-center justify-between text-sm">
             <Link href="/reset">비밀번호 재설정</Link>
-            <Link href="/signup">회원가입 하기</Link>
+            <Link href="/signup/terms">회원가입 하기</Link>
           </div>
 
           {/* 소셜 로그인 */}

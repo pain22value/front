@@ -10,7 +10,12 @@ type User = {
 type SignupRequest = {
   email: string;
   password: string;
-  name: string;
+  nickname: string;
+  serviceTermsAgreed: boolean;
+  electronicFinanceTermsAgreed: boolean;
+  privacyCollectionAgreed: boolean;
+  marketingInfoAgreed: boolean;
+  over14Agreed: boolean;
 };
 
 type SigninRequest = {

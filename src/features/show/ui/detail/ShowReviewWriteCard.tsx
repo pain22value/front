@@ -1,24 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/shared/utils/cn";
 import { toast } from "sonner";
+import { usePostReview } from "../../hooks/useReviews";
 
 const selectedStyle = "border-red-500 bg-red-50 text-red-500 hover:bg-red-50 hover:text-red-500";
 
-type ReviewData = {
-  sentiment: "good" | "bad";
-  charmPoints: string[];
-  emotionPoints: string[];
-  content: string;
-};
-
-export default function ShowReviewWriteCard({ onWriteSuccess }: { onWriteSuccess?: () => void }) {
+export default function ShowReviewWriteCard({ showId, onWriteSuccess }: { showId: number; onWriteSuccess?: () => void }) {
   // 리뷰 작성 모드 상태 (작성 중 / 작성 완료)
   const [mode, setMode] = useState<"write" | "done">("write");
   // 만족도 상태 (좋았어요 / 별로에요)
@@ -30,26 +23,7 @@ export default function ShowReviewWriteCard({ onWriteSuccess }: { onWriteSuccess
   // 리뷰 내용 상태
   const [content, setContent] = useState("");
 
-  const queryClient = useQueryClient();
-
-  const { mutate: createReview, isPending } = useMutation<unknown, Error, ReviewData>({
-    mutationFn: async (data) => {
-      // 실제 API 호출
-      // return await api.post(`/shows/${showId}/reviews`, data);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("리뷰 데이터 전송:", data);
-    },
-    onSuccess: () => {
-      toast.success("리뷰가 성공적으로 등록되었습니다.");
-      queryClient.invalidateQueries({ queryKey: ["reviews"] });
-      setMode("done");
-      onWriteSuccess?.();
-    },
-    onError: (error) => {
-      console.error("리뷰 작성 실패:", error);
-      toast.error(error.message || "리뷰 작성에 실패했습니다.");
-    },
-  });
+  const { mutate: createReview, isPending } = usePostReview(showId);
 
   // 매력 포인트 토글 함수
   const toggleCharmPoint = (tag: string) => {
@@ -70,12 +44,25 @@ export default function ShowReviewWriteCard({ onWriteSuccess }: { onWriteSuccess
       toast.warning("관람 후기를 작성해주세요.");
       return;
     }
-    createReview({
-      sentiment,
-      charmPoints,
-      emotionPoints,
-      content,
-    });
+    createReview(
+      {
+        isPositive: sentiment === "good",
+        charmPoints,
+        emotionPoints,
+        content,
+      },
+      {
+        onSuccess: () => {
+          toast.success("리뷰가 성공적으로 등록되었습니다.");
+          setMode("done");
+          onWriteSuccess?.();
+        },
+        onError: (error) => {
+          console.error("리뷰 작성 실패:", error);
+          toast.error(error.message || "리뷰 작성에 실패했습니다.");
+        },
+      }
+    );
   };
 
   return (
@@ -84,8 +71,8 @@ export default function ShowReviewWriteCard({ onWriteSuccess }: { onWriteSuccess
         <Card className="bg-muted/40">
           <CardContent className="space-y-6 p-8">
             <div>
-              <h3 className="text-lg font-semibold">뮤지컬 &lt;킹키부츠&gt; 어땠나요?</h3>
-              <p className="text-sm text-muted-foreground">2026.01.25</p>
+              <h3 className="text-lg font-semibold">어땠나요?</h3>
+              <p className="text-sm text-muted-foreground">{new Date().toLocaleDateString()}</p>
             </div>
 
             {/* 만족도 선택 */}
@@ -110,6 +97,9 @@ export default function ShowReviewWriteCard({ onWriteSuccess }: { onWriteSuccess
             <div className="space-y-3">
               <p className="font-medium">매력 포인트 (복수선택 가능)</p>
               <div className="flex flex-wrap gap-3">
+                 {/* 여기는 원래 API에서 포인트를 받아오거나 해야하지만, Mocking 으로 임시 사용 하도록 유지합니다 (Swagger에 구체적인 리스트가 없음). */}
+                 {/* Swagger 예시로는 "STAGE_PRODUCTION" 등이 있었으니, 라벨값으로 보내면 될 것입니다. */}
+                 {/* 만약 서버가 영문을 요구한다면 mapping이 필요합니다, 우선은 라벨을 그대로 사용. */}
                 {["몰입감", "연출", "스토리", "음악", "배우"].map((tag) => (
                   <Button
                     key={tag}
@@ -169,7 +159,7 @@ export default function ShowReviewWriteCard({ onWriteSuccess }: { onWriteSuccess
             <div className="flex items-start justify-between">
               <div>
                 <h4 className="font-semibold">관람후기 제목</h4>
-                <p className="text-sm text-muted-foreground">2026.01.25</p>
+                <p className="text-sm text-muted-foreground">{new Date().toLocaleDateString()}</p>
               </div>
 
               <Badge variant="outline">{sentiment === "good" ? "좋았어요" : "별로에요"}</Badge>

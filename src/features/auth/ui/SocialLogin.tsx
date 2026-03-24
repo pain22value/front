@@ -51,7 +51,7 @@ export default function SocialLogin() {
       </Button>
 
       {/* Google */}
-      <Button
+      {/* <Button
         asChild
         variant="outline"
         className="
@@ -91,7 +91,7 @@ export default function SocialLogin() {
           </svg>
           Google 로그인
         </a>
-      </Button>
+      </Button> */}
     </div>
   );
 }

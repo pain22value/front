@@ -37,6 +37,7 @@ type ShowSchedule = {
   scheduleId: number;
   showTime: string;
   status: string;
+  castings: Casting[];
 };
 
 type ShowSeatGrade = {

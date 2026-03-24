@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { seatService, type ApiSection } from "../services/seatService";
 
-const toSeatStatus = (status: "AVAILABLE" | "HELD" | "SOLD"): SeatStatus => {
+const toSeatStatus = (status: "AVAILABLE" | "HELD" | "HOLD" | "SOLD"): SeatStatus => {
   if (status === "AVAILABLE") return "available";
-  if (status === "HELD") return "reserved";
+  if (status === "HELD" || status === "HOLD") return "reserved";
   return "unavailable";
 };
 
@@ -14,9 +14,19 @@ const toSeatGrade = (grade: string): SeatGrade => {
   return "A";
 };
 
+const toSectionId = (sectionName: string): string => {
+  if (sectionName === "VIP섹션1") return "OP";
+  if (sectionName === "VIP섹션2") return "1F-B";
+  if (sectionName === "S섹션1")   return "1F-A";
+  if (sectionName === "A섹션1")   return "2F-A";
+  return sectionName;
+};
+
 export const adaptSections = (apiSections: ApiSection[]): SeatSection[] =>
   apiSections.map((section) => ({
-    sectionId: String(section.sectionId),
+    // 테스트 API
+    sectionId: toSectionId(section.sectionName),
+    //sectionId: String(section.sectionId), 목데이터
     sectionName: section.sectionName,
     grade: toSeatGrade(section.grade),
     price: section.price,
@@ -177,12 +187,13 @@ export const useGetSeats = (showScheduleId: number) => {
   return useQuery({
     queryKey: ["seats", showScheduleId],
     queryFn: async () => {
-      const apiSections = await seatService.getSeatList(showScheduleId);
-      if (!apiSections) return MOCK_SECTIONS; // API 실패 시 mock fallback
-      return adaptSections(apiSections);
+      const apiSections = await seatService.getSeatList(showScheduleId); // sessionToken 제거 (기본값 사용)
+      if (!apiSections) return MOCK_SECTIONS;
+      return adaptSections(apiSections); // ← apiSections가 이미 ApiSection[]이라서 바로 사용
     },
     retry: false,
     initialData: MOCK_SECTIONS, // 초기 렌더링은 mock으로
-    enabled: false,
+    //enabled: false, 목업 데이터로 테스트 할 때는 false
+    enabled: true,
   });
 };

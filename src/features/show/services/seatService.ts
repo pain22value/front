@@ -21,7 +21,7 @@ export interface ShowInfo {
 export interface ApiSeat {
   seatId: number;
   col: number;
-  status: "AVAILABLE" | "HELD" | "SOLD";
+  status: "AVAILABLE" | "HELD" | "HOLD" | "SOLD"; 
 }
 
 export interface ApiRow {
@@ -55,13 +55,19 @@ const enter = async (
 // 좌석 배치도 조회
 const getSeatList = async (
   showScheduleId: number,
-  sessionToken: string = MOCK_SESSION_TOKEN
+  sessionToken: string = "b8a02f4d-d124-44f0-947b-a416fe385064" // swagger로 받은 session token 하드코딩
 ): Promise<ApiSection[] | null> => {
   const { data } = await api.get<ApiResponse<{ sections: ApiSection[] }>>(
     withScheduleId(ENDPOINTS.SEATS.LIST, showScheduleId),
-    { headers: sessionHeader(sessionToken) }
+    { 
+      headers: {
+        ...sessionHeader(sessionToken),
+        // access token 하드 코딩
+        "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0cnV2ZS1hcGkiLCJzdWIiOiJkdWR3bnM0NjE5QG5hdmVyLmNvbSIsInVzZXJfcHVibGljX2lkIjoiMGUwNzljZTUtNmE3Yy00NTgxLWI1NjctNTRhOGQyMjhiYzkxIiwidXNlcl9pZCI6NCwicm9sZSI6Ik1FTUJFUiIsInRva2VuX3R5cGUiOiJhY2Nlc3MiLCJqdGkiOiI0ODVjZDY5NC00OGYwLTQ0NmYtYTljYy0zOTVhNDkwYTkzMWIiLCJpYXQiOjE3NzQzNDMzNDYsImV4cCI6MTc3NDM0MzY0Nn0.gcx4MjqWgsOl-tG5KrH2i_Ye9_uPV9EPU43YgGTmDKU` // 아까 받은 토큰
+      }
+    }
   );
-  return data.data?.sections ?? null;  // sections 꺼내기
+  return data.data?.sections ?? null;
 };
 
 // 공연 기본 정보 조회
@@ -80,12 +86,19 @@ const getShowInfo = async (
 const holdSeats = async (
   showScheduleId: number,
   seatIds: number[],
-  sessionToken: string = MOCK_SESSION_TOKEN
+  // session token 자리
+  sessionToken: string = "b8a02f4d-d124-44f0-947b-a416fe385064",
 ): Promise<string | null> => { 
   const { data } = await api.post<ApiResponse<string>>(
     withScheduleId(ENDPOINTS.SEATS.HOLD, showScheduleId),
     { seatIds },
-    { headers: sessionHeader(sessionToken) }
+    { 
+      headers: {
+        ...sessionHeader(sessionToken),
+        // access token 자리
+        "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0cnV2ZS1hcGkiLCJzdWIiOiJkdWR3bnM0NjE5QG5hdmVyLmNvbSIsInVzZXJfcHVibGljX2lkIjoiMGUwNzljZTUtNmE3Yy00NTgxLWI1NjctNTRhOGQyMjhiYzkxIiwidXNlcl9pZCI6NCwicm9sZSI6Ik1FTUJFUiIsInRva2VuX3R5cGUiOiJhY2Nlc3MiLCJqdGkiOiI0ODVjZDY5NC00OGYwLTQ0NmYtYTljYy0zOTVhNDkwYTkzMWIiLCJpYXQiOjE3NzQzNDMzNDYsImV4cCI6MTc3NDM0MzY0Nn0.gcx4MjqWgsOl-tG5KrH2i_Ye9_uPV9EPU43YgGTmDKU`,
+      }
+    }
   );
   return data.data;
 };

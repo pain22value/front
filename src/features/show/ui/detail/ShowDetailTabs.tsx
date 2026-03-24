@@ -23,7 +23,7 @@ export function ShowDetailTabs({ show }: { show: ShowDetail }) {
   ];
 
   return (
-    <Tabs defaultValue="info" className="w-full ">
+    <Tabs defaultValue="review" className="w-full ">
       <div className="w-full border-b">
         <TabsList variant="line" className="px-0 gap-0">
           {tabs.map((tab) => (

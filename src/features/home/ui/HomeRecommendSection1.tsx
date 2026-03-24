@@ -1,8 +1,8 @@
 "use client";
 
 import useHomeShows from "../hooks/useHomeShows";
+import { SHOW_LIST } from "@/shared/data/shows";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
-import { formatShowPeriod } from "@/shared/utils/date";
 import { cn } from "@/shared/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,23 +10,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomeRecommendSection1() {
   const { data, isLoading } = useHomeShows("DAILY_BOOKING", "ALL", 1, 12);
+  // console.log({ data });
 
-  if (isLoading || !data) return <HomeRecommendSectionSkeleton />;
+  if (isLoading) return <HomeRecommendSectionSkeleton />;
 
-  const shows = data.shows.map((show: HomeShow) => ({
-    id: show.showId,
-    title: show.showTitle,
-    image: show.posterUrl,
-    venue: show.venueName,
-    startTime: show.date.split(" ~ ")[0],
-    endTime: show.date.split(" ~ ")[1] || show.date.split(" ~ ")[0],
-  }));
+  const displayShows = data?.shows && data.shows.length > 0 ? data.shows : SHOW_LIST;
 
   return (
     <section className="max-w-[1200] mx-auto space-y-8">
       <h1 className="font-semibold text-2xl">이 뮤지컬 어떠세요?</h1>
       <BaseCarousel
-        items={shows}
+        items={displayShows}
         className="max-w-7xl mx-auto"
         itemClassName="sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
         showPagination
@@ -36,19 +30,19 @@ export default function HomeRecommendSection1() {
         stopOnMouseEnter
         renderItem={(item: Show, index, isSelected) => (
           <Link
-            href={`/shows/${item.id}`}
+            href={`/shows/${item.showId}`}
             className={cn(
               "group relative overflow-hidden rounded-xl transition-all duration-300 ease-in-out block",
               isSelected ? "scale-100 z-10 shadow-xl border-2 border-white/" : "scale-90 opacity-50",
             )}
           >
             <div className="relative aspect-2/3 w-full">
-              <Image src={item.image} alt={item.title} fill className="object-cover" />
+              <Image src={item.posterUrl} alt={item.showTitle} fill className="object-cover" />
             </div>
             <div className="absolute bottom-0 w-full bg-linear-to-t from-black/80 to-transparent p-4">
-              <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-              <p className="text-sm text-white/80">{item.venue}</p>
-              <p className="text-sm text-white/70">{formatShowPeriod(item.startTime, item.endTime)}</p>
+              <h3 className="text-lg font-semibold text-white">{item.showTitle}</h3>
+              <p className="text-sm text-white/80">{item.venueName}</p>
+              <p className="text-sm text-white/70">{item.date}</p>
             </div>
           </Link>
         )}

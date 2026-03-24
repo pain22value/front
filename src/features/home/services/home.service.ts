@@ -1,8 +1,8 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
 
-const getHomeShows = async (params?: HomeShowsParams): Promise<HomeShowsData> => {
-  const { data } = await api.get<ApiResponse<HomeShowsData>>(ENDPOINTS.HOME.SHOWS, {
+const getHomeShows = async (params?: ShowsListParams): Promise<ShowsData> => {
+  const { data } = await api.get<ApiResponse<ShowsData>>(ENDPOINTS.HOME.SHOWS, {
     params: {
       order: params?.order ?? "DAILY_BOOKING",
       region: params?.region ?? "ALL",
@@ -14,8 +14,8 @@ const getHomeShows = async (params?: HomeShowsParams): Promise<HomeShowsData> =>
   return data.data;
 };
 
-const getHomeBanners = async (): Promise<HomeBannersData> => {
-  const { data } = await api.get<ApiResponse<HomeBannersData>>(ENDPOINTS.HOME.BANNERS);
+const getHomeBanners = async (): Promise<BannersData> => {
+  const { data } = await api.get<ApiResponse<BannersData>>(ENDPOINTS.HOME.BANNERS);
   if (!data.data) throw new Error("홈 배너 데이터가 없습니다.");
   return data.data;
 };

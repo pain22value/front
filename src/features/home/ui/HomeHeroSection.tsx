@@ -6,19 +6,21 @@ import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/com
 import { useRef, useState } from "react";
 import { useHomeBanners } from "@/features/home/hooks/useHomeBanners";
 import useCarouselPagination from "@/shared/hooks/useCarouselPagination";
+import { BANNER_LIST } from "@/shared/data/shows";
 
 export default function HomeHeroSection() {
   const [api, setApi] = useState<CarouselApi>();
   const { data: banners } = useHomeBanners();
-  const plugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true }));
+  const displayBanners = banners || BANNER_LIST;
 
+  const plugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true }));
   const { current, count, scrollTo } = useCarouselPagination(api);
 
   return (
     <section className="relative w-full pl-20 bg-black text-white rounded-b-4xl overflow-hidden">
       <Carousel plugins={[plugin.current]} setApi={setApi} opts={{ loop: true }} className="relative w-10/12 mx-auto">
         <CarouselContent>
-          {banners?.map((banner) => (
+          {displayBanners?.map((banner) => (
             <CarouselItem key={banner.bannerId}>
               <div className="relative w-full aspect-21/9">
                 <Image src={banner.posterUrl} alt={banner.showTitle} fill className="object-contain object-bottom" />

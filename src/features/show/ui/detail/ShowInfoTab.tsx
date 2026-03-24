@@ -1,6 +1,12 @@
+"use client";
+
 import Image from "next/image";
-import { Clock, Heart, Sparkles } from "lucide-react";
+import { Clock, Heart, Sparkles, ChevronDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useArtistLike } from "../../hooks/useArtistLike";
 
 export default function ShowInfoTab({ show }: { show: ShowDetail }) {
   const info = {
@@ -29,30 +35,48 @@ export default function ShowInfoTab({ show }: { show: ShowDetail }) {
     // },
   };
 
+  const [openCast, setOpenCast] = useState(false);
+  const visibleCount = 6;
+  const visibleCastings = show.castings.slice(0, visibleCount);
+  const hiddenCastings = show.castings.slice(visibleCount);
+
   return (
     <div className="space-y-10">
       {/* 출연진 */}
       <div>
         <h2 className="mb-4 text-lg font-semibold">{info.cast.title}</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
-          {show.castings.map((actor) => (
-            <div key={actor.showCastId} className="flex flex-col items-center gap-3">
-              <div className="relative">
-                <Avatar className="size-full">
-                  <AvatarImage src={actor.profileImageUrl} alt={actor.artistName} className="object-cover" />
-                  <AvatarFallback>{actor.artistName.slice(0, 1)}</AvatarFallback>
-                </Avatar>
-                <button className="absolute bottom-0 right-0 w-3/10 h-3/10 rounded-full bg-white shadow flex items-center justify-center">
-                  <Heart className="w-5 h-5 text-neutral-300 fill-neutral-300" />
-                </button>
+        <Collapsible open={openCast} onOpenChange={setOpenCast}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
+            {visibleCastings.map((actor) => (
+              <ActorAvatar key={actor.showCastId} actor={actor} />
+            ))}
+          </div>
+          {hiddenCastings.length > 0 && (
+            <>
+              <CollapsibleContent>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 pt-8">
+                  {hiddenCastings.map((actor) => (
+                    <ActorAvatar key={actor.showCastId} actor={actor} />
+                  ))}
+                </div>
+              </CollapsibleContent>
+              <div className="flex justify-center mt-6">
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors h-auto py-1"
+                  >
+                    {openCast ? "닫기" : "더 보기"}
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform duration-200 ${openCast ? "rotate-180" : ""}`}
+                    />
+                  </Button>
+                </CollapsibleTrigger>
               </div>
-              <div className="text-center">
-                <p className="text-sm font-medium">{actor.artistName}</p>
-                <p className="text-xs text-muted-foreground">{actor.roleName}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+            </>
+          )}
+        </Collapsible>
       </div>
 
       {/* 배너 */}
@@ -83,6 +107,46 @@ export default function ShowInfoTab({ show }: { show: ShowDetail }) {
         {show.noticeImgs.map((url, index) => (
           <Image key={index} src={url} alt="Notice" width={1000} height={1000} />
         ))}
+      </div>
+    </div>
+  );
+}
+
+function ActorAvatar({ actor }: { actor: Casting }) {
+  // 로컬 좋아요 상태 (서버 상태 기반 초기값)
+  const [liked, setLiked] = useState(actor.isLiked ?? false);
+  const { toggle, isPending } = useArtistLike(actor.artistId, liked);
+
+  // 좋아요 토글 핸들러
+  const handleLike = () => {
+    setLiked((prev) => !prev);
+    toggle();
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <div className="relative">
+        <Avatar className="size-full">
+          <AvatarImage src={actor.profileImageUrl} alt={actor.artistName} className="object-cover" />
+          <AvatarFallback>{actor.artistName.slice(0, 1)}</AvatarFallback>
+        </Avatar>
+        <Button
+          variant="secondary"
+          size="icon"
+          disabled={isPending}
+          onClick={handleLike}
+          className="absolute bottom-0 right-0 size-8 rounded-full bg-white shadow-sm hover:bg-neutral-50"
+        >
+          <Heart
+            className={`w-4 h-4 transition-colors ${
+              liked ? "text-pink-500 fill-pink-500" : "text-neutral-300 fill-neutral-300"
+            }`}
+          />
+        </Button>
+      </div>
+      <div className="text-center">
+        <p className="text-sm font-medium">{actor.artistName}</p>
+        <p className="text-xs text-muted-foreground">{actor.roleName}</p>
       </div>
     </div>
   );

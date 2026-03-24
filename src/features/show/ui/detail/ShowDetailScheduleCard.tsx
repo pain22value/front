@@ -8,22 +8,37 @@ import { cn } from "@/shared/utils/cn";
 import { ko } from "date-fns/locale";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
-import { useSchedules } from "../../hooks/useSchedules";
+import { isSameDay } from "date-fns";
+import { useCastingSchedules } from "../../hooks/useCastingSchedules";
 import ShowTicketOpenNoticeModal from "./ShowTicketOpenNoticeModal";
-import { useRouter } from "next/navigation";
 // import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 import CaptchaModal from "@/features/ticketing/ui/captcha/CaptchaModal";
-import { SHOW_SCHEDULE_LIST } from "@/shared/data/schedules";
 
-export function ShowFloatingTicketingCard({ show }: { show?: ShowDetail }) {
+export function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [round, setRound] = useState("1");
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(true);
   const [isCaptchaModalOpen, setIsCaptchaModalOpen] = useState(false);
 
-  const { data: schedules, isLoading } = useSchedules(date);
-  const router = useRouter();
+  const showId = show?.showId.toString() || "";
+  const { data: scheduleData, isLoading } = useCastingSchedules(showId);
+
+  const filteredSchedules = scheduleData?.rows.filter((s) => {
+    if (!date) return false;
+    return isSameDay(new Date(s.showTime), date);
+  });
+
+  const firstScheduleId = filteredSchedules?.[0]?.scheduleId.toString() || "";
+
+  // 현재 선택된 회차가 필터링된 결과에 없으면 첫 번째 회차로 자동 리셋 (렌더링 중 상태 조정)
+  if (filteredSchedules && filteredSchedules.length > 0) {
+    if (!round || !filteredSchedules.some((s) => s.scheduleId.toString() === round)) {
+      setRound(firstScheduleId);
+    }
+  } else if (round !== "") {
+    setRound("");
+  }
   const { startTracking, setPageStage } = useTelemetryStore();
   // const user = useAuthStore((state) => state.user);
 
@@ -62,11 +77,11 @@ export function ShowFloatingTicketingCard({ show }: { show?: ShowDetail }) {
         />
         <Separator />
         {/* 회차 선택 */}
-        <RadioGroup value={round} onValueChange={setRound} className="space-y-3/">
+        <RadioGroup value={round} onValueChange={setRound} className="space-y-3">
           {isLoading ? (
             <div className="py-8 text-center text-sm text-muted-foreground">일정을 불러오는 중입니다...</div>
-          ) : (
-            (schedules || SHOW_SCHEDULE_LIST).map((schedule, index) => (
+          ) : filteredSchedules && filteredSchedules.length > 0 ? (
+            filteredSchedules.map((schedule, index) => (
               <label key={schedule.scheduleId} htmlFor={`round-${schedule.scheduleId}`}>
                 <Card
                   className={cn(
@@ -85,15 +100,20 @@ export function ShowFloatingTicketingCard({ show }: { show?: ShowDetail }) {
                   />
                   <div>
                     <p className="font-semibold">
-                      {index + 1}회차 {schedule.showTime}
+                      {index + 1}회차 {schedule.showTimeLabel}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {show?.castings?.map((c) => c.artistName).join(", ")}
+                      {Object.values(schedule.casts)
+                        .map((c) => c.artistName)
+                        .filter(Boolean)
+                        .join(", ")}
                     </p>
                   </div>
                 </Card>
               </label>
             ))
+          ) : (
+            <div className="py-8 text-center text-sm text-muted-foreground">선택하신 날짜에 공연이 없습니다.</div>
           )}
         </RadioGroup>
       </div>
@@ -102,7 +122,7 @@ export function ShowFloatingTicketingCard({ show }: { show?: ShowDetail }) {
         예매하기
       </Button>
 
-      <ShowTicketOpenNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} />
+      {/* <ShowTicketOpenNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} /> */}
       <CaptchaModal open={isCaptchaModalOpen} onOpenChange={setIsCaptchaModalOpen} />
     </div>
   );

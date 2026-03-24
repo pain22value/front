@@ -9,10 +9,37 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import PasswordChangeDialog from "@/features/my/ui/PasswordChangeDialog";
 import NicknameChangeDialog from "@/features/my/ui/NicknameChangeDialog";
+import { useUpdateMarketingConsent, useUpdateEmailNotification } from "@/features/my/hooks/useProfile";
 
 export default function ProfileEditPage() {
   const [isPasswordChangeOpen, setIsPasswordChangeOpen] = useState(false);
   const [isNicknameChangeOpen, setIsNicknameChangeOpen] = useState(false);
+
+  // 마케팅 수신 동의 상태 (초기값: 서버에서 가져와야 하지만 임시로 true)
+  const [marketingChecked, setMarketingChecked] = useState(true);
+  // 이메일 알림 수신 상태 (초기값: 임시로 true)
+  const [emailNotifChecked, setEmailNotifChecked] = useState(true);
+
+  const { mutate: updateMarketing } = useUpdateMarketingConsent();
+  const { mutate: updateEmailNotif } = useUpdateEmailNotification();
+
+  // 마케팅 수신 동의 토글 핸들러
+  const handleMarketingChange = (checked: boolean) => {
+    setMarketingChecked(checked);
+    updateMarketing(
+      { marketingInfoAgreed: checked },
+      { onError: () => setMarketingChecked(!checked) }, // 실패 시 롤백
+    );
+  };
+
+  // 이메일 알림 토글 핸들러
+  const handleEmailNotifChange = (checked: boolean) => {
+    setEmailNotifChecked(checked);
+    updateEmailNotif(
+      { emailNotificationAgreed: checked },
+      { onError: () => setEmailNotifChecked(!checked) }, // 실패 시 롤백
+    );
+  };
 
   return (
     <>
@@ -65,12 +92,12 @@ export default function ProfileEditPage() {
 
           <div className="flex items-center justify-between">
             <span className="font-medium">마케팅 정보 수신 동의</span>
-            <Switch defaultChecked />
+            <Switch checked={marketingChecked} onCheckedChange={handleMarketingChange} />
           </div>
 
           <div className="flex items-center justify-between">
             <span className="font-medium">알림 수신 설정 (이메일)</span>
-            <Switch defaultChecked />
+            <Switch checked={emailNotifChecked} onCheckedChange={handleEmailNotifChange} />
           </div>
         </div>
 

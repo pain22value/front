@@ -13,7 +13,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { cn } from "@/shared/utils/cn";
 
 type BaseCarouselProps<T> = {
-  items: T[]; // 표시할 데이터 배열 (id 속성 필수)
+  items: T[]; // 표시할 데이터 배열
   renderItem: (item: T, index: number, isSelected: boolean) => ReactNode; // 각 아이템을 렌더링할 함수
   itemsPerView?: number; // 한 번에 표시할 아이템 개수 (설정 시 flex-basis 강제 적용)
   showPagination?: boolean; // 페이지네이션 인디케이터 표시 여부
@@ -29,7 +29,7 @@ type BaseCarouselProps<T> = {
   stopOnMouseEnter?: boolean; // 마우스 진입 시 자동 플레이 정지 여부
 };
 
-export function BaseCarousel<T extends { id: string | number }>({
+export function BaseCarousel<T extends Record<string, unknown>>({
   items,
   renderItem,
   itemsPerView,
@@ -92,11 +92,22 @@ export function BaseCarousel<T extends { id: string | number }>({
       >
         {/* 컨텐트 */}
         <CarouselContent className={cn("-ml-4", contentClassName)}>
-          {items.map((item, index) => (
-            <CarouselItem key={item.id} className={cn("pl-4", itemClassName)} style={itemStyle}>
-              {renderItem(item, index, index === current)}
-            </CarouselItem>
-          ))}
+          {items.map((item, index) => {
+            // id/showId/bannerId 필드를 문자열로 안전하게 변환하여 key 추출
+            const key =
+              item.id != null
+                ? String(item.id)
+                : item.showId != null
+                  ? String(item.showId)
+                  : item.bannerId != null
+                    ? String(item.bannerId)
+                    : String(index);
+            return (
+              <CarouselItem key={key} className={cn("pl-4", itemClassName)} style={itemStyle}>
+                {renderItem(item, index, index === current)}
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
 
         {/* 좌우 버튼 */}

@@ -229,14 +229,14 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       app.stage.addChild(opLabel);
 
       opSecRows.forEach((row) => {
-        const TOTAL_OP_COLS = 25;
-        const rx = CX - (TOTAL_OP_COLS * STEP - SG) / 2;
+        const count = row.seats.length;
+        const rx = CX - (count * STEP - SG) / 2;
         const ry = OP_Y + (opSecRows.indexOf(row)) * STEP;
         const rn = makeText(row.rowName, { fontSize: 7, fill: 0x999999 }, rx - 4, ry + 1);
         rn.anchor.set(1, 0);
         app.stage.addChild(rn);
 
-        row.seats.forEach((seat) => {
+        row.seats.forEach((seat, ci) => {
           const g = new PIXI.Graphics();
           const isSelected = selectedIds.has(seat.seatId);
           const style = STATUS_OVERRIDE[seat.status] !== undefined
@@ -262,7 +262,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
               }
             }
 
-          g.x = rx + (seat.col - 1) * STEP;
+          g.x = rx + ci * STEP;
           g.y = ry;
 
           if (seat.status === "available" && !isSelected) {

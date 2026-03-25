@@ -2,9 +2,10 @@
 
 type User = {
   email: string;
-  name: string;
-  role: string;
-  provider: string | null;
+  nickname: string;
+  marketingInfoAgreed: boolean;
+  emailNotificationAgreed: boolean;
+  // provider: string | null;
 };
 
 type SignupRequest = {
@@ -25,6 +26,12 @@ type SigninRequest = {
 
 type SigninResponse = {
   accessToken: string;
-  user: string;
-  // user: User;
+};
+
+type SignupTerms = {
+  serviceTermsAgreed: boolean;
+  electronicFinanceTermsAgreed: boolean;
+  privacyCollectionAgreed: boolean;
+  marketingInfoAgreed: boolean;
+  over14Agreed: boolean;
 };

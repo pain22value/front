@@ -22,6 +22,7 @@ export const ENDPOINTS = {
     VERIFY: "/auth/email/verify",
   },
   PROFILE: {
+    ME: "/auth/me",
     NICKNAME: "/auth/me/nickname",
     MARKETING_CONSENT: "/auth/me/marketing-consent",
     EMAIL_NOTIFICATION: "/auth/me/email-notification",

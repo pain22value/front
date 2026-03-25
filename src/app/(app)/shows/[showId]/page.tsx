@@ -1,7 +1,7 @@
 import { showService } from "@/features/show/services/showService";
 import { ShowDetailCard } from "@/features/show/ui/detail/ShowDetailCard";
 import { ShowDetailTabs } from "@/features/show/ui/detail/ShowDetailTabs";
-import { ShowDetailScheduleCard } from "@/features/show/ui/detail/ShowDetailScheduleCard";
+import ShowDetailScheduleCard from "@/features/show/ui/detail/ShowDetailScheduleCard";
 import { ENDPOINTS } from "@/shared/api/endpoints";
 // import { notFound } from "next/navigation";
 

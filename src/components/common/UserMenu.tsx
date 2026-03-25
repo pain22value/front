@@ -37,7 +37,7 @@ export function UserMenu() {
             href="/my/profile"
             className="flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
           >
-            <span className="text-xl font-bold text-foreground">{user.slice(0, 3)}님</span>
+            <span className="text-xl font-bold text-foreground">{user.nickname}님</span>
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </Link>
         </DropdownMenuItem>

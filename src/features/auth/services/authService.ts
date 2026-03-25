@@ -7,16 +7,12 @@ const signup = async (signupRequest: SignupRequest): Promise<string | null> => {
 };
 
 const signin = async (signinRequest: SigninRequest): Promise<SigninResponse> => {
-  // const { data } = await api.post<ApiResponse<SigninResponse>>(
-  //   ENDPOINTS.AUTH.LOGIN,
-  //   signinRequest,
-  // );
-  // if (!data.data) throw new Error("로그인 데이터가 없습니다.");
-  // return data.data; // 실제 응답 반환 → 백엔드가 Set-Cookie로 refreshToken 쿠키를 심음
-
   const { data } = await api.post<SigninResponse>(ENDPOINTS.AUTH.LOGIN, signinRequest);
   if (!data) throw new Error("로그인 데이터가 없습니다.");
   return data;
+  // const { data } = await api.post<ApiResponse<SigninResponse>>(ENDPOINTS.AUTH.LOGIN, signinRequest);
+  // if (!data || !data.data) throw new Error("로그인 데이터가 없습니다.");
+  // return data.data;
 };
 
 const signout = async (): Promise<string | null> => {

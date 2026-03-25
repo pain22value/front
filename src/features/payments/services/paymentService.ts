@@ -80,6 +80,24 @@ export interface PaymentDetail {
   cancels: CancelDetail[];
 }
 
+// ─── 예매 내역 생성 ───────────────────────────────────────────
+export interface CreateBookingRequest {
+  seatIds: number[];
+}
+
+const createBooking = async (body: CreateBookingRequest): Promise<string> => {
+  const { data } = await api.post<ApiResponse<{ reservationNumber: string }>>(
+    "/bookings",
+    body,
+    {
+      headers: {
+        "X-User-Id": "6353c1b6-e965-4191-a5bf-82fdfab48838", // 랜덤 UUID 추가
+      }
+    }
+  );
+  return data.data.reservationNumber;
+};
+
 // ─── 결제 취소 ────────────────────────────────────────────────
 export interface RefundReceiveAccount {
   bankCode: string;
@@ -145,13 +163,18 @@ const getBanks = async (): Promise<Bank[]> => {
   return data.data;
 };
 
-export interface SavePaymentRequest {
-  orderId: string;
-  amount: number;
+export interface PaymentReadyRequest {
+  name: string;
+  birthDate: string;
+  email: string;
+  phone: string;
 }
 
-const save = async (body: SavePaymentRequest): Promise<void> => {
-  await api.post(ENDPOINTS.PAYMENTS.SAVE, body);
+const save = async (reservationNumber: string, body: PaymentReadyRequest): Promise<void> => {
+  await api.post(
+    ENDPOINTS.PAYMENTS.SAVE.replace(":reservationNumber", encodeURIComponent(reservationNumber)),
+    body
+  );
 };
 
-export const paymentService = { save, confirm, get, cancel, getBanks };
+export const paymentService = { save, confirm, get, cancel, getBanks, createBooking };

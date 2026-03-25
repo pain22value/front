@@ -75,24 +75,31 @@ export default function CheckoutPage() {
     setPaying(true);
 
     try {
-      const orderId = crypto.randomUUID();
+      // 1. 예매 내역 생성 → reservationNumber 발급
+      const seatIds = selectedSeats.map((s) => Number(s.seatId));
+      const reservationNumber = await paymentService.createBooking({ seatIds });
 
-      // Toss 결제 전 사전 등록
-      await paymentService.save({ orderId, amount: total });
+      // 2. 결제 준비
+      await paymentService.save(reservationNumber, {
+        name: customerInfo.name,
+        birthDate: customerInfo.birth,
+        email: customerInfo.email,
+        phone: customerInfo.phone,
+      });
 
-      // fetch 직접 호출 제거 → Toss SDK에 orderId만 넘기면 됨
-      // 결제 승인은 success 페이지(/payments/success)에서 paymentService.confirm() 호출
+      // 3. sessionStorage 저장
       sessionStorage.setItem("pendingBooking", JSON.stringify({
         showTitle: "뮤지컬 <킹키부츠>",
         datetime: "2026.01.26(월) 오후 7:00",
         seats: selectedSeats.map((s) => `${s.section} ${s.row}행 ${s.col}열`),
         method: payMethod,
-        orderId,
+        orderId: reservationNumber, // ← crypto.randomUUID() 대신 reservationNumber 사용
         amount: total,
       }));
 
+      // 4. Toss 결제 요청
       await requestPayment({
-        orderId,
+        orderId: reservationNumber, // ← 여기도
         orderName,
         amountValue: total,
         method: payMethod,

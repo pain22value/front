@@ -20,7 +20,7 @@ export const ENDPOINTS = {
     DETAIL: "/shows", // 뒤에 /{showId}를 붙여서 사용
   },
   PAYMENTS: {
-    SAVE: "/payments",
+    SAVE: "/bookings/:reservationNumber/payment-ready",
     CONFIRM: "/payments/confirm",        // POST, body에 orderId 포함
     GET: "/payments/:orderId",           // GET
     CANCEL: "/payments/:orderId/cancel", // POST

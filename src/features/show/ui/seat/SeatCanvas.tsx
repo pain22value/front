@@ -174,6 +174,13 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       STAGE_H + OP_H + GAP_OP_1F + SEC1_H + CONSOLE_H +
       BOX1_PAD + BADGE_H + SEC2_H + BOX2_PAD + BADGE2_H + 20;
 
+    if (appRef.current) {
+      try {
+        appRef.current.destroy(true);
+      } catch (e) {}
+      appRef.current = null;
+    }  
+
     const app = new PIXI.Application();
     appRef.current = app;
 
@@ -489,7 +496,14 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
 
     return () => {
       (appRef.current as any)?._ro?.disconnect();
-      appRef.current?.destroy(true);
+      if (appRef.current) {
+        try {
+          appRef.current.destroy(true);
+        } catch (e) {
+          // ignore
+        }
+        appRef.current = null;
+      }
     };
   }, [sections, selectedSeats]);
 

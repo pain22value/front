@@ -23,17 +23,19 @@ const toSectionId = (sectionName: string): string => {
 };
 
 export const adaptSections = (apiSections: ApiSection[]): SeatSection[] =>
-  apiSections.map((section) => ({
-    // 테스트 API
-    sectionId: toSectionId(section.sectionName),
-    //sectionId: String(section.sectionId), 목데이터
-    sectionName: section.sectionName,
-    grade: toSeatGrade(section.grade),
-    price: section.price,
-    rows: section.rows.map((row) => ({
+apiSections.map((section) => ({
+  // 테스트 API
+  sectionId: toSectionId(section.sectionName),
+  //sectionId: String(section.sectionId), 목데이터
+  sectionName: section.sectionName,
+  grade: toSeatGrade(section.grade),
+  price: section.price,
+  rows: section.rows
+    .sort((a, b) => Number(a.row) - Number(b.row)) // 숫자 기준 정렬 추가
+    .map((row) => ({
       rowName: row.row,
       seats: row.seats.map((seat) => ({
-        seatId: String(seat.seatId),
+        seatId: String(seat.scheduledSeatId),
         section: section.sectionName,
         row: Number(row.row),
         col: seat.col,
@@ -42,7 +44,7 @@ export const adaptSections = (apiSections: ApiSection[]): SeatSection[] =>
         price: section.price,
       })),
     })),
-  }));
+}));
 
 // ─── Mock 데이터 ──────────────────────────────────────────────
 const makeRow = (
@@ -192,7 +194,7 @@ export const useGetSeats = (showScheduleId: number) => {
       return adaptSections(apiSections); // ← apiSections가 이미 ApiSection[]이라서 바로 사용
     },
     retry: false,
-    initialData: MOCK_SECTIONS, // 초기 렌더링은 mock으로
+    initialData: undefined, // 초기 렌더링은 mock으로
     //enabled: false, 목업 데이터로 테스트 할 때는 false
     enabled: true,
   });

@@ -22,8 +22,11 @@ export const SeatMap = ({ showScheduleId }: SeatMapProps) => {
 
   const handlePayment = () => {
     if (selectedSeats.length === 0) return;
-    const seatIds = selectedSeats.map((s) => s.seatId).join(",");
-    router.push(`/payments?seatIds=${seatIds}`);
+    
+    // 선택한 좌석 정보 sessionStorage에 저장
+    sessionStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
+    
+    router.push(`/payments`);
   };
 
   return (

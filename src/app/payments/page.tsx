@@ -6,18 +6,26 @@ import Link from "next/link";
 import Modal from "@/components/ui/modal";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import type { Seat } from "@/shared/types/seat";
 
 export default function CheckoutPage() {
   // 데모용 가격 계산
-  const ticketUnitPrice = 160000;
-  const ticketQty = 2;
-  const bookingFee = 4000; // 2000 → 4000으로 수정 (피그마 기준)
+  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+
+  useEffect(() => {
+    const raw = sessionStorage.getItem("selectedSeats");
+    if (raw) setSelectedSeats(JSON.parse(raw));
+  }, []);
+
+  const ticketQty = selectedSeats.length;
+  const ticketUnitPrice = selectedSeats[0]?.price ?? 0;
+  const bookingFee = ticketQty * 2000;
   const total = ticketUnitPrice * ticketQty + bookingFee;
+  const orderName = `${selectedSeats[0]?.grade ?? ""}석 ${ticketQty}매`;
 
   const clientKey = "test_ck_jExPeJWYVQxDje9xG7Mj349R5gvN";
   const customerKey = "EkTWyj8AhmS5rtOMSB4Ck";
 
-  const orderName = `뮤지컬 <킹키부츠> VIP석 ${ticketQty}매`;
 
   const [paying, setPaying] = useState(false);
 
@@ -77,7 +85,7 @@ export default function CheckoutPage() {
       sessionStorage.setItem("pendingBooking", JSON.stringify({
         showTitle: "뮤지컬 <킹키부츠>",
         datetime: "2026.01.26(월) 오후 7:00",
-        seats: ["1층 B구역 16열 6번", "1층 B구역 16열 7번"],
+        seats: selectedSeats.map((s) => `${s.section} ${s.row}행 ${s.col}열`),
         method: payMethod,
         orderId,
         amount: total,
@@ -212,8 +220,11 @@ export default function CheckoutPage() {
               <div className="mt-4 flex gap-4">
                 <div className="text-[14px] font-medium text-[#68677E] w-16 shrink-0">좌석 정보</div>
                 <ul className="text-[14px] font-medium text-[#23222A]">
-                  <li>1층 B구역 16열 6번</li>
-                  <li>1층 B구역 16열 7번</li>
+                  {selectedSeats.map((seat) => (
+                    <li key={seat.seatId}>
+                      {seat.section} {seat.row}행 {seat.col}열
+                    </li>
+                  ))}
                 </ul>
               </div>
 

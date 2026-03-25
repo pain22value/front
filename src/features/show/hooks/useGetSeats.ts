@@ -1,6 +1,51 @@
 import { useQuery } from "@tanstack/react-query";
 import { seatService, type ApiSection } from "../services/seatService";
 
+const toSeatGradeBySection = (sectionId: string, col: number, rowName: string, rowMaxCol: number): SeatGrade => {
+  const row = Number(rowName);
+
+  if (sectionId === "OP") return "VIP";
+
+  if (sectionId === "1F-A") {
+    if (row >= 16) return "R";
+    if (row >= 11) return col <= 4 ? "R" : "VIP"; // 11~15행: 1~4열 R, 5~7열 VIP
+    if (row >= 7)  return col <= 3 ? "R" : "VIP"; // 7~10행: 1~3열 R, 4~6열 VIP
+    return col <= 2 ? "R" : "VIP";                // 1~6행: 1~2열 R, 3~5열 VIP
+  }
+
+  if (sectionId === "1F-B") {
+    return row <= 15 ? "VIP" : "R"; // 1~15행 VIP, 16~20행 R
+  }// 1~20행 모두 R석
+
+  if (sectionId === "1F-C") {
+    if (row >= 16) return "R";
+    if (row >= 11) return col <= 3 ? "VIP" : "R"; // 11~15행: 1~3열 VIP, 4~7열 R
+    if (row >= 7)  return col <= 3 ? "VIP" : "R"; // 7~10행: 1~3열 VIP, 4~6열 R
+    return col <= 3 ? "VIP" : "R";                // 1~6행: 1~3열 VIP, 4~5열 R
+  }
+
+  if (sectionId === "2F-A") {
+    if (row <= 2) return "R";
+    if (row <= 4) return "S";
+    return "A";
+  }
+
+  if (sectionId === "2F-B") {
+    if (row === 1) return "VIP";
+    if (row === 2) return "R";
+    if (row <= 4)  return "S";
+    return "A";
+  }
+
+  if (sectionId === "2F-C") {
+    if (row <= 2) return "R";
+    if (row <= 4) return "S";
+    return "A";
+  }
+
+  return "A";
+};
+
 const toSeatStatus = (status: "AVAILABLE" | "HELD" | "HOLD" | "SOLD"): SeatStatus => {
   if (status === "AVAILABLE") return "available";
   if (status === "HELD" || status === "HOLD") return "reserved";
@@ -22,29 +67,37 @@ const toSectionId = (sectionName: string): string => {
   return sectionName;
 };
 
+const toSeatPrice = (grade: string): number => {
+  if (grade === "VIP") return 160000;
+  if (grade === "R")   return 120000;
+  if (grade === "S")   return 90000;
+  return 60000; // A
+};
+
 export const adaptSections = (apiSections: ApiSection[]): SeatSection[] =>
-apiSections.map((section) => ({
-  // 테스트 API
-  sectionId: toSectionId(section.sectionName),
-  //sectionId: String(section.sectionId), 목데이터
-  sectionName: section.sectionName,
-  grade: toSeatGrade(section.grade),
-  price: section.price,
-  rows: section.rows
-    .sort((a, b) => Number(a.row) - Number(b.row)) // 숫자 기준 정렬 추가
-    .map((row) => ({
-      rowName: row.row,
-      seats: row.seats.map((seat) => ({
-        seatId: String(seat.scheduledSeatId),
-        section: section.sectionName,
-        row: Number(row.row),
-        col: seat.col,
-        grade: toSeatGrade(section.grade),
-        status: toSeatStatus(seat.status),
-        price: section.price,
-      })),
-    })),
-}));
+  apiSections.map((section) => ({
+    sectionId: toSectionId(section.sectionName),
+    sectionName: section.sectionName,
+    grade: toSeatGrade(section.grade),
+    price: toSeatPrice(section.grade), // ← section.price 대신 직접 계산
+    rows: section.rows
+      .sort((a, b) => Number(a.row) - Number(b.row))
+      .map((row) => {
+        const rowMaxCol = Math.max(...row.seats.map((s) => s.col)); // ← 여기서 계산
+        return {
+          rowName: row.row,
+          seats: row.seats.map((seat) => ({
+            seatId: String(seat.scheduledSeatId),
+            section: section.sectionName,
+            row: Number(row.row),
+            col: seat.col,
+            grade: toSeatGradeBySection(toSectionId(section.sectionName), seat.col, row.row, rowMaxCol),
+            status: toSeatStatus(seat.status),
+            price: toSeatPrice(toSeatGradeBySection(toSectionId(section.sectionName), seat.col, row.row, rowMaxCol)), // ← grade별 가격
+          })),
+        };
+      }),
+  }));
 
 // ─── Mock 데이터 ──────────────────────────────────────────────
 const makeRow = (
@@ -84,9 +137,9 @@ const makeRowWithAisle = (
 // cols에 빈 번호 건너뛰면 거기가 통로가 됨
 const MOCK_SECTIONS: SeatSection[] = [
   { sectionId: "OP",   sectionName: "OP", grade: "VIP", price: 150000,   rows: [
-    makeRowWithAisle("OP", 1, [5,6,7, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 27,28,29], "VIP", 150000),
-    makeRowWithAisle("OP", 2, [4,5,6,7, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 27,28,29,30], "VIP", 150000),
-    makeRowWithAisle("OP", 3, [3,4,5,6,7, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 27,28,29,30,31], "VIP", 150000),
+    makeRowWithAisle("OP", 1, [5,6,7, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 27,28,29], "VIP", 160000),
+    makeRowWithAisle("OP", 2, [4,5,6,7, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 27,28,29,30], "VIP", 160000),
+    makeRowWithAisle("OP", 3, [3,4,5,6,7, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 27,28,29,30,31], "VIP", 160000),
   ] },
   { sectionId: "1F-A", sectionName: "A", grade: "R", price: 110000, rows: [
     makeRow("1F-A",  1, 5, "R", 110000),

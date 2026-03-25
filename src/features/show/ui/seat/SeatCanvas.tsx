@@ -147,6 +147,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
 
   useEffect(() => {
     if (!wrapperRef.current) return;
+    if (wrapperRef.current.querySelector('canvas')) return; // 이미 캔버스가 있으면 스킵
     const wrapper = wrapperRef.current;
 
     const opRows   = sections.find((s) => s.sectionId === "OP")?.rows.length   ?? 3;
@@ -228,7 +229,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       app.stage.addChild(opLabel);
 
       opSecRows.forEach((row) => {
-        const TOTAL_OP_COLS = 33;
+        const TOTAL_OP_COLS = 25;
         const rx = CX - (TOTAL_OP_COLS * STEP - SG) / 2;
         const ry = OP_Y + (opSecRows.indexOf(row)) * STEP;
         const rn = makeText(row.rowName, { fontSize: 7, fill: 0x999999 }, rx - 4, ry + 1);

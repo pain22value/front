@@ -1,6 +1,13 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
 
+// 내 정보 조회
+const getMyInfo = async (): Promise<User> => {
+  const { data } = await api.get<ApiResponse<User>>(ENDPOINTS.PROFILE.ME);
+  if (!data.data) throw new Error("내 정보를 불러올 수 없습니다.");
+  return data.data;
+};
+
 // 닉네임 변경
 const updateNickname = async (body: UpdateNicknameRequest): Promise<string | null> => {
   const { data } = await api.patch<ApiResponse<string>>(ENDPOINTS.PROFILE.NICKNAME, body);
@@ -19,8 +26,16 @@ const updateEmailNotification = async (body: UpdateEmailNotificationRequest): Pr
   return data.data;
 };
 
+// 회원 탈퇴
+const withdraw = async (): Promise<string | null> => {
+  const { data } = await api.delete<ApiResponse<string>>(ENDPOINTS.PROFILE.ME);
+  return data.data;
+};
+
 export const profileService = {
+  getMyInfo,
   updateNickname,
   updateMarketingConsent,
   updateEmailNotification,
+  withdraw,
 };

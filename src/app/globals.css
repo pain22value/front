@@ -201,6 +201,6 @@
 
 @layer components {
   .container-1200 {
-    @apply max-w-[1200px] mx-auto;
+    @apply max-w-[1200] mx-auto;
   }
 }

@@ -83,7 +83,7 @@ export const SeatPanel = ({
       <button
         onClick={onPayment}
         disabled={selectedSeats.length === 0}
-        className="w-full py-3 bg-black text-white rounded-lg text-sm disabled:opacity-30"
+        className="w-full py-3 bg-[#F93E4B] text-[#FFFFFF] rounded-lg text-sm disabled:opacity-30 disabled:bg-gray-300"
       >
         {selectedSeats.length > 0
           ? `${totalPrice.toLocaleString()}원 결제하기`

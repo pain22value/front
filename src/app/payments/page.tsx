@@ -18,9 +18,9 @@ export default function CheckoutPage() {
   }, []);
 
   const ticketQty = selectedSeats.length;
-  const ticketUnitPrice = selectedSeats[0]?.price ?? 0;
+  const ticketTotal = selectedSeats.reduce((sum, s) => sum + s.price, 0);
   const bookingFee = ticketQty * 2000;
-  const total = ticketUnitPrice * ticketQty + bookingFee;
+  const total = ticketTotal + bookingFee;
   const orderName = `${selectedSeats[0]?.grade ?? ""}석 ${ticketQty}매`;
 
   const clientKey = "test_ck_jExPeJWYVQxDje9xG7Mj349R5gvN";
@@ -232,7 +232,7 @@ export default function CheckoutPage() {
               <div className="mt-2 flex gap-4 text-sm">
                 <span className="text-[14px] font-medium text-[#68677E] w-16 shrink-0">가격 정보</span>
                 <span className="text-[14px] font-medium text-[#23222A]">
-                  {ticketUnitPrice.toLocaleString()}원 X {ticketQty}매
+                  {ticketTotal.toLocaleString()}원 ({ticketQty}매)
                 </span>
               </div>
             </div>
@@ -374,9 +374,9 @@ export default function CheckoutPage() {
                   <div className="flex items-start justify-between">
                     <div className="text-[16px] font-medium text-[#68677E] shrink-0">티켓금액</div>
                     <div className="text-right font-semibold text-gray-900">
-                      {Array.from({ length: ticketQty }).map((_, idx) => (
-                        <div key={idx} className="mb-1">
-                          {ticketUnitPrice.toLocaleString()}원
+                      {selectedSeats.map((seat) => (
+                        <div key={seat.seatId} className="mb-1">
+                          {seat.price.toLocaleString()}원
                         </div>
                       ))}
                     </div>

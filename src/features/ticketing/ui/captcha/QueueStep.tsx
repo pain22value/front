@@ -38,7 +38,7 @@ export default function QueueStep({
 
     // 대기 상태가 아닐 때 (ADMITTED 또는 READY)
     if (pollingStatus !== "WAITING" && queueData.admissionToken) {
-      setAdmissionToken(queueData.admissionToken, showId);
+      setAdmissionToken(queueData.admissionToken);
       setPageStage("seatmap"); // 좌석 선택 화면 진입하므로 상태 변경
       onOpenChange(false); // 모달 닫기
       // router.push(`/shows/${showId}/seat`); // 좌석 선택 화면으로 이동

@@ -86,14 +86,16 @@ export default function ShowInfoTab({ show }: { show: ShowDetail }) {
   );
 }
 
-function ArtistAvatar({ artist }: { artist: Casting }) {
-  // 로컬 좋아요 상태 (서버 상태 기반 초기값)
-  const [liked, setLiked] = useState(artist.isLiked ?? false);
-  const { toggle, isPending } = useArtistLike(artist.artistId, liked);
+import { useArtistStore } from "@/features/artists/stores/useArtistStore";
 
-  // 좋아요 토글 핸들러
-  const handleLike = () => {
-    setLiked((prev) => !prev);
+function ArtistAvatar({ artist }: { artist: Casting }) {
+  // 전역 상태에서 좋아요 여부 가져오기 (없으면 서버 상태 사용)
+  const isLiked = useArtistStore((state) => state.likes[artist.artistId] ?? artist.isLiked ?? false);
+  const { toggle, isPending } = useArtistLike(artist.artistId, isLiked);
+
+  // 좋아요 토글 핸들러 (낙관적 업데이트는 생략하거나 global store에서 처리)
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
     toggle();
   };
 
@@ -113,7 +115,7 @@ function ArtistAvatar({ artist }: { artist: Casting }) {
         >
           <Heart
             className={`w-4 h-4 transition-colors ${
-              liked ? "text-pink-500 fill-pink-500" : "text-neutral-300 fill-neutral-300"
+              isLiked ? "text-pink-500 fill-pink-500" : "text-neutral-300 fill-neutral-300"
             }`}
           />
         </Button>

@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useWithdraw } from "@/features/my/hooks/useProfile";
-import { WITHDRAW_NOTICE_SECTIONS } from "@/shared/data/withdraw";
+import { WITHDRAW_NOTICE_SECTIONS } from "@/shared/constants/withdraw";
 
 export default function AccountDeletePage() {
   const [confirmText, setConfirmText] = useState("");

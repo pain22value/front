@@ -1,7 +1,7 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { ELECTRONIC_FINANCIAL_TRANSACTION_TERMS, SERVICE_TERMS } from "@/shared/data/terms";
+import { ELECTRONIC_FINANCIAL_TRANSACTION_TERMS, SERVICE_TERMS } from "@/shared/constants/terms";
 
 export default function TermsContent({ type }: { type: "service" | "finance" }) {
   const data = type === "service" ? SERVICE_TERMS : ELECTRONIC_FINANCIAL_TRANSACTION_TERMS;

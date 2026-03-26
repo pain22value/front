@@ -9,11 +9,11 @@ export const useShows = (category: ShowCategory = "all") => {
   });
 };
 
-export const useActorShows = (actorId: string, category?: ShowCategory) => {
+export const useArtistShows = (artistId: string, category?: ShowCategory) => {
   return useQuery({
-    queryKey: ["shows", "actor", actorId, category],
-    queryFn: () => showService.getShows({ actorId, category }),
-    enabled: !!actorId,
+    queryKey: ["shows", "artist", artistId, category],
+    queryFn: () => showService.getShows({ artistId, category }),
+    enabled: !!artistId,
     retry: 1,
   });
 };

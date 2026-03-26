@@ -9,13 +9,6 @@ export const useReviews = (showId: number, page: number, size: number = 5) => {
   });
 };
 
-export const useReviewMeta = (showId: number) => {
-  return useQuery({
-    queryKey: ["reviews", "meta", showId],
-    queryFn: () => reviewService.getReviewMeta(showId),
-  });
-};
-
 export const usePostReview = (showId: number) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -24,5 +17,12 @@ export const usePostReview = (showId: number) => {
       queryClient.invalidateQueries({ queryKey: ["reviews", showId] });
       queryClient.invalidateQueries({ queryKey: ["reviews", "meta", showId] });
     },
+  });
+};
+
+export const useReviewMeta = (showId: number) => {
+  return useQuery({
+    queryKey: ["reviews", "meta", showId],
+    queryFn: () => reviewService.getReviewMeta(showId),
   });
 };

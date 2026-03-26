@@ -53,7 +53,7 @@ type Banner = {
 
 type ShowsParams = {
   category?: ShowCategory;
-  actorId?: number | string;
+  artistId?: number | string;
 };
 
 type ShowsListParams = {

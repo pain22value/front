@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 export default async function ShowDetailPage({ params }: { params: Promise<{ showId: string }> }) {
   const { showId } = await params;
   const show = await showService.getShowDetail(showId);
-  // console.log({ show });
+  console.log({ show });
   // if (!show) notFound();
   return (
     <section className="pl-20">

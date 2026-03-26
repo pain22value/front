@@ -66,12 +66,16 @@ export function useProfile() {
   const { user: storeUser } = useAuthStore();
 
   // 백엔드 문제로 인한 임시 데이터 처리
-  const user = useMemo(() => storeUser || {
-    email: "abc*****@gmail.com",
-    nickname: "김관우",
-    marketingInfoAgreed: true,
-    emailNotificationAgreed: true,
-  }, [storeUser]);
+  const user = useMemo(
+    () =>
+      storeUser || {
+        email: "abc*****@gmail.com",
+        nickname: "김관우",
+        marketingInfoAgreed: true,
+        emailNotificationAgreed: true,
+      },
+    [storeUser],
+  );
 
   const [isPasswordChangeOpen, setIsPasswordChangeOpen] = useState(false);
   const [isNicknameChangeOpen, setIsNicknameChangeOpen] = useState(false);

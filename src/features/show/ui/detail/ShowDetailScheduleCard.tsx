@@ -12,12 +12,18 @@ import ShowTicketOpenNoticeModal from "./ShowTicketOpenNoticeModal";
 import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 import CaptchaModal from "@/features/ticketing/ui/captcha/CaptchaModal";
 import ShowDetailScheduleList from "./ShowDetailScheduleList";
+import ShowNoticeModal from "./ShowNoticeModal";
+import { useRouter } from "next/navigation";
+import { useTicketingStore } from "@/features/ticketing/stores/useTicketingStore";
+import { toast } from "sonner";
 
 export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [round, setRound] = useState("1");
-  // const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(true);
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(true);
   const [isCaptchaModalOpen, setIsCaptchaModalOpen] = useState(false);
+  const router = useRouter();
+  const { admissionToken, showId: storedShowId } = useTicketingStore();
 
   const showId = show?.showId.toString() || "";
   const { data: scheduleData, isLoading } = useCastingSchedules(showId);
@@ -41,6 +47,13 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
   // const user = useAuthStore((state) => state.user);
 
   const handleTicketing = () => {
+    // 이미 해당 공연의 입장 토큰이 있는 경우 바로 좌석 선택 페이지로 이동
+    if (admissionToken && storedShowId === showId) {
+      // router.push(`/shows/${showId}/seat`);
+      toast.success("이미 입장 토큰이 있습니다.");
+      return;
+    }
+
     startTracking();
     setPageStage("captcha");
 
@@ -89,7 +102,8 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
       </Button>
 
       {/* <ShowTicketOpenNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} /> */}
-      <CaptchaModal open={isCaptchaModalOpen} onOpenChange={setIsCaptchaModalOpen} />
+      {/* <ShowNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} /> */}
+      <CaptchaModal open={isCaptchaModalOpen} onOpenChange={setIsCaptchaModalOpen} showId={showId} />
     </div>
   );
 }

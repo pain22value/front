@@ -1,16 +1,17 @@
-// 리뷰
+type EmotionPoint = "IMMERSION" | "TENSION" | "ENJOYMENT" | "CATHARSIS" | "TOUCHING";
+type CharmPoint = "STAGE_PRODUCTION" | "STORY" | "ACTING" | "DANCE" | "NUMBER";
 
-type Review = {
+interface Review {
   reviewId: number;
   userId: string;
   userNickname: string;
-  title: string;          // Note: The swagger return has it, but post request body does not. 
+  title: string;
   content: string;
   createdAt: string;
   positive: boolean;
-};
+}
 
-type ReviewListResponse = {
+interface ReviewListResponse {
   content: Review[];
   totalCount: number;
   totalPages: number;
@@ -18,25 +19,27 @@ type ReviewListResponse = {
   size: number;
   hasNext: boolean;
   hasPrevious: boolean;
-};
+}
 
-type ReviewPostRequest = {
+interface ReviewPostRequest {
   isPositive: boolean;
-  emotionPoints: string[];
-  charmPoints: string[];
+  emotionPoints: EmotionPoint[];
+  charmPoints: CharmPoint[];
+  title: string;
   content: string;
-};
+}
 
-type ReviewPointScore = {
+interface ReviewPointScore {
   name: string;
   label: string;
   score: number;
-};
+}
 
-type ReviewMetaResponse = {
+interface ReviewMetaResponse {
   weeklyRanking: number;
   truveScore: number;
   showId: number;
   charmPointScores: ReviewPointScore[];
   emotionPointScores: ReviewPointScore[];
-};
+}
+

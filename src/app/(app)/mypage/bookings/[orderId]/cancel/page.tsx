@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BookingDetail } from "@/shared/types/booking";
+import { paymentService } from "@/features/payments/services/paymentService";
 
 // ─── 임시 목업 데이터 ──────────────────────────────────────────────────────────
 const MOCK_BOOKING: BookingDetail = {
@@ -96,6 +97,32 @@ export default function BookingCancelPage() {
   const [cancelReason, setCancelReason] = useState("");
   const [reasonOpen, setReasonOpen] = useState(false);
   const [policyExpanded, setPolicyExpanded] = useState(false);
+
+  const [isCanceling, setIsCanceling] = useState(false);
+
+  const handleCancel = async () => {
+    if (checkedItems.size === 0 || !cancelReason) return;
+    setIsCanceling(true);
+
+    try {
+      await paymentService.cancel(booking.orderId, {
+        cancelReason,
+        cancelAmount: selectedAmount,
+        ...(booking.paymentInfo.type === "VIRTUAL_ACCOUNT" && {
+          refundReceiveAccount: {
+            bankCode: "20",
+            accountNumber: "",
+            holderName: "",
+          }
+        })
+      });
+      router.push(`/mypage/bookings/${booking.orderId}/cancel/success`);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsCanceling(false);
+    }
+  };
 
   const allChecked = checkedItems.size === booking.items.length;
 
@@ -332,8 +359,8 @@ export default function BookingCancelPage() {
                 ? "bg-[#F93E4B] hover:bg-[#d40f1e]"
                 : "bg-[#DDDDE4] cursor-not-allowed"
             }`}
-            disabled={checkedItems.size === 0 || !cancelReason}
-            onClick={() => router.push(`/mypage/bookings/${booking.orderId}/cancel/success`)}
+            onClick={handleCancel}
+            disabled={checkedItems.size === 0 || !cancelReason || isCanceling}
           >
             취소 진행
           </button>

@@ -77,15 +77,16 @@ export default function CheckoutPage() {
     try {
       // 1. 예매 내역 생성 → reservationNumber 발급
       const seatIds = selectedSeats.map((s) => Number(s.seatId));
-      const reservationNumber = await paymentService.createBooking({ seatIds });
+      //const reservationNumber = await paymentService.createBooking({ seatIds });
+      const reservationNumber = crypto.randomUUID();// 임시 변경
 
-      // 2. 결제 준비
-      await paymentService.save(reservationNumber, {
-        name: customerInfo.name,
-        birthDate: customerInfo.birth,
-        email: customerInfo.email,
-        phone: customerInfo.phone,
-      });
+      // 2. 결제 준비 (임시 주석 처리)
+      //await paymentService.save(reservationNumber, {
+        //name: customerInfo.name,
+        //birthDate: customerInfo.birth,
+        //email: customerInfo.email,
+        //phone: customerInfo.phone,
+      //});
 
       // 3. sessionStorage 저장
       sessionStorage.setItem("pendingBooking", JSON.stringify({

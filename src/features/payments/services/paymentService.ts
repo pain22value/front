@@ -21,11 +21,6 @@ export interface ConfirmPaymentRequest {
 
 export interface ConfirmPaymentResponse {
   orderId: string;
-  // 백엔드 확인 필요 - Swagger 스펙에는 없지만 실제 응답에 포함될 수 있음
-  totalAmount?: number;
-  method?: string;
-  bankAccount?: string;
-  depositDeadline?: string;
 }
 
 // ─── 결제 상세 조회 ───────────────────────────────────────────

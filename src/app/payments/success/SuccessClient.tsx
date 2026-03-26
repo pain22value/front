@@ -97,8 +97,8 @@ export default function SuccessClient({ searchParams }: Props) {
     );
   }
 
-  const totalAmount = paymentResult?.totalAmount ?? amount;
-  const isVirtualAccount = (paymentResult?.method ?? bookingInfo?.method) === "VIRTUAL_ACCOUNT";
+  const totalAmount = amount;
+  const isVirtualAccount = bookingInfo?.method === "VIRTUAL_ACCOUNT";
 
   return (
     <ResultCard
@@ -125,8 +125,8 @@ export default function SuccessClient({ searchParams }: Props) {
           // 무통장 입금일 때만 계좌 정보 펼쳐짐
           expandable: isVirtualAccount ? (
             <div className="space-y-0.5">
-              <p className="text-[#23222A] font-medium font-[14px]">{paymentResult?.bankAccount ?? "우리은행 26109854118255 (TRUVE)"}</p>
-              <p className="text-[#F11322] font-medium font-[14px]">{paymentResult?.depositDeadline ?? "2026.01.26(월) 23:59까지"}</p>
+              <p className="text-[#23222A] font-medium font-[14px]">{"우리은행 26109854118255 (TRUVE)"}</p>
+              <p className="text-[#F11322] font-medium font-[14px]">{"2026.01.26(월) 23:59까지"}</p>
             </div>
           ) : undefined,
         },

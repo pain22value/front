@@ -7,20 +7,26 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useQueueStatus } from "../../hooks/useQueue";
 import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
+import { useRouter } from "next/navigation";
+import { useTicketingStore } from "../../stores/useTicketingStore";
 
 export default function QueueStep({
   onOpenChange,
+  showId,
 }: {
   onOpenChange: (open: boolean) => void; // 큐 모달 닫기 핸들러
+  showId: string | number;
 }) {
+  const router = useRouter();
   // 리액트 쿼리 커스텀 훅을 사용하여 대기 상태 폴링
-  const { data: queueData } = useQueueStatus(1);
+  const { data: queueData } = useQueueStatus(showId);
 
   const currentRank = queueData?.rank ?? 0;
   const waitingCount = queueData?.waitingUserCount ?? 0;
   const pollingStatus = queueData?.status ?? "WAITING";
 
   const { setPageStage } = useTelemetryStore();
+  const { setAdmissionToken } = useTicketingStore();
 
   useEffect(() => {
     // 큐 화면 진입 시 page_stage를 queue로 변경
@@ -30,11 +36,14 @@ export default function QueueStep({
   useEffect(() => {
     if (!queueData) return;
 
-    if (pollingStatus === "ADMITTED" || currentRank <= 0) {
+    // 대기 상태가 아닐 때 (ADMITTED 또는 READY)
+    if (pollingStatus !== "WAITING" && queueData.admissionToken) {
+      setAdmissionToken(queueData.admissionToken, showId);
       setPageStage("seatmap"); // 좌석 선택 화면 진입하므로 상태 변경
-      onOpenChange(false); // 모달 닫기 및 좌석 선택 화면 진입 로직 처리
+      onOpenChange(false); // 모달 닫기
+      // router.push(`/shows/${showId}/seat`); // 좌석 선택 화면으로 이동
     }
-  }, [queueData, pollingStatus, currentRank, onOpenChange, setPageStage]);
+  }, [queueData, pollingStatus, onOpenChange, setPageStage, setAdmissionToken, showId, router]);
 
   return (
     <div className="p-6">

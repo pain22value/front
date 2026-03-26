@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import ActorCard from "@/features/show/ui/ActorCard";
+import ArtistCard from "@/features/artists/ui/ArtistCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSearch } from "../hooks/useSearch";
 
@@ -19,7 +19,7 @@ export default function SearchResultSection({ query }: { query?: string }) {
     return <SearchSkeleton />;
   }
 
-  const actorsList = data?.artists || [];
+  const artistsList = data?.artists || [];
   const showsList = data?.shows || [];
 
   return (
@@ -61,17 +61,15 @@ export default function SearchResultSection({ query }: { query?: string }) {
         <h2 className="text-2xl font-semibold">배우({data?.artistCount || 0})</h2>
         <Separator className="mt-4! mb-6!" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {actorsList.map((artist: SearchArtist) => (
-            <ActorCard
+          {artistsList.map((artist: Artist) => (
+            <ArtistCard
               key={artist.artistId}
-              actor={
-                {
-                  id: artist.artistId,
-                  name: artist.artistName,
-                  image: artist.profileImageUrl || "",
-                  description: artist.appearanceInfo,
-                } as Actor
-              }
+              artist={{
+                artistId: artist.artistId,
+                artistName: artist.artistName,
+                profileImageUrl: artist.profileImageUrl || "",
+                isLiked: artist.isLiked,
+              }}
             />
           ))}
         </div>
@@ -118,7 +116,7 @@ const SearchSkeleton = () => (
       </div>
     </section>
 
-    {/* Actors Skeleton */}
+    {/* Artists Skeleton */}
     <section>
       <Skeleton className="h-8 w-32" />
       <Separator className="mt-4! mb-6!" />

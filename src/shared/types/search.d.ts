@@ -33,6 +33,6 @@ type SearchResponse = {
   showCount: number;
   hasMoreArtists: boolean;
   hasMoreShows: boolean;
-  artists: SearchArtist[];
+  artists: Artist[];
   shows: SearchShow[];
 };

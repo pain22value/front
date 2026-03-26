@@ -1,5 +1,5 @@
+import { artistService } from "@/features/artists/services/artistService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { artistService } from "../services/artistService";
 
 // 배우 좋아요 토글 훅
 export const useArtistLike = (artistId: number, isLiked: boolean) => {

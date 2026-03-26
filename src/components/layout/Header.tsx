@@ -15,7 +15,7 @@ export default function Header() {
   const { toggleSidebar } = useSidebarStore();
 
   // 다크 테마(히어로 섹션 등)가 적용되는 경로 패턴들 정의
-  const darkPaths = ["/", "/actors/"];
+  const darkPaths = ["/", "/artists/"];
   const isDarkPath = darkPaths.some((p) => (p === "/" ? pathname === "/" : pathname.startsWith(p)));
 
   return (

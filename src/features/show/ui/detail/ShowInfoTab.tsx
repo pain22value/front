@@ -1,40 +1,14 @@
 "use client";
 
-import Image from "next/image";
-import { Clock, Heart, Sparkles, ChevronDown } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Clock, Heart, Sparkles, ChevronDown } from "lucide-react";
+import { useArtistLike } from "../../hooks/useArtistLike";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useArtistLike } from "../../hooks/useArtistLike";
+import Image from "next/image";
 
 export default function ShowInfoTab({ show }: { show: ShowDetail }) {
-  const info = {
-    cast: { title: "캐스팅" },
-    banner: {
-      text: `배우를 선택하면 아티스트 페이지로 이동할 수 있습니다.
-    관심 배우를 설정하고 소식을 미리 받아보세요.`,
-    },
-    // showInfo: {
-    //   title: "공연시간정보",
-    //   content: `예매가능시간: 관람 5시간 전까지
-
-    // 화, 목, 금 7시 30분 / 수 2시 30분, 7시 30분 / 토, 일, 공휴일 2시, 7시 / 월 공연 없음
-
-    // ※ 2/4(수) 2시 30분, 2/11(수) 2시 30분, 2/22(일) 7시, 2/25(수) 2시 30분, 3/2(월) 7시 공연 없음
-    // ※ 2/21(토) 2시, 2/21(토) 7시 공연은 전관으로 판매 마감되었습니다. 예매 시, 참고 부탁드립니다.
-    // ※ 극장, 공연제작사 및 관계사의 협의에 따라 일부 좌석이 마감되었습니다.`,
-    //   notice: "※ 월요일 공연 없음",
-    // },
-    // notice: {
-    //   title: "공지사항",
-    //   imageUrls: [
-    //     "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770690953/image_5_yghiiq.png",
-    //     "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770690678/image_6_x7pmhf.png",
-    //   ],
-    // },
-  };
-
   const [openCast, setOpenCast] = useState(false);
   const visibleCount = 6;
   const visibleCastings = show.castings.slice(0, visibleCount);
@@ -44,19 +18,19 @@ export default function ShowInfoTab({ show }: { show: ShowDetail }) {
     <div className="space-y-10">
       {/* 출연진 */}
       <div>
-        <h2 className="mb-4 text-lg font-semibold">{info.cast.title}</h2>
+        <h2 className="mb-4 text-lg font-semibold">캐스팅</h2>
         <Collapsible open={openCast} onOpenChange={setOpenCast}>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
-            {visibleCastings.map((actor) => (
-              <ActorAvatar key={actor.showCastId} actor={actor} />
+            {visibleCastings.map((artist) => (
+              <ArtistAvatar key={artist.showCastId} artist={artist} />
             ))}
           </div>
           {hiddenCastings.length > 0 && (
             <>
               <CollapsibleContent>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 pt-8">
-                  {hiddenCastings.map((actor) => (
-                    <ActorAvatar key={actor.showCastId} actor={actor} />
+                  {hiddenCastings.map((artist) => (
+                    <ArtistAvatar key={artist.showCastId} artist={artist} />
                   ))}
                 </div>
               </CollapsibleContent>
@@ -112,10 +86,10 @@ export default function ShowInfoTab({ show }: { show: ShowDetail }) {
   );
 }
 
-function ActorAvatar({ actor }: { actor: Casting }) {
+function ArtistAvatar({ artist }: { artist: Casting }) {
   // 로컬 좋아요 상태 (서버 상태 기반 초기값)
-  const [liked, setLiked] = useState(actor.isLiked ?? false);
-  const { toggle, isPending } = useArtistLike(actor.artistId, liked);
+  const [liked, setLiked] = useState(artist.isLiked ?? false);
+  const { toggle, isPending } = useArtistLike(artist.artistId, liked);
 
   // 좋아요 토글 핸들러
   const handleLike = () => {
@@ -127,8 +101,8 @@ function ActorAvatar({ actor }: { actor: Casting }) {
     <div className="flex flex-col items-center gap-3">
       <div className="relative">
         <Avatar className="size-full">
-          <AvatarImage src={actor.profileImageUrl} alt={actor.artistName} className="object-cover" />
-          <AvatarFallback>{actor.artistName.slice(0, 1)}</AvatarFallback>
+          <AvatarImage src={artist.profileImageUrl} alt={artist.artistName} className="object-cover" />
+          <AvatarFallback>{artist.artistName.slice(0, 1)}</AvatarFallback>
         </Avatar>
         <Button
           variant="secondary"
@@ -145,9 +119,33 @@ function ActorAvatar({ actor }: { actor: Casting }) {
         </Button>
       </div>
       <div className="text-center">
-        <p className="text-sm font-medium">{actor.artistName}</p>
-        <p className="text-xs text-muted-foreground">{actor.roleName}</p>
+        <p className="text-sm font-medium">{artist.artistName}</p>
+        <p className="text-xs text-muted-foreground">{artist.roleName}</p>
       </div>
     </div>
   );
 }
+
+const info = {
+  cast: { title: "캐스팅" },
+  banner: {
+    text: `배우를 선택하면 아티스트 페이지로 이동할 수 있습니다.
+  관심 배우를 설정하고 소식을 미리 받아보세요.`,
+  },
+  showInfo: {
+    title: "공연시간정보",
+    content: `예매가능시간: 관람 5시간 전까지
+  화, 목, 금 7시 30분 / 수 2시 30분, 7시 30분 / 토, 일, 공휴일 2시, 7시 / 월 공연 없음
+  ※ 2/4(수) 2시 30분, 2/11(수) 2시 30분, 2/22(일) 7시, 2/25(수) 2시 30분, 3/2(월) 7시 공연 없음
+  ※ 2/21(토) 2시, 2/21(토) 7시 공연은 전관으로 판매 마감되었습니다. 예매 시, 참고 부탁드립니다.
+  ※ 극장, 공연제작사 및 관계사의 협의에 따라 일부 좌석이 마감되었습니다.`,
+    notice: "※ 월요일 공연 없음",
+  },
+  notice: {
+    title: "공지사항",
+    imageUrls: [
+      "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770690953/image_5_yghiiq.png",
+      "https://res.cloudinary.com/dfiaqyaug/image/upload/v1770690678/image_6_x7pmhf.png",
+    ],
+  },
+};

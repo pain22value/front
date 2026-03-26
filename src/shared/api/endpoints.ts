@@ -45,7 +45,9 @@ export const ENDPOINTS = {
 
   // 아티스트
   ARTISTS: {
+    DETAIL: (artistId: number | string) => `/musical/artists/${artistId}`,
     LIKE: (artistId: number | string) => `/musical/artists/${artistId}/likes`,
+    PAST_SHOWS: (artistId: number | string) => `/musical/artists/${artistId}/past-shows`,
   },
 
   // 대기열

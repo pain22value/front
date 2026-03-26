@@ -5,7 +5,15 @@ import { useState } from "react";
 import CaptchaStep from "./CaptchaStep";
 import QueueStep from "./QueueStep";
 
-export default function CaptchaModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+export default function CaptchaModal({
+  open,
+  onOpenChange,
+  showId,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  showId: string | number;
+}) {
   const [step, setStep] = useState<"captcha" | "queue">("captcha");
 
   return (
@@ -22,9 +30,9 @@ export default function CaptchaModal({ open, onOpenChange }: { open: boolean; on
       <DialogTitle />
       <DialogContent className="max-w-md p-0 overflow-hidden sm:max-w-[520]">
         {step === "captcha" ? (
-          <CaptchaStep onNext={() => setStep("queue")} />
+          <CaptchaStep onNext={() => setStep("queue")} showId={showId} />
         ) : (
-          <QueueStep onOpenChange={onOpenChange} />
+          <QueueStep onOpenChange={onOpenChange} showId={showId} />
         )}
       </DialogContent>
     </Dialog>

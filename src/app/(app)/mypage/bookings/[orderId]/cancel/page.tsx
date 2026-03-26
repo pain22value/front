@@ -1,49 +1,10 @@
 // mypage/bookings/orderId/cancel : 예매 취소 페이지
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { BookingDetail } from "@/shared/types/booking";
+import { useState, useEffect } from "react";
 import { paymentService } from "@/features/payments/services/paymentService";
-
-// ─── 임시 목업 데이터 ──────────────────────────────────────────────────────────
-const MOCK_BOOKING: BookingDetail = {
-  id: "1",
-  orderId: "TRV-2026-031501",
-  
-  bookedAt: "2026.01.20",
-  status: "CONFIRMED",
-  showId: "1",
-  show: {
-    title: "뮤지컬 <킹키부츠>",
-    venue: "샤롯데씨어터",
-    address: "서울특별시 송파구 올림픽로 240",
-    date: "2026.01.26.(월)",
-    time: "오후 7:00-9:30",
-    seat: "VIP석 2인",
-    posterUrl: "/poster-kinkyboots.jpg",
-  },
-  finalAmount: 320000,
-  items: [
-    { name: "VIP석 1층 B구역 16열 6번", quantity: 1, amount: 160000 },
-    { name: "VIP석 1층 B구역 16열 7번", quantity: 1, amount: 160000 },
-  ],
-  totalAmount: 322000,
-  paymentInfo: {
-    type: "CARD",
-    method: "토스페이",
-    amount: 322000,
-    orderedAt: "2026.01.25.(월) 12:34:07",
-  },
-  freeCancelDeadline: "2026.01.31(토)",
-  guideTitle: "입장 안내",
-  guideItems: [
-    "공연 시작 1시간 전부터 입장 가능합니다",
-    "본인 확인을 위해 신분증을 지참해주세요",
-    "QR코드 캡처 화면은 입장 불가합니다",
-  ],
-  performanceDatetime: new Date("2026-01-26T19:00:00"),
-};
+import { bookingService, BookingOrder } from "@/features/mypage/services/bookingService";
+import { useRouter, useParams } from "next/navigation";
 
 const CANCEL_REASONS = [
   "일정 변경",
@@ -52,7 +13,7 @@ const CANCEL_REASONS = [
   "단순 변심",
 ];
 
-const CANCEL_FEE_RATE = 0.2; // 20% 취소 수수료
+const CANCEL_FEE_RATE = 0.2;
 
 const CANCEL_POLICY = {
   title: "취소 수수료 기준",
@@ -75,48 +36,74 @@ const CANCEL_POLICY = {
   ],
 };
 
-
-
 function formatAmount(amount: number) {
   return amount.toLocaleString("ko-KR") + "원";
 }
 
-// 결제 수단 라벨 추출 (타입에 따라 다르게)
-function getRefundMethodLabel(booking: BookingDetail): string {
-  if (booking.paymentInfo.type === "CARD") {
-    return `${booking.paymentInfo.method} 환불`;
-  }
-  return "무통장 환불";
-}
-
 export default function BookingCancelPage() {
   const router = useRouter();
-  const booking = MOCK_BOOKING;
+  const params = useParams();
+  const orderId = params.orderId as string;
 
+  const [booking, setBooking] = useState<BookingOrder | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
   const [cancelReason, setCancelReason] = useState("");
   const [reasonOpen, setReasonOpen] = useState(false);
   const [policyExpanded, setPolicyExpanded] = useState(false);
-
   const [isCanceling, setIsCanceling] = useState(false);
+
+  useEffect(() => {
+    const fetchBooking = async () => {
+      try {
+        const data = await bookingService.getBookingOrder(orderId);
+        setBooking(data);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBooking();
+  }, [orderId]);
+
+  if (isLoading) return (
+    <div className="flex items-center justify-center py-20">
+      <p className="text-[16px] text-[#68677E]">로딩 중...</p>
+    </div>
+  );
+
+  if (!booking) return (
+    <div className="flex-1 py-10 bg-white min-h-screen pl-20">
+      <p className="text-[16px] text-[#68677E]">예매 정보를 찾을 수 없습니다.</p>
+    </div>
+  );
 
   const handleCancel = async () => {
     if (checkedItems.size === 0 || !cancelReason) return;
     setIsCanceling(true);
 
     try {
-      await paymentService.cancel(booking.orderId, {
+      const result = await paymentService.cancel(orderId, {
         cancelReason,
         cancelAmount: selectedAmount,
-        ...(booking.paymentInfo.type === "VIRTUAL_ACCOUNT" && {
-          refundReceiveAccount: {
-            bankCode: "20",
-            accountNumber: "",
-            holderName: "",
-          }
-        })
       });
-      router.push(`/mypage/bookings/${booking.orderId}/cancel/success`);
+
+      // ← 여기가 추가된 부분
+      sessionStorage.setItem("cancelResult", JSON.stringify({
+        showTitle: booking.show.title,
+        cancelDatetime: result.canceledAt,
+        cancelSeats: booking.items
+          .filter((_, idx) => checkedItems.has(idx))
+          .map((item) => item.name),
+        refundStatus: result.cancelStatus,
+        paymentAmount: selectedAmount,
+        cancelFee: result.refundFee,
+        refundAmount: result.refundAmount,
+        paymentMethod: "카드 환불",
+      }));
+
+      router.push(`/mypage/bookings/${orderId}/cancel/success`);
     } catch (e) {
       console.error(e);
     } finally {
@@ -150,7 +137,6 @@ export default function BookingCancelPage() {
 
   const cancelFee = Math.floor(selectedAmount * CANCEL_FEE_RATE);
   const refundAmount = selectedAmount - cancelFee;
-  const refundMethodLabel = getRefundMethodLabel(booking);
 
   return (
     <div className="flex-1 py-10 bg-white min-h-screen pl-20">
@@ -196,7 +182,7 @@ export default function BookingCancelPage() {
           <span className="text-[14px] font-semibold text-[#68677E]">전체 선택</span>
         </label>
 
-        {/* 티켓 항목 */}
+        {/* 티켓 항목 - 좌석별로 표시 */}
         <div className="flex flex-col gap-3 mb-4">
           {booking.items.map((item, idx) => {
             const isChecked = checkedItems.has(idx);
@@ -217,9 +203,11 @@ export default function BookingCancelPage() {
                 />
                 <div>
                   <p className="text-[14px] font-bold text-[#23222A]">
-                    {booking.show.title} {booking.show.date}
+                    {booking.show.title} {booking.show.showDate}
                   </p>
-                  <p className="text-[13px] text-[#68677E]">{item.name}</p>
+                  <p className="text-[13px] text-[#68677E]">
+                    {item.grade}석 · {item.name} · {formatAmount(item.amount)}
+                  </p>
                 </div>
               </label>
             );
@@ -239,7 +227,7 @@ export default function BookingCancelPage() {
           <hr className="border-[#F1F1F4] my-1" />
           <div className="flex justify-between text-[14px] font-medium text-[#68677E]">
             <span>환불 방법</span>
-            <span>{refundMethodLabel}</span>
+            <span>카드 환불</span>
           </div>
         </div>
 
@@ -310,7 +298,6 @@ export default function BookingCancelPage() {
             </button>
           </div>
 
-          {/* 기본 항목 (항상 표시) */}
           <p className="text-[14px] font-bold text-[#68677E] mb-1">{CANCEL_POLICY.title}</p>
           <ul className="space-y-1 pl-1 mb-2">
             {CANCEL_POLICY.defaultItems.map((item, idx) => (
@@ -321,7 +308,6 @@ export default function BookingCancelPage() {
             ))}
           </ul>
 
-          {/* 더보기 시 추가 항목 */}
           {policyExpanded && (
             <>
               <ul className="space-y-1 pl-1 mb-3">

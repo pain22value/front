@@ -79,7 +79,7 @@ export const adaptSections = (apiSections: ApiSection[]): SeatSection[] =>
     sectionId: toSectionId(section.sectionName),
     sectionName: section.sectionName,
     grade: toSeatGrade(section.grade),
-    price: toSeatPrice(section.grade), // ← section.price 대신 직접 계산
+    price: section.price,
     rows: section.rows
       .sort((a, b) => Number(a.row) - Number(b.row))
       .map((row) => {
@@ -93,7 +93,7 @@ export const adaptSections = (apiSections: ApiSection[]): SeatSection[] =>
             col: seat.col,
             grade: toSeatGradeBySection(toSectionId(section.sectionName), seat.col, row.row, rowMaxCol),
             status: toSeatStatus(seat.status),
-            price: toSeatPrice(toSeatGradeBySection(toSectionId(section.sectionName), seat.col, row.row, rowMaxCol)), // ← grade별 가격
+            price: section.price,
           })),
         };
       }),

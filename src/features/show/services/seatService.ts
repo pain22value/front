@@ -55,7 +55,7 @@ const enter = async (
 // 좌석 배치도 조회
 const getSeatList = async (
   showScheduleId: number,
-  sessionToken: string = "e9438747-f422-41bd-b557-f93ca37458ad" // swagger로 받은 session token 하드코딩
+  sessionToken: string = "7480b68b-9f72-43fa-bd60-65d38b164be6" // swagger로 받은 session token 하드코딩
 ): Promise<ApiSection[] | null> => {
   const { data } = await api.get<ApiResponse<{ sections: ApiSection[] }>>(
     withScheduleId(ENDPOINTS.SEATS.LIST, showScheduleId),
@@ -63,7 +63,7 @@ const getSeatList = async (
       headers: {
         ...sessionHeader(sessionToken),
         // access token 하드 코딩
-        "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0cnV2ZS1hcGkiLCJzdWIiOiJkdWR3bnM0NjE5QG5hdmVyLmNvbSIsInVzZXJfcHVibGljX2lkIjoiMGUwNzljZTUtNmE3Yy00NTgxLWI1NjctNTRhOGQyMjhiYzkxIiwidXNlcl9pZCI6NCwicm9sZSI6Ik1FTUJFUiIsInRva2VuX3R5cGUiOiJhY2Nlc3MiLCJqdGkiOiIxODY4MDkxYS1mMGYxLTQ4MjktOGVmNy1iYTNmNzEzMDk5YmYiLCJpYXQiOjE3NzQ1MDQ2MDYsImV4cCI6MTc3NDUwNDkwNn0.D64rM6X6HUWTrw8rmtOaKijS7ofGD_wLdx2-10KuLSE` // 아까 받은 토큰
+        "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0cnV2ZS1hcGkiLCJzdWIiOiJkdWR3bnM0NjE5QG5hdmVyLmNvbSIsInVzZXJfcHVibGljX2lkIjoiMGUwNzljZTUtNmE3Yy00NTgxLWI1NjctNTRhOGQyMjhiYzkxIiwidXNlcl9pZCI6NCwicm9sZSI6Ik1FTUJFUiIsInRva2VuX3R5cGUiOiJhY2Nlc3MiLCJqdGkiOiIxZWQyZGNkYi0wMWU5LTQ0NWYtOWI1MC1jODI4NDMyYzkxZWYiLCJpYXQiOjE3NzQ1MDgzNDAsImV4cCI6MTc3NDUwODY0MH0.gcMfvwZnlGk6gpKv5LY0LCPDHY3jKP2AGMsj5jxvWIg` // 아까 받은 토큰
       }
     }
   );
@@ -87,7 +87,7 @@ const holdSeats = async (
   showScheduleId: number,
   seatIds: number[],
   // session token 자리
-  sessionToken: string = "e9438747-f422-41bd-b557-f93ca37458ad",
+  sessionToken: string = "7480b68b-9f72-43fa-bd60-65d38b164be6",
 ): Promise<string | null> => { 
   const { data } = await api.post<ApiResponse<string>>(
     withScheduleId(ENDPOINTS.SEATS.HOLD, showScheduleId),
@@ -96,7 +96,7 @@ const holdSeats = async (
       headers: {
         ...sessionHeader(sessionToken),
         // access token 자리
-        "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0cnV2ZS1hcGkiLCJzdWIiOiJkdWR3bnM0NjE5QG5hdmVyLmNvbSIsInVzZXJfcHVibGljX2lkIjoiMGUwNzljZTUtNmE3Yy00NTgxLWI1NjctNTRhOGQyMjhiYzkxIiwidXNlcl9pZCI6NCwicm9sZSI6Ik1FTUJFUiIsInRva2VuX3R5cGUiOiJhY2Nlc3MiLCJqdGkiOiIxODY4MDkxYS1mMGYxLTQ4MjktOGVmNy1iYTNmNzEzMDk5YmYiLCJpYXQiOjE3NzQ1MDQ2MDYsImV4cCI6MTc3NDUwNDkwNn0.D64rM6X6HUWTrw8rmtOaKijS7ofGD_wLdx2-10KuLSE`,
+        "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0cnV2ZS1hcGkiLCJzdWIiOiJkdWR3bnM0NjE5QG5hdmVyLmNvbSIsInVzZXJfcHVibGljX2lkIjoiMGUwNzljZTUtNmE3Yy00NTgxLWI1NjctNTRhOGQyMjhiYzkxIiwidXNlcl9pZCI6NCwicm9sZSI6Ik1FTUJFUiIsInRva2VuX3R5cGUiOiJhY2Nlc3MiLCJqdGkiOiIxZWQyZGNkYi0wMWU5LTQ0NWYtOWI1MC1jODI4NDMyYzkxZWYiLCJpYXQiOjE3NzQ1MDgzNDAsImV4cCI6MTc3NDUwODY0MH0.gcMfvwZnlGk6gpKv5LY0LCPDHY3jKP2AGMsj5jxvWIg`,
       }
     }
   );

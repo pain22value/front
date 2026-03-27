@@ -1,18 +1,21 @@
 // 인증상태를 브라우저 로컬스토리지에 저장 (개발환경)
 
 import { authService } from "@/features/auth/services/authService";
+import { profileService } from "@/features/my/services/profileService";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 type AuthState = {
   accessToken: string | null;
-  user: string | null;
-  // user: User | null;
+  user: User | null;
+  signupTerms: SignupTerms | null;
   signup: (signupRequest: SignupRequest) => Promise<void>;
   signin: (signinRequest: SigninRequest) => Promise<void>;
   signout: () => Promise<void>;
-  setAuth: (accessToken: string, user: string) => void;
-  // setAuth: (accessToken: string, user: User) => void;
+  refresh: () => Promise<{ accessToken: string; user: User }>;
+  setAuth: (accessToken: string, user: User) => void;
+  setUser: (user: User) => void;
+  setSignupTerms: (terms: SignupTerms | null) => void;
 };
 
 export const useAuthStore = create(
@@ -21,6 +24,7 @@ export const useAuthStore = create(
     (set, get) => ({
       accessToken: null,
       user: null,
+      signupTerms: null,
       signup: async (signupRequest) => {
         try {
           await authService.signup(signupRequest);
@@ -33,7 +37,9 @@ export const useAuthStore = create(
       signin: async (signinRequest) => {
         try {
           const { accessToken } = await authService.signin(signinRequest);
-          set({ accessToken, user: accessToken });
+          set({ accessToken });
+          const user = await profileService.getMyInfo();
+          set({ user });
         } catch (error: unknown) {
           set({ accessToken: null, user: null });
           throw new Error(
@@ -50,7 +56,21 @@ export const useAuthStore = create(
           set({ accessToken: null, user: null });
         }
       },
+      refresh: async () => {
+        try {
+          const { accessToken } = await authService.refresh();
+          set({ accessToken });
+          const user = await profileService.getMyInfo();
+          set({ user });
+          return { accessToken, user };
+        } catch (error) {
+          set({ accessToken: null, user: null });
+          throw error;
+        }
+      },
       setAuth: (accessToken, user) => set({ accessToken, user }),
+      setUser: (user) => set({ user }),
+      setSignupTerms: (terms) => set({ signupTerms: terms }),
     }),
     {
       name: "auth-storage",

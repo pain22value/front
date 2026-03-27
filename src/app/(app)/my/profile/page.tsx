@@ -1,39 +1,60 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
+import { useProfile } from "@/features/my/hooks/useProfile";
 import PasswordChangeDialog from "@/features/my/ui/PasswordChangeDialog";
 import NicknameChangeDialog from "@/features/my/ui/NicknameChangeDialog";
+import PolicyDialog from "@/shared/ui/policy/PolicyDialog";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
-export default function ProfileEditPage() {
-  const [isPasswordChangeOpen, setIsPasswordChangeOpen] = useState(false);
-  const [isNicknameChangeOpen, setIsNicknameChangeOpen] = useState(false);
+export default function ProfilePage() {
+  const { user, states, actions } = useProfile();
+  const {
+    isPasswordChangeOpen,
+    isNicknameChangeOpen,
+    selectedPolicy,
+    isPolicyOpen,
+    marketingChecked,
+    emailNotifChecked,
+  } = states;
+
+  const {
+    setIsPasswordChangeOpen,
+    setIsNicknameChangeOpen,
+    setIsPolicyOpen,
+    openPolicy,
+    handleMarketingChange,
+    handleEmailNotifChange,
+    handleNicknameSubmit,
+  } = actions;
 
   return (
-    <>
+    <section className="pl-20 max-w-[1200] mx-auto">
       <div className="max-w-2xl mx-auto p-6 space-y-8 bg-background text-foreground min-h-screen">
-        <h1 className="text-2xl font-bold mb-6">개인정보 수정</h1>
+        <h1 className="text-2xl font-bold mb-6">계정정보</h1>
 
-        {/* 사용자 프로필 헤더 */}
-        <Card className="bg-muted border-none shadow-sm">
-          <CardContent className="flex items-center gap-4 py-6">
-            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-accent-foreground font-bold text-lg">
-              김
-            </div>
-            <span className="text-xl font-semibold">김관우님</span>
-          </CardContent>
-        </Card>
+        {/* 사용자 정보 */}
+        <div className="flex items-center w-full max-w-4xl p-4 bg-[#f1f3f5] rounded-xl shadow-sm">
+          {/* 아바타 영역 */}
+          <div className="flex items-center justify-center w-12 h-12 bg-[#84849a] rounded-full mr-4">
+            <span className="text-white text-lg font-bold">{user?.nickname?.[0] || user?.email?.[0] || "?"}</span>
+          </div>
+
+          {/* 이름 영역 */}
+          <div className="flex items-baseline">
+            <h2 className="text-2xl font-bold text-[#1a1a1b] tracking-tight">{user?.nickname}</h2>
+            <span className="ml-1 text-2xl font-bold text-[#1a1a1b]">님</span>
+          </div>
+        </div>
 
         {/* 기본 정보 섹션 */}
         <div className="space-y-6">
           <div className="space-y-1">
             <label className="text-sm font-bold">이메일</label>
-            <div className="text-muted-foreground py-2">abc*****@gmail.com</div>
+            <div className="text-muted-foreground py-2">{user?.email}</div>
           </div>
 
           <div className="flex items-center justify-between">
@@ -49,7 +70,7 @@ export default function ProfileEditPage() {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <label className="text-sm font-bold">닉네임</label>
-              <div className="text-muted-foreground">김관우</div>
+              <div className="text-muted-foreground">{user?.nickname}</div>
             </div>
             <Button variant="outline" onClick={() => setIsNicknameChangeOpen(true)}>
               변경
@@ -65,12 +86,12 @@ export default function ProfileEditPage() {
 
           <div className="flex items-center justify-between">
             <span className="font-medium">마케팅 정보 수신 동의</span>
-            <Switch defaultChecked />
+            <Switch checked={marketingChecked} onCheckedChange={handleMarketingChange} />
           </div>
 
           <div className="flex items-center justify-between">
             <span className="font-medium">알림 수신 설정 (이메일)</span>
-            <Switch defaultChecked />
+            <Switch checked={emailNotifChecked} onCheckedChange={handleEmailNotifChange} />
           </div>
         </div>
 
@@ -81,9 +102,9 @@ export default function ProfileEditPage() {
           <h2 className="text-lg font-bold">약관 및 정책</h2>
 
           <nav className="space-y-4">
-            <NavItem label="서비스 이용약관" />
-            <NavItem label="전자금융거래 이용약관" />
-            <NavItem label="개인정보 수집 및 이용" />
+            <NavItem label="서비스 이용약관" onClick={() => openPolicy("service")} />
+            <NavItem label="전자금융거래 이용약관" onClick={() => openPolicy("finance")} />
+            <NavItem label="개인정보 수집 및 이용" onClick={() => openPolicy("privacy")} />
           </nav>
         </div>
 
@@ -100,26 +121,25 @@ export default function ProfileEditPage() {
         open={isPasswordChangeOpen}
         onOpenChange={setIsPasswordChangeOpen}
         onSubmit={(data) => {
-          console.log(data);
+          console.log("Password change requested:", data);
           setIsPasswordChangeOpen(false);
+          // TODO: 비밀번호 변경 연동
         }}
       />
 
       <NicknameChangeDialog
         open={isNicknameChangeOpen}
         onOpenChange={setIsNicknameChangeOpen}
-        onSubmit={(nickname) => {
-          console.log("New nickname:", nickname);
-          setIsNicknameChangeOpen(false);
-        }}
+        onSubmit={handleNicknameSubmit}
       />
-    </>
+      <PolicyDialog open={isPolicyOpen} onOpenChange={setIsPolicyOpen} type={selectedPolicy} />
+    </section>
   );
 }
 
 // 리스트 아이템 공통 컴포넌트
-const NavItem = ({ label }: { label: string }) => (
-  <div className="flex items-center justify-between cursor-pointer py-2 group">
+const NavItem = ({ label, onClick }: { label: string; onClick?: () => void }) => (
+  <div className="flex items-center justify-between cursor-pointer py-2 group" onClick={onClick}>
     <span className="font-medium group-hover:text-primary transition-colors">{label}</span>
     <ChevronRight className="w-5 h-5 text-muted-foreground" />
   </div>

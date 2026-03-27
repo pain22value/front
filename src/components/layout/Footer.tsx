@@ -1,4 +1,6 @@
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 export default function Footer() {
   return (
@@ -15,10 +17,31 @@ export default function Footer() {
 
           {/* 중앙 */}
           <nav className="flex flex-wrap items-center justify-center gap-6 text-sm ">
-            <a href="#">서비스 소개</a>
-            <a href="#">이용약관</a>
-            <a href="#">개인정보처리방침</a>
-            <a href="#">문의하기</a>
+            <Button asChild variant="link">
+              <Link href="/terms/service-term" target="_blank">
+                서비스 소개
+              </Link>
+            </Button>
+            <Button asChild variant="link">
+              <Link href="/terms/service-term" target="_blank">
+                서비스 이용약관
+              </Link>
+            </Button>
+            <Button asChild variant="link">
+              <Link href="/terms/finance-term" target="_blank">
+                전자금융거래 이용약관
+              </Link>
+            </Button>
+            <Button asChild variant="link">
+              <Link href="/privacy-policy" target="_blank">
+                개인정보 처리방침
+              </Link>
+            </Button>
+            <Button asChild variant="link">
+              <Link href="/terms/service-term" target="_blank">
+                문의하기
+              </Link>
+            </Button>
           </nav>
 
           {/* 우측 */}

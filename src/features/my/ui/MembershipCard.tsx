@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, CheckCircle2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useModalStore } from "@/shared/store/modalStore";
+import { useModalStore } from "@/shared/stores/modalStore";
 
 export default function MembershipCard({
   name,

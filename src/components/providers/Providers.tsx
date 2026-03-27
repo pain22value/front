@@ -1,21 +1,17 @@
 "use client";
 
 import TanstackProvider from "@/components/providers/TanstackProvider";
-import { createContext, Suspense } from "react";
+import { createContext } from "react";
 import { ThemeProvider } from "./ThemeProvider";
 import AuthProvider from "./AuthProvider";
-import { PostHogProvider, PostHogPageView } from "./PostHogProvider";
-import { InteractionTracker } from "./InteractionTracker";
+import { ClientTelemetryTracker } from "./ClientTelemetryTracker";
 
 export const Context = createContext<Record<string, never>>({});
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <PostHogProvider>
-      <InteractionTracker />
-      <Suspense fallback={null}>
-        <PostHogPageView />
-      </Suspense>
+    <>
+      <ClientTelemetryTracker />
       <Context.Provider value={{}}>
         <TanstackProvider>
           <AuthProvider>
@@ -25,6 +21,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           </AuthProvider>
         </TanstackProvider>
       </Context.Provider>
-    </PostHogProvider>
+    </>
   );
 }

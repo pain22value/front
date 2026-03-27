@@ -16,7 +16,7 @@ import { authService } from "../services/authService";
 
 export default function SignupForm() {
   const router = useRouter();
-  const { signup } = useAuthStore();
+  const { signup, signupTerms, setSignupTerms } = useAuthStore();
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isSendingVerification, setIsSendingVerification] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -58,6 +58,14 @@ export default function SignupForm() {
     !!verificationCodeValue;
   const isEmailInputValid = !!emailValue && !errors.email;
 
+  /* ================= 약관 동의 확인 ================= */
+  useEffect(() => {
+    if (!signupTerms) {
+      toast.error("약관 동의가 필요합니다.");
+      router.replace("/signup/terms");
+    }
+  }, [signupTerms, router]);
+
   /* ================= password 교차 검증 보완 ================= */
   useEffect(() => {
     if (passwordConfirmValue) {
@@ -83,10 +91,26 @@ export default function SignupForm() {
 
   /* ================= 회원가입 ================= */
   const onSubmit = async (data: SignupFormValues) => {
+    if (!signupTerms) {
+      toast.error("약관 동의가 필요합니다.");
+      router.push("/signup/terms");
+      return;
+    }
+
     try {
       const { email, password, nickname } = data;
-      await signup({ email, password, name: nickname });
+      await signup({
+        email,
+        password,
+        nickname,
+        serviceTermsAgreed: signupTerms.serviceTermsAgreed,
+        electronicFinanceTermsAgreed: signupTerms.electronicFinanceTermsAgreed,
+        privacyCollectionAgreed: signupTerms.privacyCollectionAgreed,
+        marketingInfoAgreed: signupTerms.marketingInfoAgreed,
+        over14Agreed: signupTerms.over14Agreed,
+      });
       toast.success("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
+      setSignupTerms(null);
       router.push("/signin");
     } catch (error) {
       toast.error(

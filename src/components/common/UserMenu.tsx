@@ -10,7 +10,6 @@ import {
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-// import { Card, CardContent } from "@/components/ui/card";
 
 export function UserMenu() {
   const { user, signout } = useAuthStore();
@@ -26,8 +25,10 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <div className="w-8 h-8 rounded-full bg-muted" />
+        <Button variant="ghost" size="icon" className="rounded-full overflow-hidden">
+          <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+            {user.nickname?.charAt(0)}
+          </div>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[320] p-4 bg-popover shadow-lg rounded-lg">
@@ -37,7 +38,7 @@ export function UserMenu() {
             href="/my/profile"
             className="flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
           >
-            <span className="text-xl font-bold text-foreground">{user.slice(0, 3)}님</span>
+            <span className="text-xl font-bold text-foreground">{user.nickname}님</span>
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
           </Link>
         </DropdownMenuItem>

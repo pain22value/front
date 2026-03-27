@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { authService } from "@/features/auth/services/authService";
+import { profileService } from "@/features/my/services/profileService";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useEffect } from "react";
 import { AxiosError } from "axios";
@@ -7,24 +8,18 @@ import { toast } from "sonner";
 // import { usePathname } from "next/navigation";
 
 export const useAuthQuery = () => {
-  const { setAuth, signout } = useAuthStore();
+  const { signout, refresh } = useAuthStore();
   // const pathname = usePathname();
 
   const { data, isError, isSuccess, error, isLoading } = useQuery({
     queryKey: ["auth", "refresh"],
-    queryFn: authService.refresh,
+    queryFn: () => refresh(),
     // enabled: !!pathname && !pathname.startsWith("/oauth/callback"), // OAuth 콜백 페이지에서는 토큰 갱신 요청을 보내지 않음
     retry: false, // 인증 실패 시 재시도 하지 않음
     // refetchOnWindowFocus: true, // 브라우저 포커스 시 토큰 갱신 시도
     refetchOnWindowFocus: (query) => query.state.status !== "error", // 로그인 실패 상태면 포커스 시 재요청 안함
     staleTime: 1000 * 60 * 5, // 5분 동안은 캐시된 데이터 사용 (불필요한 요청 방지)
   });
-
-  // 토큰 갱신 성공 시 스토어 업데이트
-  useEffect(() => {
-    if (isSuccess && data) setAuth(data.accessToken, data.accessToken);
-    // if (isSuccess && data) setAuth(data.accessToken, data.user);
-  }, [isSuccess, data, setAuth]);
 
   // 토큰 갱신 실패 시 로그아웃 처리
   useEffect(() => {

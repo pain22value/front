@@ -2,23 +2,25 @@
 
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import ActorCard from "@/features/show/ui/ActorCard";
+import ArtistCard from "@/features/artists/ui/ArtistCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatShowPeriod } from "@/shared/utils/date";
-import { SHOW_LIST } from "@/shared/data/shows";
-import { ACTOR_LIST } from "@/shared/data/actors";
 import { useSearch } from "../hooks/useSearch";
 
 export default function SearchResultSection({ query }: { query?: string }) {
-  const { data, isLoading } = useSearch(query || "");
-  console.log({ data });
+  const { data, isLoading } = useSearch({
+    keyword: query || "",
+    artistOffset: 0,
+    artistLimit: 20,
+    showOffset: 0,
+    showLimit: 20,
+  });
 
   if (isLoading) {
     return <SearchSkeleton />;
   }
 
-  const actorsList = data?.actors || ACTOR_LIST.slice(0, 4);
-  const showsList = data?.shows || SHOW_LIST.slice(0, 4);
+  const artistsList = data?.artists || [];
+  const showsList = data?.shows || [];
 
   return (
     <section className="max-w-[1200] mx-auto px-2 sm:px-4 md:px-8 space-y-10 md:space-y-16 mt-8">
@@ -29,12 +31,11 @@ export default function SearchResultSection({ query }: { query?: string }) {
             src="https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427942/Frame_2085665719_r3hpi9.png"
             alt="데스노트 더 뮤지컬"
             fill
-            priority
             className="object-contain object-bottom"
           />
         </div>
       </section>
-      <section className="bg-neutral-950 text-white p-8 rounded-2xl overflow-hidden">
+      {/* <section className="bg-neutral-950 text-white p-8 rounded-2xl overflow-hidden">
         <div className="max-w-6xl mx-auto flex gap-8">
           <div className="mt-auto">
             <h1 className="text-3xl font-bold">데스노트</h1>
@@ -55,28 +56,36 @@ export default function SearchResultSection({ query }: { query?: string }) {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
       <section>
-        <h2 className="text-2xl font-semibold">배우({actorsList.length})</h2>
+        <h2 className="text-2xl font-semibold">배우({data?.artistCount || 0})</h2>
         <Separator className="mt-4! mb-6!" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {actorsList.map((actor: Actor) => (
-            <ActorCard key={actor.id} actor={actor} />
+          {artistsList.map((artist: Artist) => (
+            <ArtistCard
+              key={artist.artistId}
+              artist={{
+                artistId: artist.artistId,
+                artistName: artist.artistName,
+                profileImageUrl: artist.profileImageUrl || "",
+                isLiked: artist.isLiked,
+              }}
+            />
           ))}
         </div>
       </section>
       <section>
-        <h2 className="text-2xl font-semibold">티켓({showsList.length})</h2>
+        <h2 className="text-2xl font-semibold">티켓({data?.showCount || 0})</h2>
         <Separator className="mt-4 my-6" />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {showsList.map((show: Show) => (
-            <div key={show.id}>
-              <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden mb-4">
-                <Image src={show.image} alt={show.title} fill className="object-cover" />
+          {showsList.map((show: SearchShow) => (
+            <div key={show.showId}>
+              <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden mb-4 bg-muted">
+                {show.posterUrl && <Image src={show.posterUrl} alt={show.title} fill className="object-cover" />}
               </div>
               <p className="font-semibold">{show.title}</p>
-              <p className="text-sm text-muted-foreground">{show.venue}</p>
-              <p className="text-sm text-muted-foreground">{formatShowPeriod(show.startTime, show.endTime)}</p>
+              <p className="text-sm text-muted-foreground">{show.venueName}</p>
+              <p className="text-sm text-muted-foreground">{show.date}</p>
             </div>
           ))}
         </div>
@@ -107,7 +116,7 @@ const SearchSkeleton = () => (
       </div>
     </section>
 
-    {/* Actors Skeleton */}
+    {/* Artists Skeleton */}
     <section>
       <Skeleton className="h-8 w-32" />
       <Separator className="mt-4! mb-6!" />

@@ -1,35 +1,49 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Bell, Check } from "lucide-react";
+import { Users, Bell } from "lucide-react";
 import { useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { useInteractionStore } from "@/shared/store/useInteractionStore";
 import { useQueueStatus } from "../../hooks/useQueue";
+import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
+import { useRouter } from "next/navigation";
+import { useTicketingStore } from "../../stores/useTicketingStore";
 
 export default function QueueStep({
   onOpenChange,
+  showId,
 }: {
   onOpenChange: (open: boolean) => void; // 큐 모달 닫기 핸들러
+  showId: string | number;
 }) {
-  const stopTicketingFlow = useInteractionStore((state) => state.stopTicketingFlow);
-
+  const router = useRouter();
   // 리액트 쿼리 커스텀 훅을 사용하여 대기 상태 폴링
-  const { data: queueData } = useQueueStatus(1);
+  const { data: queueData } = useQueueStatus(showId);
 
   const currentRank = queueData?.rank ?? 0;
   const waitingCount = queueData?.waitingUserCount ?? 0;
   const pollingStatus = queueData?.status ?? "WAITING";
 
+  const { setPageStage } = useTelemetryStore();
+  const { setAdmissionToken } = useTicketingStore();
+
+  useEffect(() => {
+    // 큐 화면 진입 시 page_stage를 queue로 변경
+    setPageStage("queue");
+  }, [setPageStage]);
+
   useEffect(() => {
     if (!queueData) return;
 
-    if (pollingStatus === "ADMITTED" || currentRank <= 0) {
-      stopTicketingFlow(); // 예매 프로세스 진입 완료 시 트래킹 종료
-      onOpenChange(false); // 모달 닫기 및 좌석 선택 화면 진입 로직 처리
+    // 대기 상태가 아닐 때 (ADMITTED 또는 READY)
+    if (pollingStatus !== "WAITING" && queueData.admissionToken) {
+      setAdmissionToken(queueData.admissionToken);
+      setPageStage("seatmap"); // 좌석 선택 화면 진입하므로 상태 변경
+      onOpenChange(false); // 모달 닫기
+      // router.push(`/shows/${showId}/seat`); // 좌석 선택 화면으로 이동
     }
-  }, [queueData, pollingStatus, currentRank, onOpenChange, stopTicketingFlow]);
+  }, [queueData, pollingStatus, onOpenChange, setPageStage, setAdmissionToken, showId, router]);
 
   return (
     <div className="p-6">

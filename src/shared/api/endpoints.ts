@@ -1,4 +1,11 @@
 export const ENDPOINTS = {
+  // 홈
+  HOME: {
+    SHOWS: "/musical/home/shows",
+    BANNERS: "/musical/home/banners",
+  },
+
+  // 인증
   AUTH: {
     SIGNUP: "/auth/sign-up",
     LOGIN: "/auth/login",
@@ -14,11 +21,42 @@ export const ENDPOINTS = {
     SEND_CODE: "/auth/email/send-code",
     VERIFY: "/auth/email/verify",
   },
-  SHOWS: {
-    RECOMMENDATIONS: "/shows/recommendations",
-    LIST: "/shows",
-    DETAIL: "/shows", // 뒤에 /{showId}를 붙여서 사용
+  PROFILE: {
+    ME: "/auth/me",
+    NICKNAME: "/auth/me/nickname",
+    MARKETING_CONSENT: "/auth/me/marketing-consent",
+    EMAIL_NOTIFICATION: "/auth/me/email-notification",
   },
+
+  // 검색
+  SEARCH: {
+    LIST: "/musical/search",
+  },
+
+  // 공연
+  SHOWS: {
+    LIST: "/musical/shows",
+    SCHEDULES: "/musical/shows/schedules",
+    DETAIL: (showId: number | string) => `/musical/shows/${showId}`,
+    REVIEWS: (showId: number | string) => `/musical/reviews/${showId}`,
+    REVIEWS_META: (showId: number | string) => `/musical/reviews/${showId}/meta`,
+    CASTING_SCHEDULES: (showId: number | string) => `/musical/shows/${showId}/casting-schedules`,
+  },
+
+  // 아티스트
+  ARTISTS: {
+    DETAIL: (artistId: number | string) => `/musical/artists/${artistId}`,
+    LIKE: (artistId: number | string) => `/musical/artists/${artistId}/likes`,
+    PAST_SHOWS: (artistId: number | string) => `/musical/artists/${artistId}/past-shows`,
+  },
+
+  // 대기열
+  QUEUE: {
+    ENTER: (showId: number | string) => `/queue/${showId}/enter`,
+    STATUS: (showId: number | string) => `/queue/${showId}/status`,
+  },
+
+  // 결제
   PAYMENTS: {
     SAVE: "/bookings/:reservationNumber/payment-ready",
     CONFIRM: "/payments/confirm",        // POST, body에 orderId 포함
@@ -26,6 +64,8 @@ export const ENDPOINTS = {
     CANCEL: "/payments/:orderId/cancel", // POST
     BANKS: "/payments/banks",            // GET
   },
+
+  // 좌석
   // 백엔드한테 요청 보낼 주소를 저장해둔것
   // seatService.ts에서 api.get(`${ENDPOINTS.SEATS.LIST}/${showId}/seats`) 이런 식으로 쓰임
   SEATS: {
@@ -35,12 +75,5 @@ export const ENDPOINTS = {
     HOLD:      "/ticketing/:showScheduleId/hold/seat",    // POST 좌석 선점
     RELEASE:   "/ticketing/:showScheduleId/hold/seat",    // DELETE 좌석 반납
     HEARTBEAT: "/ticketing/:showScheduleId/heartbeat",    // POST 세션 연장
-  },
-  QUEUE: {
-    ENTER: (showId: number | string) => `/queue/${showId}/enter`,
-    STATUS: (showId: number | string) => `/queue/${showId}/status`,
-  },
-  SEARCH: {
-    LIST: "/search",
   },
 } as const;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import ShowReviewChart from "./ShowReviewChart";
 import ShowReviewWriteCard from "./ShowReviewWriteCard";
@@ -13,29 +14,33 @@ import ShowReviewFilter from "./ShowReviewFilter";
 import { REVIEW_LIST } from "@/shared/data/reviews";
 
 export default function ShowReviewTab() {
+  const { showId } = useParams();
   const [isWriting, setIsWriting] = useState(false);
   const [page, setPage] = useState(1);
-  const [sentimentFilter, setSentimentFilter] = useState("all"); // 'all', 'good', 'bad'
+  const [sentimentFilter, setSentimentFilter] = useState("all");
 
-  const { data, status } = useReviews(page, sentimentFilter);
+  const { data, status } = useReviews(Number(showId), page);
+
+  const currentReviews = data?.content || [];
+  const baseReviews = currentReviews.length > 0 ? currentReviews : REVIEW_LIST;
+
+  const displayReviews = baseReviews.filter((review) => {
+    if (sentimentFilter === "all") return true;
+    if (sentimentFilter === "good") return review.positive === true;
+    if (sentimentFilter === "bad") return review.positive === false;
+    return true;
+  });
 
   const handleFilterChange = (value: string) => {
     setSentimentFilter(value);
-    setPage(1); // Reset to first page on filter change
+    setPage(1);
   };
-
-  const currentReviews = data?.reviews || REVIEW_LIST.slice(0, 5);
 
   return (
     <section className="mx-auto max-w-4xl space-y-6">
-      {/* 안내 문구 */}
       <ShowReviewNotice />
-
-      {/* 메타 정보 */}
-      <ShowReviewMeta />
-
-      {/* 관람 포인트 */}
-      <ShowReviewChart />
+      <ShowReviewMeta showId={Number(showId)} />
+      <ShowReviewChart showId={Number(showId)} />
 
       <h2 className="text-2xl font-bold tracking-tight mt-10">관람평</h2>
       <Separator className="h-1! bg-foreground" />
@@ -49,7 +54,7 @@ export default function ShowReviewTab() {
       />
 
       {/* 리뷰 작성 카드 */}
-      {isWriting && <ShowReviewWriteCard onWriteSuccess={() => setIsWriting(false)} />}
+      {isWriting && <ShowReviewWriteCard showId={Number(showId)} onWriteSuccess={() => setIsWriting(false)} />}
 
       {/* 리뷰 리스트 */}
       <div className="space-y-4">
@@ -69,8 +74,8 @@ export default function ShowReviewTab() {
               </div>
             </div>
           ))
-        ) : currentReviews.length > 0 ? (
-          currentReviews.map((review: Review) => <ShowReviewItem key={review.id} review={review} />)
+        ) : displayReviews.length > 0 ? (
+          displayReviews.map((review: Review) => <ShowReviewItem key={review.reviewId} review={review} />)
         ) : (
           <div className="py-10 text-center text-muted-foreground">작성된 리뷰가 없습니다.</div>
         )}
@@ -78,7 +83,7 @@ export default function ShowReviewTab() {
 
       {/* 페이지네이션 */}
       <ShowReviewPagination
-        currentPage={data?.currentPage ?? 1}
+        currentPage={data?.page ?? 1}
         totalPages={data?.totalPages ?? 1}
         isLoading={status === "pending"}
         onPageChange={setPage}

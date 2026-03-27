@@ -1,0 +1,48 @@
+type ShowDetail = {
+  showId: number;
+  title: string;
+  description: string;
+  runtimeMin: number;
+  ageLimit: number;
+  posterUrl: string;
+  noticeImgs: string[];
+  detailImgs: string[];
+  date: string;
+  startTime: string;
+  endTime: string;
+  venue: {
+    venueId: number;
+    name: string;
+    address: string;
+  };
+  castings: Casting[];
+  schedules: ShowSchedule[];
+  seatGrades: ShowSeatGrade[];
+  ranking?: string;
+  truveIndex?: number;
+  benefit?: string;
+};
+
+type Casting = {
+  showCastId: number;
+  artistId: number;
+  artistName: string;
+  profileImageUrl: string;
+  roleName: string;
+  order: number;
+  isLiked?: boolean;
+};
+
+type ShowSchedule = {
+  scheduleId: number;
+  showTime: string;
+  status: string;
+  castings: Casting[];
+};
+
+type ShowSeatGrade = {
+  showSeatGradeId: number;
+  gradeName: string;
+  colorCode: string;
+  price: number;
+};

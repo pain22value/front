@@ -1,6 +1,6 @@
 // 대기열
 
-type QueueStatus = "WAITING" | "ADMITTED" | "EXPIRED";
+type QueueStatus = "WAITING" | "ADMITTED" | "EXPIRED" | "READY";
 
 type QueueStatusResponse = {
   status: QueueStatus;

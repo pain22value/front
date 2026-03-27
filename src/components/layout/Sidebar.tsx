@@ -8,7 +8,7 @@ import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Link from "next/link";
-import { ACTOR_LIST } from "@/shared/data/actors";
+import { ARTIST_LIST } from "@/shared/data/artists";
 
 export default function Sidebar() {
   const { isExpanded, setExpanded } = useSidebarStore();
@@ -140,14 +140,14 @@ export default function Sidebar() {
       {/* 배우 */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
         <div className="flex flex-col gap-4 w-full">
-          {ACTOR_LIST.slice(0, 4).map((actor) => (
+          {ARTIST_LIST.slice(0, 4).map((artist) => (
             <Link
-              key={actor.id}
-              href={`/actors/${actor.id}`}
+              key={artist.artistId}
+              href={`/artists/${artist.artistId}`}
               className="flex items-center gap-4 w-full cursor-pointer group no-underline text-foreground"
             >
               <Avatar className="size-9 rounded-lg shrink-0 transition-transform group-hover:scale-105">
-                <AvatarImage src={actor.image} className="object-cover" />
+                <AvatarImage src={artist.profileImageUrl} className="object-cover" />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
               <span
@@ -156,7 +156,7 @@ export default function Sidebar() {
                 after:bg-black dark:after:bg-white
                 after:transition-all after:duration-300 group-hover:after:w-full"
               >
-                {actor.name}
+                {artist.artistName}
               </span>
             </Link>
           ))}
@@ -193,7 +193,7 @@ export default function Sidebar() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-4 w-full cursor-pointer group">
+        {/* <div className="flex items-center gap-4 w-full cursor-pointer group">
           <Button
             variant="secondary"
             size="icon"
@@ -215,7 +215,7 @@ export default function Sidebar() {
           >
             라이브 채팅
           </span>
-        </div>
+        </div> */}
       </div>
     </aside>
   );

@@ -1,26 +1,31 @@
 "use client";
 
+import { useMemo } from "react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useReviewMeta } from "../../hooks/useReviews";
+import { REVIEW_CHART_LEFT_MOCK, REVIEW_CHART_RIGHT_MOCK } from "@/shared/data/reviews";
 
-const dataLeft = [
-  { subject: "몰입감", value: 4 },
-  { subject: "연출", value: 2 },
-  { subject: "스토리", value: 5 },
-  { subject: "음악", value: 3 },
-  { subject: "배우", value: 4 },
-];
+export default function ShowReviewChart({ showId }: { showId: number }) {
+  const { data } = useReviewMeta(showId);
 
-const dataRight = [
-  { subject: "몰입감", value: 4 },
-  { subject: "연출", value: 3 },
-  { subject: "스토리", value: 4 },
-  { subject: "음악", value: 4 },
-  { subject: "배우", value: 3 },
-];
+  const dataLeft = useMemo(
+    () =>
+      data?.charmPointScores && data.charmPointScores.length > 0
+        ? data.charmPointScores.map((score) => ({ subject: score.label, value: score.score }))
+        : REVIEW_CHART_LEFT_MOCK,
+    [data],
+  );
 
-export default function ShowReviewChart() {
+  const dataRight = useMemo(
+    () =>
+      data?.emotionPointScores && data.emotionPointScores.length > 0
+        ? data.emotionPointScores.map((score) => ({ subject: score.label, value: score.score }))
+        : REVIEW_CHART_RIGHT_MOCK,
+    [data],
+  );
+
   return (
     <section className="space-y-6">
       <h2 className="text-xl font-bold">관람 포인트</h2>

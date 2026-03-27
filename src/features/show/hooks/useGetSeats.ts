@@ -1,268 +1,254 @@
-/* 2번쨰 껍질
 import { useQuery } from "@tanstack/react-query";
-import { seatService } from "../services/seatService";
+import { seatService, type ApiSection } from "../services/seatService";
 
-const MOCK_SECTIONS: SeatSection[] = [
-  {
-    sectionId: "OP",
-    sectionName: "OP",
-    grade: "VIP",
-    price: 150000,
-    rows: [
-      {
-        rowName: "1",
-        seats: Array.from({ length: 10 }, (_, i) => ({
-          seatId: `OP-1-${i + 1}`,
-          section: "OP",
-          row: 1,
-          col: i + 1,
-          grade: "VIP" as SeatGrade,
-          status: (i === 3 ? "unavailable" : i === 5 ? "reserved" : "available") as SeatStatus,
-          price: 150000,
-        })),
-      },
-      {
-        rowName: "2",
-        seats: Array.from({ length: 10 }, (_, i) => ({
-          seatId: `OP-2-${i + 1}`,
-          section: "OP",
-          row: 2,
-          col: i + 1,
-          grade: "VIP" as SeatGrade,
-          status: "available" as SeatStatus,
-          price: 150000,
-        })),
-      },
-    ],
-  },
-  {
-    sectionId: "B",
-    sectionName: "B",
-    grade: "S",
-    price: 80000,
-    rows: [
-      {
-        rowName: "1",
-        seats: Array.from({ length: 15 }, (_, i) => ({
-          seatId: `B-1-${i + 1}`,
-          section: "B",
-          row: 1,
-          col: i + 1,
-          grade: "S" as SeatGrade,
-          status: (i % 4 === 0 ? "unavailable" : "available") as SeatStatus,
-          price: 80000,
-        })),
-      },
-    ],
-  },
-];
+const toSeatGradeBySection = (sectionId: string, col: number, rowName: string, rowMaxCol: number): SeatGrade => {
+  const row = Number(rowName);
 
+  if (sectionId === "OP") return "VIP";
 
-//export const useGetSeats = (showId: number) => {
-  //return useQuery({
-    //queryKey: ["seats", showId],
-    //queryFn: () => seatService.getSeatList(showId),
-    //placeholderData: MOCK_SECTIONS,
-  //});
-//};
+  if (sectionId === "1F-A") {
+    if (row >= 16) return "R";
+    if (row >= 11) return col <= 4 ? "R" : "VIP"; // 11~15행: 1~4열 R, 5~7열 VIP
+    if (row >= 7)  return col <= 3 ? "R" : "VIP"; // 7~10행: 1~3열 R, 4~6열 VIP
+    return col <= 2 ? "R" : "VIP";                // 1~6행: 1~2열 R, 3~5열 VIP
+  }
 
+  if (sectionId === "1F-B") {
+    return row <= 15 ? "VIP" : "R"; // 1~15행 VIP, 16~20행 R
+  }// 1~20행 모두 R석
 
-// 임시로 이거 사용하다가 API 나오면 위 코드 사용
-export const useGetSeats = (showId: number) => {
-  return useQuery({
-    queryKey: ["seats", showId],
-    queryFn: () => seatService.getSeatList(showId),
-    placeholderData: MOCK_SECTIONS,
-    retry: false, // 실패해도 재시도 안 함
-    enabled: false, // API 요청 자체를 안 함 (Mock만 보여줌)
-    initialData: MOCK_SECTIONS, // 항상 Mock 데이터 사용
-  });
+  if (sectionId === "1F-C") {
+    if (row >= 16) return "R";
+    if (row >= 11) return col <= 3 ? "VIP" : "R"; // 11~15행: 1~3열 VIP, 4~7열 R
+    if (row >= 7)  return col <= 3 ? "VIP" : "R"; // 7~10행: 1~3열 VIP, 4~6열 R
+    return col <= 3 ? "VIP" : "R";                // 1~6행: 1~3열 VIP, 4~5열 R
+  }
+
+  if (sectionId === "2F-A") {
+    if (row <= 2) return "R";
+    if (row <= 4) return "S";
+    return "A";
+  }
+
+  if (sectionId === "2F-B") {
+    if (row === 1) return "VIP";
+    if (row === 2) return "R";
+    if (row <= 4)  return "S";
+    return "A";
+  }
+
+  if (sectionId === "2F-C") {
+    if (row <= 2) return "R";
+    if (row <= 4) return "S";
+    return "A";
+  }
+
+  return "A";
 };
 
-*/
+const toSeatStatus = (status: "AVAILABLE" | "HELD" | "HOLD" | "SOLD"): SeatStatus => {
+  if (status === "AVAILABLE") return "available";
+  if (status === "HELD" || status === "HOLD") return "reserved";
+  return "unavailable";
+};
 
-import { useQuery } from "@tanstack/react-query";
-import { seatService } from "../services/seatService";
+const toSeatGrade = (grade: string): SeatGrade => {
+  if (grade === "VIP") return "VIP";
+  if (grade === "R") return "R";
+  if (grade === "S") return "S";
+  return "A";
+};
 
-// 행별 좌석 수 생성 헬퍼
+const toSectionId = (sectionName: string): string => {
+  if (sectionName === "VIP섹션1") return "OP";
+  if (sectionName === "VIP섹션2") return "1F-B";
+  if (sectionName === "S섹션1")   return "1F-A";
+  if (sectionName === "A섹션1")   return "2F-A";
+  return sectionName;
+};
+
+const toSeatPrice = (grade: string): number => {
+  if (grade === "VIP") return 160000;
+  if (grade === "R")   return 120000;
+  if (grade === "S")   return 90000;
+  return 60000; // A
+};
+
+export const adaptSections = (apiSections: ApiSection[]): SeatSection[] =>
+  apiSections.map((section) => ({
+    sectionId: toSectionId(section.sectionName),
+    sectionName: section.sectionName,
+    grade: toSeatGrade(section.grade),
+    price: section.price,
+    rows: section.rows
+      .sort((a, b) => Number(a.row) - Number(b.row))
+      .map((row) => {
+        const rowMaxCol = Math.max(...row.seats.map((s) => s.col)); // ← 여기서 계산
+        return {
+          rowName: row.row,
+          seats: row.seats.map((seat) => ({
+            seatId: String(seat.scheduledSeatId),
+            section: section.sectionName,
+            row: Number(row.row),
+            col: seat.col,
+            grade: toSeatGradeBySection(toSectionId(section.sectionName), seat.col, row.row, rowMaxCol),
+            status: toSeatStatus(seat.status),
+            price: section.price,
+          })),
+        };
+      }),
+  }));
+
+// ─── Mock 데이터 ──────────────────────────────────────────────
 const makeRow = (
   section: string,
   rowNum: number,
   count: number,
   grade: SeatGrade,
   price: number,
-  unavailableIndexes: number[] = [],
+) => makeRowWithAisle(
+  section,
+  rowNum,
+  Array.from({ length: count }, (_, i) => i + 1), // count=6 이면 [1,2,3,4,5,6]
+  grade,
+  price,
+);
+
+const makeRowWithAisle = (
+  section: string,
+  rowNum: number,
+  cols: number[],   // ← 실제 좌석이 있는 col 번호 배열
+  grade: SeatGrade,
+  price: number,
 ): { rowName: string; seats: Seat[] } => ({
   rowName: String(rowNum),
-  seats: Array.from({ length: count }, (_, i) => ({
-    seatId: `${section}-${rowNum}-${i + 1}`,
+  seats: cols.map((col) => ({
+    seatId: `${section}-${rowNum}-${col}`,
     section,
     row: rowNum,
-    col: i + 1,
+    col,             // ← 실제 위치
     grade,
-    status: unavailableIndexes.includes(i) ? "unavailable" : ("available" as SeatStatus),
+    status: "available" as SeatStatus,
     price,
   })),
 });
 
+// 한 행에 총 35좌석
+// cols에 빈 번호 건너뛰면 거기가 통로가 됨
 const MOCK_SECTIONS: SeatSection[] = [
-  // OP 구역 (3행)
-  {
-    sectionId: "OP",
-    sectionName: "OP",
-    grade: "VIP",
-    price: 150000,
-    rows: [
-      makeRow("OP", 1, 16, "VIP", 150000),
-      makeRow("OP", 2, 18, "VIP", 150000),
-      makeRow("OP", 3, 18, "VIP", 150000),
-    ],
-  },
+  { sectionId: "OP",   sectionName: "OP", grade: "VIP", price: 150000,   rows: [
+    makeRowWithAisle("OP", 1, [5,6,7, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 27,28,29], "VIP", 160000),
+    makeRowWithAisle("OP", 2, [4,5,6,7, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 27,28,29,30], "VIP", 160000),
+    makeRowWithAisle("OP", 3, [3,4,5,6,7, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 27,28,29,30,31], "VIP", 160000),
+  ] },
+  { sectionId: "1F-A", sectionName: "A", grade: "R", price: 110000, rows: [
+    makeRow("1F-A",  1, 5, "R", 110000),
+    makeRow("1F-A",  2, 5, "R", 110000),
+    makeRow("1F-A",  3, 5, "R", 110000),
+    makeRow("1F-A",  4, 5, "R", 110000),
+    makeRow("1F-A",  5, 5, "R", 110000),
+    makeRow("1F-A",  6, 5, "R", 110000),
+    makeRow("1F-A",  7, 6, "R", 110000),
+    makeRow("1F-A",  8, 6, "R", 110000),
+    makeRow("1F-A",  9, 6, "R", 110000),
+    makeRow("1F-A", 10, 6, "R", 110000),
+    makeRow("1F-A", 11, 7, "R", 110000),
+    makeRow("1F-A", 12, 7, "R", 110000),
+    makeRow("1F-A", 13, 7, "R", 110000),
+    { rowName: "", seats: [] },              // ← 통로 (B구역이랑 같은 행)
+    makeRow("1F-A", 14, 7, "S", 80000),
+    makeRow("1F-A", 15, 7, "S", 80000),
+    makeRow("1F-A", 16, 6, "S", 80000),
+    makeRow("1F-A", 17, 5, "S", 80000),
+    makeRow("1F-A", 18, 4, "S", 80000),
+    makeRow("1F-A", 19, 3, "S", 80000),
+    makeRow("1F-A", 20, 2, "S", 80000),
+  ] },
+  { sectionId: "1F-B", sectionName: "B", grade: "R", price: 110000, rows: [
+    makeRow("1F-B",  1, 15, "R", 110000),
+    makeRow("1F-B",  2, 15, "R", 110000),
+    makeRow("1F-B",  3, 15, "R", 110000),
+    makeRow("1F-B",  4, 15, "R", 110000),
+    makeRow("1F-B",  5, 15, "R", 110000),
+    makeRow("1F-B",  6, 15, "R", 110000),
+    makeRow("1F-B",  7, 15, "R", 110000),
+    makeRow("1F-B",  8, 15, "R", 110000),
+    makeRow("1F-B",  9, 15, "R", 110000),
+    makeRow("1F-B", 10, 15, "R", 110000),
+    makeRow("1F-B", 11, 15, "R", 110000),
+    makeRow("1F-B", 12, 15, "R", 110000),
+    makeRow("1F-B", 13, 15, "R", 110000),
+    { rowName: "", seats: [] },             // ← 빈 행 (통로)
+    makeRow("1F-B", 14, 15, "S", 80000),
+    makeRow("1F-B", 15, 15, "S", 80000),
+    makeRow("1F-B", 16, 15, "S", 80000),
+    makeRow("1F-B", 17, 15, "S", 80000),
+    makeRow("1F-B", 18, 15, "S", 80000),
+    makeRow("1F-B", 19, 15, "S", 80000),
+    makeRow("1F-B", 20, 15, "S", 80000),
+  ] },
+  { sectionId: "1F-C", sectionName: "C", grade: "R", price: 110000, rows: [
+    makeRow("1F-C",  1, 5, "R", 110000),
+    makeRow("1F-C",  2, 5, "R", 110000),
+    makeRow("1F-C",  3, 5, "R", 110000),
+    makeRow("1F-C",  4, 5, "R", 110000),
+    makeRow("1F-C",  5, 5, "R", 110000),
+    makeRow("1F-C",  6, 5, "R", 110000),
+    makeRow("1F-C",  7, 6, "R", 110000),
+    makeRow("1F-C",  8, 6, "R", 110000),
+    makeRow("1F-C",  9, 6, "R", 110000),
+    makeRow("1F-C", 10, 6, "R", 110000),
+    makeRow("1F-C", 11, 7, "R", 110000),
+    makeRow("1F-C", 12, 7, "R", 110000),
+    makeRow("1F-C", 13, 7, "R", 110000),
+    { rowName: "", seats: [] },              // ← 통로
+    makeRow("1F-C", 14, 7, "S", 80000),
+    makeRow("1F-C", 15, 7, "S", 80000),
+    makeRow("1F-C", 16, 6, "S", 80000),
+    makeRow("1F-C", 17, 5, "S", 80000),
+    makeRow("1F-C", 18, 4, "S", 80000),
+    makeRow("1F-C", 19, 3, "S", 80000),
+    makeRow("1F-C", 20, 2, "S", 80000),
+  ] },
+  { sectionId: "2F-B", sectionName: "B", grade: "A", price: 60000, rows: [
+    makeRow("2F-B", 1, 15, "A", 60000),
+    makeRow("2F-B", 2, 15, "A", 60000),
+    makeRow("2F-B", 3, 15, "A", 60000),
+    makeRow("2F-B", 4, 15, "A", 60000),
+    makeRow("2F-B", 5, 15, "A", 60000),
+    makeRow("2F-B", 6, 15, "A", 60000),
+  ] },
 
-  // 1F A구역 (좌, 20행)
-  {
-    sectionId: "1F-A",
-    sectionName: "A",
-    grade: "R",
-    price: 110000,
-    rows: [
-      makeRow("1F-A", 1, 6, "R", 110000),
-      makeRow("1F-A", 2, 7, "R", 110000),
-      makeRow("1F-A", 3, 7, "R", 110000),
-      makeRow("1F-A", 4, 7, "R", 110000),
-      makeRow("1F-A", 5, 7, "R", 110000),
-      makeRow("1F-A", 6, 8, "R", 110000),
-      makeRow("1F-A", 7, 8, "R", 110000),
-      makeRow("1F-A", 8, 8, "R", 110000),
-      makeRow("1F-A", 9, 8, "R", 110000),
-      makeRow("1F-A", 10, 8, "R", 110000),
-      makeRow("1F-A", 11, 9, "S", 80000),
-      makeRow("1F-A", 12, 9, "S", 80000),
-      makeRow("1F-A", 13, 9, "S", 80000),
-      makeRow("1F-A", 14, 7, "S", 80000),
-      makeRow("1F-A", 15, 7, "S", 80000),
-      makeRow("1F-A", 16, 6, "S", 80000),
-      makeRow("1F-A", 17, 6, "S", 80000),
-      makeRow("1F-A", 18, 5, "S", 80000),
-      makeRow("1F-A", 19, 4, "S", 80000),
-      makeRow("1F-A", 20, 3, "S", 80000),
-    ],
-  },
+  { sectionId: "2F-A", sectionName: "A", grade: "A", price: 60000, rows: [
+    makeRow("2F-A", 1, 5, "A", 60000),
+    makeRow("2F-A", 2, 5, "A", 60000),
+    makeRow("2F-A", 3, 5, "A", 60000),
+    makeRow("2F-A", 4, 5, "A", 60000),
+    makeRow("2F-A", 5, 4, "A", 60000),
+    makeRow("2F-A", 6, 3, "A", 60000),
+  ] },
 
-  // 1F B구역 (중앙, 20행)
-  {
-    sectionId: "1F-B",
-    sectionName: "B",
-    grade: "R",
-    price: 110000,
-    rows: [
-      makeRow("1F-B", 1, 14, "R", 110000),
-      makeRow("1F-B", 2, 15, "R", 110000),
-      makeRow("1F-B", 3, 15, "R", 110000),
-      makeRow("1F-B", 4, 15, "R", 110000),
-      makeRow("1F-B", 5, 15, "R", 110000),
-      makeRow("1F-B", 6, 16, "R", 110000),
-      makeRow("1F-B", 7, 16, "R", 110000),
-      makeRow("1F-B", 8, 16, "R", 110000),
-      makeRow("1F-B", 9, 16, "R", 110000),
-      makeRow("1F-B", 10, 16, "R", 110000),
-      makeRow("1F-B", 11, 16, "S", 80000),
-      makeRow("1F-B", 12, 16, "S", 80000),
-      makeRow("1F-B", 13, 16, "S", 80000),
-      makeRow("1F-B", 14, 16, "S", 80000),
-      makeRow("1F-B", 15, 16, "S", 80000),
-      makeRow("1F-B", 16, 16, "S", 80000),
-      makeRow("1F-B", 17, 16, "S", 80000),
-      makeRow("1F-B", 18, 15, "S", 80000),
-      makeRow("1F-B", 19, 14, "S", 80000),
-      makeRow("1F-B", 20, 13, "S", 80000),
-    ],
-  },
-
-  // 1F C구역 (우, 20행) - A의 거울
-  {
-    sectionId: "1F-C",
-    sectionName: "C",
-    grade: "R",
-    price: 110000,
-    rows: [
-      makeRow("1F-C", 1, 6, "R", 110000),
-      makeRow("1F-C", 2, 7, "R", 110000),
-      makeRow("1F-C", 3, 7, "R", 110000),
-      makeRow("1F-C", 4, 7, "R", 110000),
-      makeRow("1F-C", 5, 7, "R", 110000),
-      makeRow("1F-C", 6, 8, "R", 110000),
-      makeRow("1F-C", 7, 8, "R", 110000),
-      makeRow("1F-C", 8, 8, "R", 110000),
-      makeRow("1F-C", 9, 8, "R", 110000),
-      makeRow("1F-C", 10, 8, "R", 110000),
-      makeRow("1F-C", 11, 9, "S", 80000),
-      makeRow("1F-C", 12, 9, "S", 80000),
-      makeRow("1F-C", 13, 9, "S", 80000),
-      makeRow("1F-C", 14, 7, "S", 80000),
-      makeRow("1F-C", 15, 7, "S", 80000),
-      makeRow("1F-C", 16, 6, "S", 80000),
-      makeRow("1F-C", 17, 6, "S", 80000),
-      makeRow("1F-C", 18, 5, "S", 80000),
-      makeRow("1F-C", 19, 4, "S", 80000),
-      makeRow("1F-C", 20, 3, "S", 80000),
-    ],
-  },
-
-  // 2F A구역 (6행)
-  {
-    sectionId: "2F-A",
-    sectionName: "A",
-    grade: "A",
-    price: 60000,
-    rows: [
-      makeRow("2F-A", 1, 6, "A", 60000),
-      makeRow("2F-A", 2, 6, "A", 60000),
-      makeRow("2F-A", 3, 6, "A", 60000),
-      makeRow("2F-A", 4, 6, "A", 60000),
-      makeRow("2F-A", 5, 5, "A", 60000),
-      makeRow("2F-A", 6, 4, "A", 60000),
-    ],
-  },
-
-  // 2F B구역 (6행)
-  {
-    sectionId: "2F-B",
-    sectionName: "B",
-    grade: "A",
-    price: 60000,
-    rows: [
-      makeRow("2F-B", 1, 14, "A", 60000),
-      makeRow("2F-B", 2, 14, "A", 60000),
-      makeRow("2F-B", 3, 14, "A", 60000),
-      makeRow("2F-B", 4, 13, "A", 60000),
-      makeRow("2F-B", 5, 12, "A", 60000),
-      makeRow("2F-B", 6, 10, "A", 60000),
-    ],
-  },
-
-  // 2F C구역 (6행)
-  {
-    sectionId: "2F-C",
-    sectionName: "C",
-    grade: "A",
-    price: 60000,
-    rows: [
-      makeRow("2F-C", 1, 6, "A", 60000),
-      makeRow("2F-C", 2, 6, "A", 60000),
-      makeRow("2F-C", 3, 6, "A", 60000),
-      makeRow("2F-C", 4, 6, "A", 60000),
-      makeRow("2F-C", 5, 5, "A", 60000),
-      makeRow("2F-C", 6, 4, "A", 60000),
-    ],
-  },
+  { sectionId: "2F-C", sectionName: "C", grade: "A", price: 60000, rows: [
+    makeRow("2F-C", 1, 5, "A", 60000),
+    makeRow("2F-C", 2, 5, "A", 60000),
+    makeRow("2F-C", 3, 5, "A", 60000),
+    makeRow("2F-C", 4, 5, "A", 60000),
+    makeRow("2F-C", 5, 4, "A", 60000),
+    makeRow("2F-C", 6, 3, "A", 60000),
+  ] },
 ];
 
-export const useGetSeats = (showId: number) => {
+export const useGetSeats = (showScheduleId: number) => {
   return useQuery({
-    queryKey: ["seats", showId],
-    queryFn: () => seatService.getSeatList(showId),
-    enabled: false,
-    initialData: MOCK_SECTIONS,
+    queryKey: ["seats", showScheduleId],
+    queryFn: async () => {
+      const apiSections = await seatService.getSeatList(showScheduleId); // sessionToken 제거 (기본값 사용)
+      if (!apiSections) return MOCK_SECTIONS;
+      return adaptSections(apiSections); // ← apiSections가 이미 ApiSection[]이라서 바로 사용
+    },
+    retry: false,
+    initialData: undefined, // 초기 렌더링은 mock으로
+    //enabled: false, 목업 데이터로 테스트 할 때는 false
+    enabled: true,
   });
 };

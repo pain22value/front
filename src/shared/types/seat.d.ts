@@ -1,7 +1,7 @@
 // 2/21 박영준
 // 백엔드에서 오는 데이터 타입을 미리 정의
-type SeatStatus = "available" | "reserved" | "unavailable"; // 좌석 상태
-type SeatGrade = "VIP" | "R" | "S" | "A"; // 좌석 등급
+export type SeatStatus = "available" | "reserved" | "unavailable"; // 좌석 상태
+export type SeatGrade = "VIP" | "R" | "S" | "A"; // 좌석 등급
 
 // 좌석 하나
 interface Seat {

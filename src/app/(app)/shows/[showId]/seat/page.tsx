@@ -1,13 +1,14 @@
 import { SeatMap } from "@/features/show/ui/seat/SeatMap";
 
 interface SeatPageProps {
-  params: { showId: string };
+  params: Promise<{ showId: string }>;
 }
 
-export default function SeatPage({ params }: SeatPageProps) {
+export default async function SeatPage({ params }: SeatPageProps) {
+  const { showId } = await params;
   return (
     <div className="h-[calc(100vh-64px)] w-full">
-      <SeatMap showId={Number(params.showId)} />
+      <SeatMap showScheduleId={Number(showId)} />
     </div>
   );
 }

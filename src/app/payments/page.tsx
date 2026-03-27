@@ -6,18 +6,26 @@ import Link from "next/link";
 import Modal from "@/components/ui/modal";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import type { Seat } from "@/shared/types/seat";
 
 export default function CheckoutPage() {
   // 데모용 가격 계산
-  const ticketUnitPrice = 160000;
-  const ticketQty = 2;
-  const bookingFee = 4000; // 2000 → 4000으로 수정 (피그마 기준)
-  const total = ticketUnitPrice * ticketQty + bookingFee;
+  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+
+  useEffect(() => {
+    const raw = sessionStorage.getItem("selectedSeats");
+    if (raw) setSelectedSeats(JSON.parse(raw));
+  }, []);
+
+  const ticketQty = selectedSeats.length;
+  const ticketTotal = selectedSeats.reduce((sum, s) => sum + s.price, 0);
+  const bookingFee = ticketQty * 2000;
+  const total = ticketTotal + bookingFee;
+  const orderName = `${selectedSeats[0]?.grade ?? ""}석 ${ticketQty}매`;
 
   const clientKey = "test_ck_jExPeJWYVQxDje9xG7Mj349R5gvN";
   const customerKey = "EkTWyj8AhmS5rtOMSB4Ck";
 
-  const orderName = `뮤지컬 <킹키부츠> VIP석 ${ticketQty}매`;
 
   const [paying, setPaying] = useState(false);
 
@@ -56,7 +64,7 @@ export default function CheckoutPage() {
     const hasInfoError = Object.values(newErrors).some(Boolean);
     const hasReceiptError = receipt === null;
     const hasPayMethodError = payMethod === undefined;
-    const hasAgreeError = !agrees[0] || !agrees[1]; // 필수 약관 2개
+    const hasAgreeError = !agrees[0] || !agrees[1];
 
     if (hasInfoError || hasReceiptError || hasPayMethodError || hasAgreeError) {
       setModal("필수 입력 항목을 입력해주세요.");
@@ -67,28 +75,32 @@ export default function CheckoutPage() {
     setPaying(true);
 
     try {
-      const orderId = crypto.randomUUID();
+      // 1. 예매 내역 생성 → reservationNumber 발급
+      const seatIds = selectedSeats.map((s) => Number(s.seatId));
+      const reservationNumber = await paymentService.createBooking({ seatIds });
 
-    await fetch(`${process.env.API_URL}/api/payments`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        orderId,
-        amount: total,
-        method: payMethod,
-      }),
-    });
 
+      // 2. 결제 준비 (임시 주석 처리)
+      await paymentService.save(reservationNumber, {
+        name: customerInfo.name,
+        birthDate: customerInfo.birth,
+        email: customerInfo.email,
+        phone: customerInfo.phone,
+      });
+
+      // 3. sessionStorage 저장
       sessionStorage.setItem("pendingBooking", JSON.stringify({
         showTitle: "뮤지컬 <킹키부츠>",
         datetime: "2026.01.26(월) 오후 7:00",
-        seats: ["1층 B구역 16열 6번", "1층 B구역 16열 7번"],
+        seats: selectedSeats.map((s) => `${s.section} ${s.row}행 ${s.col}열`),
         method: payMethod,
+        orderId: reservationNumber, // ← crypto.randomUUID() 대신 reservationNumber 사용
+        amount: total,
       }));
 
-      if (!payMethod) return;
+      // 4. Toss 결제 요청
       await requestPayment({
-        orderId,
+        orderId: reservationNumber, // ← 여기도
         orderName,
         amountValue: total,
         method: payMethod,
@@ -216,8 +228,11 @@ export default function CheckoutPage() {
               <div className="mt-4 flex gap-4">
                 <div className="text-[14px] font-medium text-[#68677E] w-16 shrink-0">좌석 정보</div>
                 <ul className="text-[14px] font-medium text-[#23222A]">
-                  <li>1층 B구역 16열 6번</li>
-                  <li>1층 B구역 16열 7번</li>
+                  {selectedSeats.map((seat) => (
+                    <li key={seat.seatId}>
+                      {seat.section} {seat.row}행 {seat.col}열
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -225,7 +240,7 @@ export default function CheckoutPage() {
               <div className="mt-2 flex gap-4 text-sm">
                 <span className="text-[14px] font-medium text-[#68677E] w-16 shrink-0">가격 정보</span>
                 <span className="text-[14px] font-medium text-[#23222A]">
-                  {ticketUnitPrice.toLocaleString()}원 X {ticketQty}매
+                  {ticketTotal.toLocaleString()}원 ({ticketQty}매)
                 </span>
               </div>
             </div>
@@ -367,9 +382,9 @@ export default function CheckoutPage() {
                   <div className="flex items-start justify-between">
                     <div className="text-[16px] font-medium text-[#68677E] shrink-0">티켓금액</div>
                     <div className="text-right font-semibold text-gray-900">
-                      {Array.from({ length: ticketQty }).map((_, idx) => (
-                        <div key={idx} className="mb-1">
-                          {ticketUnitPrice.toLocaleString()}원
+                      {selectedSeats.map((seat) => (
+                        <div key={seat.seatId} className="mb-1">
+                          {seat.price.toLocaleString()}원
                         </div>
                       ))}
                     </div>

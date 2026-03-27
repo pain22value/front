@@ -7,7 +7,6 @@ import ResultCard from "@/components/common/ResultCard";
 export default function BookingCancelSuccessPage() {
   const params = useParams();
   const orderId = params.orderId as string;
-
   const [result, setResult] = useState<{
     showTitle: string;
     cancelDatetime: string;

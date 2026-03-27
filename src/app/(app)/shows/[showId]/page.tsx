@@ -9,13 +9,14 @@ import { ENDPOINTS } from "@/shared/api/endpoints";
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.LIST}`);
-    if (!res.ok) throw new Error("Failed to fetch shows");
-    const shows = await res.json();
-    return shows.map((show: { id: number }) => ({ showId: show.id.toString() }));
-    // return [{ showId: "1" }, { showId: "2" }, { showId: "3" }];
+    const res = await fetch(`${process.env.API_URL}${ENDPOINTS.HOME.SHOWS}`);
+    if (!res.ok) throw new Error("공연 목록을 불러오는 데 실패했습니다.");
+    const result: ApiResponse<ShowsData> = await res.json();
+    const shows = result.data?.shows || [];
+    console.log({ showsCount: shows.length });
+    return shows.map((show) => ({ showId: show.showId.toString() }));
   } catch (error) {
-    console.error("Failed to generate static params:", error);
+    console.error("정적 파라미터 생성 중 오류 발생:", error);
     return [];
   }
 }

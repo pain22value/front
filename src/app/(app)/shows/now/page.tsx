@@ -5,7 +5,8 @@ import ShowCardList from "@/features/show/ui/ShowCardList";
 import { SHOW_LIST } from "@/shared/data/shows";
 
 export default function ShowNowPage() {
-  const { data: shows, isLoading } = useShows("now");
+  const { data: showsData, isLoading } = useShows(undefined, "now");
+  const shows = showsData?.shows || [];
 
   return (
     <section className="pl-20">

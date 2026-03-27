@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomeShowNowSection() {
   const [order, setOrder] = useState<ShowsOrder>("DAILY_BOOKING");
-  const [region, setRegion] = useState<ShowsRegion>("SEOUL");
+  const [region, setRegion] = useState<ShowsRegion>("ALL");
 
   const { data, isLoading } = useHomeShows(order, region, 1, 12);
   const displayShows = data?.shows && data.shows.length > 0 ? data.shows : [];

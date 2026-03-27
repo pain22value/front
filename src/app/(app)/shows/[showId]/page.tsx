@@ -9,11 +9,11 @@ import { ENDPOINTS } from "@/shared/api/endpoints";
 
 export async function generateStaticParams() {
   try {
-    // const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.LIST}`);
-    // if (!res.ok) throw new Error("Failed to fetch shows");
-    // const shows = await res.json();
-    // return shows.map((show: { id: number }) => ({ showId: show.id.toString() }));
-    return [{ showId: "1" }, { showId: "2" }, { showId: "3" }];
+    const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.LIST}`);
+    if (!res.ok) throw new Error("Failed to fetch shows");
+    const shows = await res.json();
+    return shows.map((show: { id: number }) => ({ showId: show.id.toString() }));
+    // return [{ showId: "1" }, { showId: "2" }, { showId: "3" }];
   } catch (error) {
     console.error("Failed to generate static params:", error);
     return [];

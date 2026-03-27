@@ -41,14 +41,13 @@ export default function ShowTicketOpenNoticeModal({
               <p className="text-sm text-muted-foreground">2026.01.26 (월) 20:00</p>
             </div>
           </div>
-
-          <div className="flex gap-3">
+          {/* <div className="flex gap-3">
             <Bell className="text-muted-foreground" />
             <div>
               <p className="font-medium">알림 설정</p>
               <p className="text-sm text-muted-foreground">오픈 10분 전 푸시 알림</p>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Fair Ticketing */}

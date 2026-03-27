@@ -102,7 +102,7 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
         예매하기
       </Button>
 
-      {/* <ShowTicketOpenNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} /> */}
+      <ShowTicketOpenNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} />
       {/* <ShowNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} /> */}
       <CaptchaModal open={isCaptchaModalOpen} onOpenChange={setIsCaptchaModalOpen} showId={showId} />
     </div>

@@ -6,7 +6,8 @@ import { useShows } from "@/features/show/hooks/useShows";
 import { SHOW_LIST } from "@/shared/data/shows";
 
 export default function ShowListPage() {
-  const { data: shows, isLoading } = useShows("all");
+  const { data: showsData, isLoading } = useShows(undefined, "all");
+  const shows = showsData?.shows || [];
 
   return (
     <section className="pl-20">

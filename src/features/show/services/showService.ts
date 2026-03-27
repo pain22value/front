@@ -3,9 +3,17 @@ import { ENDPOINTS } from "@/shared/api/endpoints";
 import { MOCK_SHOW_DETAIL } from "@/shared/data/shows";
 
 // 공연 목록 조회
-const getShows = async (params: ShowsParams): Promise<Show[]> => {
-  const { data } = await api.get<ApiResponse<Show[]>>(ENDPOINTS.SHOWS.LIST, { params });
-  if (!data.data) throw new Error("공연 목록을 불러올 수 없습니다.");
+const getShows = async (params?: ShowsListParams): Promise<ShowsData> => {
+  const { data } = await api.get<ApiResponse<ShowsData>>(ENDPOINTS.HOME.SHOWS, {
+    params: {
+      order: params?.order ?? "DAILY_BOOKING",
+      region: params?.region ?? "ALL",
+      page: params?.page ?? 1,
+      size: params?.size ?? 10,
+    },
+  });
+  console.log({ data });
+  if (!data.data) throw new Error("홈 공연 목록 데이터가 없습니다.");
   return data.data;
 };
 

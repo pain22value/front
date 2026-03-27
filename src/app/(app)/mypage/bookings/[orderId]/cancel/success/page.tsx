@@ -21,10 +21,10 @@ export default function BookingCancelSuccessPage() {
 
   useEffect(() => {
     const raw = sessionStorage.getItem("cancelResult");
-    if (raw) {
-      setResult(JSON.parse(raw));
-      sessionStorage.removeItem("cancelResult");
-    }
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    sessionStorage.removeItem("cancelResult");
+    setTimeout(() => setResult(parsed), 0);
   }, []);
 
   if (!result) return (

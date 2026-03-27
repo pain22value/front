@@ -492,11 +492,11 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       applyScale();
       const ro = new ResizeObserver(applyScale);
       ro.observe(wrapper);
-      (app as any)._ro = ro;
+      (app as unknown as { _ro: typeof ro })._ro = ro;
     });
 
     return () => {
-      (appRef.current as any)?._ro?.disconnect();
+      (appRef.current as { _ro?: { disconnect: () => void } })?._ro?.disconnect();
       if (appRef.current) {
         try {
           appRef.current.destroy(true);

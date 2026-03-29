@@ -73,3 +73,14 @@ type ShowsData = {
 type BannersData = {
   banners: Banner[];
 };
+
+type PromotionsData = {
+  totalCount: number;
+  shows: Promotion[];
+};
+
+type Promotion = {
+  displayOrder: number;
+  showId: number;
+  posterUrl: string;
+};

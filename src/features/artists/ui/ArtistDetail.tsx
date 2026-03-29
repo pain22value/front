@@ -8,7 +8,7 @@ import ArtistHeroSection from "./ArtistHeroSection";
 import { useArtistDetail } from "../hooks/useArtist";
 import { NOTICE_LIST } from "@/shared/constants/notices";
 
-export default function ArtistSection({ artistId }: { artistId: string }) {
+export default function ArtistDetail({ artistId }: { artistId: string }) {
   const { data, isLoading } = useArtistDetail(artistId);
 
   if (isLoading) return <ArtistSectionSkeleton />;
@@ -22,10 +22,10 @@ export default function ArtistSection({ artistId }: { artistId: string }) {
   const mappedPastShows = pastShows.shows.map((show) => ({ ...show, showTitle: show.title }));
 
   return (
-    <section>
+    <>
       <ArtistHeroSection artist={artist} />
-      <section className="pl-20">
-        <section className="max-w-[1200] mx-auto px-4 py-8 space-y-12">
+      <section>
+        <section className="space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ArtistNoticeSection notices={notices.length > 0 ? notices.map((n) => n.content) : NOTICE_LIST} />
             <ArtistLiveChatSection />
@@ -40,6 +40,6 @@ export default function ArtistSection({ artistId }: { artistId: string }) {
           />
         </section>
       </section>
-    </section>
+    </>
   );
 }

@@ -1,13 +1,13 @@
-import ArtistSection from "@/features/artists/ui/ArtistSection";
+import ArtistDetail from "@/features/artists/ui/ArtistDetail";
 
 type Params = Promise<{ artistId: string }>;
 
-export default async function ArtistPage(props: { params: Params }) {
+export default async function ArtistDetailPage(props: { params: Params }) {
   const params = await props.params;
 
   return (
-    <section>
-      <ArtistSection artistId={params.artistId} />
-    </section>
+    <main className="artist-detail-page">
+      <ArtistDetail artistId={params.artistId} />
+    </main>
   );
 }

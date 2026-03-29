@@ -1,4 +1,4 @@
-import ArtistMembershipSubscribeSection from "@/features/artists/ui/membership/ArtistMembershipSubscribeSection";
+import ArtistMembershipSubscribe from "@/features/artists/ui/membership/ArtistMembershipSubscribe";
 
 type Params = Promise<{ artistId: string }>;
 
@@ -6,8 +6,10 @@ export default async function ArtistMembershipPage(props: { params: Params }) {
   const params = await props.params;
 
   return (
-    <section className="pl-20 min-h-screen py-12 px-4 transition-colors">
-      <ArtistMembershipSubscribeSection artistId={params.artistId} />
-    </section>
+    <main className="artist-membership-page">
+      <section className="transition-colors">
+        <ArtistMembershipSubscribe artistId={params.artistId} />
+      </section>
+    </main>
   );
 }

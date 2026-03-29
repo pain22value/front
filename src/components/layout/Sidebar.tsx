@@ -70,7 +70,9 @@ export default function Sidebar() {
     <aside
       ref={sidebarRef}
       className="z-30 
-      fixed top-(--header-height) h-[calc(100svh-var(--header-height))] 
+      fixed top-(--header-height) left-0 
+      h-[calc(100svh-var(--header-height))]/ 
+      h-screen
       flex flex-col items-center gap-4 py-4
       overflow-hidden shrink-0"
       style={{ width: 80 }}

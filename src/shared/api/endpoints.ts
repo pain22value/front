@@ -3,6 +3,7 @@ export const ENDPOINTS = {
   HOME: {
     SHOWS: "/musical/home/shows",
     BANNERS: "/musical/home/banners",
+    PROMOTIONS: "/musical/home/promotions",
   },
 
   // 인증

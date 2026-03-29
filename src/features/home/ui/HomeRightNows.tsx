@@ -9,7 +9,7 @@ import Link from "next/link";
 import useHomeShows from "../hooks/useHomeShows";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function HomeShowNowSection() {
+export default function HomeRightNows() {
   const [order, setOrder] = useState<ShowsOrder>("DAILY_BOOKING");
   const [region, setRegion] = useState<ShowsRegion>("ALL");
 
@@ -17,7 +17,7 @@ export default function HomeShowNowSection() {
   const displayShows = data?.shows && data.shows.length > 0 ? data.shows : [];
 
   return (
-    <section className="w-full max-w-[1200] mx-auto space-y-8">
+    <div className="w-full space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="font-semibold text-2xl">지금 예매 가능</h1>
         <Link href="/shows/now" className="ml-auto text-sm font-medium text-muted-foreground hover:text-foreground">
@@ -100,7 +100,7 @@ export default function HomeShowNowSection() {
           )}
         />
       )}
-    </section>
+    </div>
   );
 }
 

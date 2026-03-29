@@ -27,18 +27,18 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
   console.log({ show });
   // if (!show) notFound();
   return (
-    <section className="pl-20">
-      <section className="max-w-[1200] mx-auto p-0 xs:p-2 sm:p-4 md:p-6 lg:p-10 border border-dashed">
-        <div className="grid grid-cols-1 md:grid-cols-[minmax(550px,65%)_minmax(300px,35%)]/ md:grid-cols-[minmax(550px,1fr)_300px] gap-8">
+    <main className="show-detail-page">
+      <section>
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(550px,1fr)_300px] gap-0 md:gap-8">
           <div className="col-span-[100%] md:col-span-[65%] space-y-20">
             <ShowDetailCard {...show} />
             <ShowDetailTabs show={show} />
           </div>
-          <aside className="hidden md:block sticky top-[calc(var(--header-height)+2.5rem)]">
+          <aside className="hidden md:block sticky top-[calc(var(--header-height)+2.5rem)] self-start">
             <ShowDetailScheduleCard show={show} />
           </aside>
         </div>
       </section>
-    </section>
+    </main>
   );
 }

@@ -1,10 +1,10 @@
 "use client";
 
 import TanstackProvider from "@/components/providers/TanstackProvider";
-import { createContext } from "react";
+import { ClientTelemetryTracker } from "./ClientTelemetryTracker";
 import { ThemeProvider } from "./ThemeProvider";
 import AuthProvider from "./AuthProvider";
-import { ClientTelemetryTracker } from "./ClientTelemetryTracker";
+import { createContext } from "react";
 
 export const Context = createContext<Record<string, never>>({});
 

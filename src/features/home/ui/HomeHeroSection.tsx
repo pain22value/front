@@ -6,15 +6,24 @@ import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/com
 import { useRef, useState } from "react";
 import { useHomeBanners } from "@/features/home/hooks/useHomeBanners";
 import useCarouselPagination from "@/shared/hooks/useCarouselPagination";
-import { BANNER_LIST } from "@/shared/data/shows";
+
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomeHeroSection() {
   const [api, setApi] = useState<CarouselApi>();
-  const { data: banners } = useHomeBanners();
-  const displayBanners = banners || BANNER_LIST;
-
+  const { data: banners, isLoading } = useHomeBanners();
   const plugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true }));
   const { current, count, scrollTo } = useCarouselPagination(api);
+
+  if (isLoading || !banners?.length) {
+    return (
+      <section className="relative w-full pl-20 bg-black text-white rounded-b-4xl overflow-hidden pb-10">
+        <Skeleton className="relative w-10/12 mx-auto aspect-21/9 bg-neutral-800 rounded-xl" />
+      </section>
+    );
+  }
+
+  const displayBanners = banners;
 
   return (
     <section className="relative w-full pl-20 bg-black text-white rounded-b-4xl overflow-hidden">

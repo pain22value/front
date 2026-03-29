@@ -8,6 +8,8 @@ export const useHomeRecommendBanners = () => {
     staleTime: 1000 * 60 * 60, // 1시간
     retry: 1,
     select: (data) =>
-      data && data.banners.length > 0 && [...data.banners].sort((a, b) => a.displayOrder - b.displayOrder),
+      data?.banners?.length
+        ? [...data.banners].sort((a, b) => a.displayOrder - b.displayOrder)
+        : [],
   });
 };

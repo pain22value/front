@@ -20,7 +20,14 @@ const getHomeBanners = async (): Promise<BannersData> => {
   return data.data;
 };
 
+const getHomePromotions = async (): Promise<PromotionsData> => {
+  const { data } = await api.get<ApiResponse<PromotionsData>>(ENDPOINTS.HOME.PROMOTIONS);
+  if (!data.data) throw new Error("홈 프로모션 데이터가 없습니다.");
+  return data.data;
+};
+
 export const homeService = {
   getHomeShows,
   getHomeBanners,
+  getHomePromotions,
 };

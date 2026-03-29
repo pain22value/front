@@ -3,7 +3,7 @@
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { ko } from "date-fns/locale";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Separator } from "@/components/ui/separator";
 import { isSameDay } from "date-fns";
 import { useCastingSchedules } from "../../hooks/useCastingSchedules";
@@ -20,8 +20,22 @@ import { toast } from "sonner";
 export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [round, setRound] = useState("1");
+  const [hasDismissedTicketNotice, setHasDismissedTicketNotice] = useState(false);
+  const isTicketOpenNoticeOpen = useMemo(() => {
+    if (hasDismissedTicketNotice || !show?.date) return false;
+
+    // show.startTime이 이미 "2026-04-16T00:00:00" 형태의 풀 타임스탬프인 경우 최우선 사용
+    const targetDateStr = show?.startTime || (show?.date ? `${show.date.replaceAll(".", "-")}T00:00:00` : null);
+    if (!targetDateStr) return false;
+
+    const openDate = new Date(targetDateStr);
+    return !isNaN(openDate.getTime()) && new Date() < openDate;
+  }, [show, hasDismissedTicketNotice]);
+
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(true);
   const [isCaptchaModalOpen, setIsCaptchaModalOpen] = useState(false);
+  // console.log({ show });
+
   const router = useRouter();
   const { admissionToken, clearTicketing, getIsValid } = useTicketingStore();
 
@@ -98,12 +112,17 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
         />
       </div>
 
-      <Button onClick={handleTicketing} className="w-full h-12 bg-red-500 hover:bg-red-600 text-white">
+      <Button onClick={handleTicketing} className="w-full h-12 bg-red-500 hover:bg-red-600 text-white mb-0">
         예매하기
       </Button>
 
-      <ShowTicketOpenNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} />
-      {/* <ShowNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} /> */}
+      <ShowNoticeModal open={isNoticeModalOpen} onOpenChange={setIsNoticeModalOpen} />
+      <ShowTicketOpenNoticeModal
+        open={isTicketOpenNoticeOpen}
+        onOpenChange={() => setHasDismissedTicketNotice(true)}
+        title={show?.title}
+        openDate={show?.startTime || (show?.date ? `${show.date.replaceAll(".", "-")}T00:00:00` : undefined)}
+      />
       <CaptchaModal open={isCaptchaModalOpen} onOpenChange={setIsCaptchaModalOpen} showId={showId} />
     </div>
   );

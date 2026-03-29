@@ -32,8 +32,8 @@ export default function ProfilePage() {
   } = actions;
 
   return (
-    <section className="pl-20 max-w-[1200] mx-auto">
-      <div className="max-w-2xl mx-auto p-6 space-y-8 bg-background text-foreground min-h-screen">
+    <main className="profile-page">
+      <section className="p-6 space-y-8 bg-background text-foreground min-h-screen">
         <h1 className="text-2xl font-bold mb-6">계정정보</h1>
 
         {/* 사용자 정보 */}
@@ -115,7 +115,7 @@ export default function ProfilePage() {
             <ChevronRight className="w-5 h-5 text-muted-foreground" />
           </Link>
         </div>
-      </div>
+      </section>
 
       <PasswordChangeDialog
         open={isPasswordChangeOpen}
@@ -133,7 +133,7 @@ export default function ProfilePage() {
         onSubmit={handleNicknameSubmit}
       />
       <PolicyDialog open={isPolicyOpen} onOpenChange={setIsPolicyOpen} type={selectedPolicy} />
-    </section>
+    </main>
   );
 }
 

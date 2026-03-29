@@ -1,23 +1,22 @@
 "use client";
 
 import useHomeShows from "../hooks/useHomeShows";
-import { SHOW_LIST } from "@/shared/data/shows";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
 import { cn } from "@/shared/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function HomeRecommendSection1() {
+export default function HomeRecommendations() {
   const { data, isLoading } = useHomeShows("DAILY_BOOKING", "ALL", 1, 12);
   // console.log({ data });
 
-  if (isLoading) return <HomeRecommendSectionSkeleton />;
+  if (isLoading || !data?.shows?.length) return <HomeRecommendSectionSkeleton />;
 
-  const displayShows = data?.shows && data.shows.length > 0 ? data.shows : SHOW_LIST;
+  const displayShows = data.shows;
 
   return (
-    <section className="max-w-[1200] mx-auto space-y-8">
+    <div className="space-y-8">
       <h1 className="font-semibold text-2xl">이 뮤지컬 어떠세요?</h1>
       <BaseCarousel
         items={displayShows}
@@ -47,7 +46,7 @@ export default function HomeRecommendSection1() {
           </Link>
         )}
       />
-    </section>
+    </div>
   );
 }
 

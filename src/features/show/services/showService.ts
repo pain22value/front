@@ -37,11 +37,11 @@ async function getShowDetail(showId: string): Promise<ShowDetail> {
     const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.DETAIL(showId)}`);
     if (!res.ok) throw new Error(`Failed to fetch show detail: ${res.status}`);
     const result: ApiResponse<ShowDetail> = await res.json();
-    // console.log({ result });
-    return result.data || MOCK_SHOW_DETAIL;
+    if (!result.data) throw new Error("공연 상세 데이터가 없습니다.");
+    return result.data;
   } catch (error) {
-    console.log(error);
-    return MOCK_SHOW_DETAIL;
+    console.error("getShowDetail Error:", error);
+    throw error;
   }
 }
 

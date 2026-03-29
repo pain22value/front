@@ -16,7 +16,7 @@ export default function Footer() {
           </div>
 
           {/* 중앙 */}
-          <nav className="flex flex-wrap items-center justify-center gap-6 text-sm ">
+          <nav className="flex flex-wrap items-center justify-center text-sm">
             <Button asChild variant="link">
               <Link href="/terms/service-term" target="_blank">
                 서비스 소개

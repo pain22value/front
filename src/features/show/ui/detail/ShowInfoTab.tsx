@@ -7,9 +7,11 @@ import { useArtistLike } from "../../hooks/useArtistLike";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ShowInfoTab({ show }: { show: ShowDetail }) {
   const [openCast, setOpenCast] = useState(false);
+  const [openNotice, setOpenNotice] = useState(false);
   const visibleCount = 6;
   const visibleCastings = show.castings.slice(0, visibleCount);
   const hiddenCastings = show.castings.slice(visibleCount);
@@ -78,9 +80,38 @@ export default function ShowInfoTab({ show }: { show: ShowDetail }) {
       {/* 공지사항 */}
       <div>
         <h2 className="mb-4 text-lg font-semibold">공지사항</h2>
-        {show.noticeImgs.map((url, index) => (
-          <Image key={index} src={url} alt="Notice" width={1000} height={1000} />
-        ))}
+        <Collapsible open={openNotice} onOpenChange={setOpenNotice}>
+          <div className="space-y-0">
+            {show.noticeImgs.length > 0 && (
+              <Image src={show.noticeImgs[0]} alt="Notice" width={1000} height={1000} className="w-full" />
+            )}
+            {show.noticeImgs.length > 1 && (
+              <CollapsibleContent>
+                <div className="space-y-0">
+                  {show.noticeImgs.slice(1).map((url, index) => (
+                    <Image key={index} src={url} alt="Notice" width={1000} height={1000} className="w-full" />
+                  ))}
+                </div>
+              </CollapsibleContent>
+            )}
+          </div>
+          {show.noticeImgs.length > 1 && (
+            <div className="flex justify-center mt-6">
+              <CollapsibleTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors h-auto py-1"
+                >
+                  {openNotice ? "닫기" : "공지사항 더 보기"}
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform duration-200 ${openNotice ? "rotate-180" : ""}`}
+                  />
+                </Button>
+              </CollapsibleTrigger>
+            </div>
+          )}
+        </Collapsible>
       </div>
     </div>
   );
@@ -102,10 +133,12 @@ function ArtistAvatar({ artist }: { artist: Casting }) {
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="relative">
-        <Avatar className="size-full">
-          <AvatarImage src={artist.profileImageUrl} alt={artist.artistName} className="object-cover" />
-          <AvatarFallback>{artist.artistName.slice(0, 1)}</AvatarFallback>
-        </Avatar>
+        <Link href={`/artists/${artist.artistId}`} className="block transition">
+          <Avatar className="size-full">
+            <AvatarImage src={artist.profileImageUrl} alt={artist.artistName} className="object-cover" />
+            <AvatarFallback>{artist.artistName.slice(0, 1)}</AvatarFallback>
+          </Avatar>
+        </Link>
         <Button
           variant="secondary"
           size="icon"
@@ -120,10 +153,10 @@ function ArtistAvatar({ artist }: { artist: Casting }) {
           />
         </Button>
       </div>
-      <div className="text-center">
+      <Link href={`/artists/${artist.artistId}`} className="text-center hover:underline decoration-neutral-300">
         <p className="text-sm font-medium">{artist.artistName}</p>
         <p className="text-xs text-muted-foreground">{artist.roleName}</p>
-      </div>
+      </Link>
     </div>
   );
 }

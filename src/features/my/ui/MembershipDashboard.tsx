@@ -7,9 +7,9 @@ export default function MembershipDashboard() {
   const monthlyPayment: string = "15,000";
 
   return (
-    <div className="max-w-[1200] mx-auto p-8 font-sans text-gray-900">
+    <div className="font-sans text-gray-900">
       {/* 섹션 제목 */}
-      <header className="mb-8">
+      <header className="mt-10 mb-8">
         <h1 className="text-3xl font-bold">내 멤버십</h1>
       </header>
       {/* 요약 대시보드 카드 영역 */}

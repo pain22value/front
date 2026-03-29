@@ -6,9 +6,9 @@ import { ARTIST_LIST } from "@/shared/data/artists";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-export default function HomeArtistSection() {
+export default function HomeArtists() {
   return (
-    <section className="w-full max-w-[1200] mx-auto space-y-8 rounded-2xl border bg-background p-6">
+    <div className="space-y-8 rounded-2xl border bg-background p-6">
       {/* 아티스트와 라이브 채팅 안내 */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">아티스트와 라이브 채팅을 시작해보세요!</h2>
@@ -33,6 +33,6 @@ export default function HomeArtistSection() {
           </Link>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

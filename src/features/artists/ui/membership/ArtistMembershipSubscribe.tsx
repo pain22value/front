@@ -9,7 +9,7 @@ import ArtistProfile from "@/features/artists/ui/ArtistProfile";
 import { ARTIST_LIST } from "@/shared/data/artists";
 import MembershipCompleteStep from "./MembershipCompleteStep";
 
-export default function ArtistMembershipSubscribeSection({ artistId }: { artistId: string }) {
+export default function ArtistMembershipSubscribe({ artistId }: { artistId: string }) {
   const [currentStep, setCurrentStep] = useState(1);
 
   // URL 에서 전달받은 artistId를 숫자로 변환하여 찾아오는 구조 (fallback 포함)
@@ -19,7 +19,7 @@ export default function ArtistMembershipSubscribeSection({ artistId }: { artistI
   const handlePrevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   return (
-    <section className="max-w-[850] mx-auto">
+    <div>
       <MembershipStepper currentStep={currentStep} />
       <div className="mt-8">
         {currentStep === 1 && (
@@ -40,6 +40,6 @@ export default function ArtistMembershipSubscribeSection({ artistId }: { artistI
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 }

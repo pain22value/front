@@ -12,8 +12,10 @@ type AdmissionTokenPayload = {
 type TicketingState = {
   admissionToken: string | null;
   showId: string | number | null;
-  expiresAt: number | null; // 만료 시간 (ms)
+  expiresAt: number | null;
+  sessionToken: string | null; //  박영준 추가 0330
   setAdmissionToken: (token: string | null) => void;
+  setSessionToken: (token: string | null) => void; // 박영준 추가 0330
   clearTicketing: () => void;
   getIsValid: (currentShowId: string | number) => boolean;
 };
@@ -24,6 +26,8 @@ export const useTicketingStore = create<TicketingState>()(
       admissionToken: null,
       showId: null,
       expiresAt: null,
+      sessionToken: null, // 박영준 추가 0330
+
       setAdmissionToken: (token) => {
         if (!token) {
           set({ admissionToken: null, showId: null, expiresAt: null });
@@ -41,7 +45,18 @@ export const useTicketingStore = create<TicketingState>()(
           set({ admissionToken: null, showId: null, expiresAt: null });
         }
       },
-      clearTicketing: () => set({ admissionToken: null, showId: null, expiresAt: null }),
+
+      setSessionToken: (token) => { // 박영준 추가 0330
+        set({ sessionToken: token });
+      },
+
+      clearTicketing: () => set({
+        admissionToken: null,
+        showId: null,
+        expiresAt: null,
+        sessionToken: null, // 박영준 추가 0330
+      }),
+
       getIsValid: (currentShowId: string | number) => {
         const { admissionToken, showId, expiresAt } = get();
         if (!admissionToken || !showId || !expiresAt) return false;

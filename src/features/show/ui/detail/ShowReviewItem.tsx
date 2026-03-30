@@ -14,27 +14,27 @@ import { Button } from "@/components/ui/button";
 export default function ShowReviewItem({ review }: { review: Review }) {
   const user = useAuthStore((state) => state.user);
   // const isMyReview = user?.id === review.userId;
-  const isMyReview = null;
+  const isMyReview = false;
 
   return (
     <div className="rounded-lg border bg-background p-6">
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <h3 className="font-semibold">{review.title}</h3>
-          <p className="text-sm text-muted-foreground">{review.date}</p>
+          <p className="text-sm text-muted-foreground">{new Date(review.createdAt).toLocaleDateString()}</p>
         </div>
 
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">
-            {review.author} {review.round && `| ${review.round}`}
+            {review.userNickname}
           </span>
           {isMyReview && (
             <Badge className="rounded-full border-teal-500 text-teal-600 bg-teal-50 hover:bg-teal-50 px-4! py-2!">
               내 관람평
             </Badge>
           )}
-          <Button variant="outline" size="sm" className="rounded-full">
-            {review.sentiment}
+          <Button variant="outline" size="sm" className="rounded-full cursor-default">
+            {review.positive ? "좋았어요" : "아쉬워요"}
           </Button>
           {isMyReview && (
             <DropdownMenu>

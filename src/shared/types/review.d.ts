@@ -1,17 +1,45 @@
-// 리뷰
+type EmotionPoint = "IMMERSION" | "TENSION" | "ENJOYMENT" | "CATHARSIS" | "TOUCHING";
+type CharmPoint = "STAGE_PRODUCTION" | "STORY" | "ACTING" | "DANCE" | "NUMBER";
 
-type Review = {
-  id: number;
+interface Review {
+  reviewId: number;
+  userId: string;
+  userNickname: string;
   title: string;
   content: string;
-  date: string;
-  author: string;
-  round?: string;
-  sentiment: "좋았어요" | "아쉬워요" | string;
-};
+  createdAt: string;
+  positive: boolean;
+}
 
-type ReviewListResponse = {
-  reviews: Review[];
+interface ReviewListResponse {
+  content: Review[];
+  totalCount: number;
   totalPages: number;
-  currentPage: number;
-};
+  page: number;
+  size: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+
+interface ReviewPostRequest {
+  isPositive: boolean;
+  emotionPoints: EmotionPoint[];
+  charmPoints: CharmPoint[];
+  title: string;
+  content: string;
+}
+
+interface ReviewPointScore {
+  name: string;
+  label: string;
+  score: number;
+}
+
+interface ReviewMetaResponse {
+  weeklyRanking: number;
+  truveScore: number;
+  showId: number;
+  charmPointScores: ReviewPointScore[];
+  emotionPointScores: ReviewPointScore[];
+}
+

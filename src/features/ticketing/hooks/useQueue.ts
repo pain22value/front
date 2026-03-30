@@ -3,20 +3,29 @@ import { queueService } from "../services/queueService";
 
 export const useEnterQueue = () => {
   return useMutation({
-    mutationFn: (queueId: string | number) => queueService.enterQueue(queueId),
+    mutationFn: (showId: string | number) => queueService.enterQueue(showId),
   });
 };
 
-export const useQueueStatus = (queueId: string | number) => {
+export const useQueueStatus = (showId: string | number) => {
   return useQuery<QueueStatusResponse>({
-    queryKey: ["queueStatus", queueId],
-    queryFn: () => queueService.getQueueStatus(queueId),
+    queryKey: ["queueStatus", showId],
+    queryFn: () => queueService.getQueueStatus(showId),
     refetchInterval: (query) => {
-      // 대기 순서가 WAITING이 아니거나 rank가 0이 되면 폴링 중지
-      if (query.state.data && (query.state.data.status !== "WAITING" || query.state.data.rank <= 0)) {
+      // 에러가 발생하면 폴링 중지
+      if (query.state.error) return false;
+
+      // 데이터가 아직 없으면 기본 3초 간격
+      if (!query.state.data) return 3000;
+
+      // 대기 상태가 WAITING인 경우에만 폴링 계속 진행
+      if (query.state.data.status !== "WAITING") {
         return false;
       }
-      return query.state.data?.pollingMs || 3000;
+
+      // 서버에서 전달한 폴링 주기가 있으면 사용, 없으면 기본 3초
+      return query.state.data.pollingMs || 3000;
     },
   });
 };
+

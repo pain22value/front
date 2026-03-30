@@ -1,21 +1,23 @@
 "use client";
 
-import HomeHeroSection from "@/features/show/ui/home/HomeHeroSection";
-import HomeRecommendSection1 from "@/features/show/ui/home/HomeRecommendSection1";
-import HomeRecommendSection2 from "@/features/show/ui/home/HomeRecommendSection2";
-import HomeShowNowSection from "@/features/show/ui/home/HomeShowNowSection";
-import HomeActorsSection from "@/features/show/ui/home/HomeActorsSection";
+import HomeHeroSection from "@/features/home/ui/HomeHeroSection";
+import HomeRecommendations from "@/features/home/ui/HomeRecommendations";
+import HomePromotions from "@/features/home/ui/HomePromotions";
+import HomeRightNows from "@/features/home/ui/HomeRightNows";
+import HomeArtists from "@/features/home/ui/HomeArtists";
 
 export default function Home() {
   return (
-    <section>
+    <main className="home-page">
       <HomeHeroSection />
-      <section className="pl-20 my-30 space-y-20">
-        <HomeRecommendSection1 />
-        <HomeShowNowSection />
-        <HomeRecommendSection2 />
-        <HomeActorsSection />
+      <section>
+        <section className="space-y-20">
+          <HomeRecommendations />
+          <HomeRightNows />
+          <HomePromotions />
+          <HomeArtists />
+        </section>
       </section>
-    </section>
+    </main>
   );
 }

@@ -270,7 +270,7 @@ export default function CheckoutPage() {
                     name="birth"
                     className={errors.birth ? inputErrorCls : inputCls}
                     onChange={handleChange}
-                    placeholder="20XX-XX-XX"
+                    placeholder="19990129"
                   />
                 </FormRow>
                 <FormRow label="이메일" error={errors.email}>
@@ -286,7 +286,7 @@ export default function CheckoutPage() {
                     name="phone"
                     className={errors.phone ? inputErrorCls : inputCls}
                     onChange={handleChange}
-                    placeholder="010-1234-5678"
+                    placeholder="01012345678"
                     inputMode="tel"
                   />
                 </FormRow>

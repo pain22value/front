@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function HomeArtists() {
   return (
-    <div className="space-y-8 rounded-2xl border bg-background p-6">
+    <section className="space-y-8 rounded-2xl border bg-background p-6">
       {/* 아티스트와 라이브 채팅 안내 */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">아티스트와 라이브 채팅을 시작해보세요!</h2>
@@ -33,6 +33,6 @@ export default function HomeArtists() {
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

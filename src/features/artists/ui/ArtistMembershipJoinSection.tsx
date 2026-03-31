@@ -4,12 +4,13 @@ import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useArtistLike } from "../../show/hooks/useArtistLike";
-import { useArtistStore } from "@/features/artists/stores/useArtistStore";
+import { useFavoriteStore } from "@/features/artists/stores/useFavoriteStore";
 
 export default function ArtistMembershipJoinSection({ artist }: { artist: Artist }) {
   // 전역 상태에서 좋아요 여부 가져오기 (없으면 서버 상태 사용)
-  const isLiked = useArtistStore((state) => state.likes[artist.artistId] ?? artist.isLiked ?? false);
-  const { toggle, isPending } = useArtistLike(artist.artistId, isLiked);
+  // favorites 배열에서 현재 아티스트 존재 여부 확인 (Array 구조 대응)
+  const isLiked = useFavoriteStore((state) => state.favorites.some((a) => a.artistId === artist.artistId));
+  const { toggle, isPending } = useArtistLike(artist.artistId, isLiked, artist.artistName, artist.profileImageUrl);
 
   const handleLike = () => {
     toggle();

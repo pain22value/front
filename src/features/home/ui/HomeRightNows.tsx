@@ -17,7 +17,7 @@ export default function HomeRightNows() {
   const displayShows = data?.shows && data.shows.length > 0 ? data.shows : [];
 
   return (
-    <div className="w-full space-y-8">
+    <section className="w-full space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="font-semibold text-2xl">지금 예매 가능</h1>
         <Link href="/shows/now" className="ml-auto text-sm font-medium text-muted-foreground hover:text-foreground">
@@ -85,8 +85,9 @@ export default function HomeRightNows() {
                     <Image
                       src={show.posterUrl}
                       alt={show.showTitle}
-                      fill
-                      className="object-cover transition-transform duration-300 hover:scale-105"
+                      width={300}
+                      height={400}
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     />
                   </div>
                   <div className="space-y-1">
@@ -100,13 +101,13 @@ export default function HomeRightNows() {
           )}
         />
       )}
-    </div>
+    </section>
   );
 }
 
 function CarouselSkeleton() {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+    <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
       {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} className="space-y-3">
           <Skeleton className="aspect-3/4 w-full rounded-xl" />
@@ -117,6 +118,6 @@ function CarouselSkeleton() {
           </div>
         </div>
       ))}
-    </div>
+    </section>
   );
 }

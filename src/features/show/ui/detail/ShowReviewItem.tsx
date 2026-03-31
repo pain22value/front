@@ -25,9 +25,7 @@ export default function ShowReviewItem({ review }: { review: Review }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">
-            {review.userNickname}
-          </span>
+          <span className="text-sm text-muted-foreground">{review.userNickname}</span>
           {isMyReview && (
             <Badge className="rounded-full border-teal-500 text-teal-600 bg-teal-50 hover:bg-teal-50 px-4! py-2!">
               내 관람평

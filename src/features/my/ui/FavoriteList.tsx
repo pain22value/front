@@ -1,0 +1,74 @@
+"use client";
+
+import { useMemo } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { useFavoriteStore } from "@/features/artists/stores/useFavoriteStore";
+import { useArtistLike } from "@/features/show/hooks/useArtistLike";
+import { Heart } from "lucide-react";
+
+// 즐겨찾기 아이템 컴포넌트 (각 아티스트별 좋아요 훅 사용)
+function FavoriteArtistItem({
+  artistId,
+  artistName,
+  profileImageUrl,
+}: {
+  artistId: number;
+  artistName: string;
+  profileImageUrl?: string;
+}) {
+  // favorites 배열에서 현재 아티스트 존재 여부 확인 (있으면 = 좋아요)
+  const isLiked = useFavoriteStore((state) => state.favorites.some((a) => a.artistId === artistId));
+  const { toggle, isPending } = useArtistLike(artistId, isLiked, artistName, profileImageUrl);
+
+  return (
+    <div className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
+      <div className="flex items-center space-x-4">
+        <Avatar className="h-12 w-12 border">
+          <AvatarImage src={profileImageUrl} alt={artistName} className="object-cover" />
+          <AvatarFallback>{artistName[0]}</AvatarFallback>
+        </Avatar>
+        <span className="text-lg font-medium text-slate-900">{artistName}</span>
+      </div>
+
+      <div className="flex items-center space-x-3">
+        <Button variant="ghost" size="icon" className="hover:bg-transparent" onClick={toggle} disabled={isPending}>
+          <Heart
+            className={`h-6 w-6 transition-colors ${isLiked ? "fill-pink-500 text-pink-500" : "fill-slate-300 text-slate-300"}`}
+          />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export default function FavoriteList() {
+  // favorites 배열 직접 구독 (배열 참조가 바뀔때만 리렌더)
+  const favorites = useFavoriteStore((state) => state.favorites);
+
+  return (
+    <div className="w-full mt-10">
+      <h2 className="text-2xl font-bold p-4">즐겨찾기</h2>
+
+      {favorites.length === 0 ? (
+        // 좋아요한 아티스트가 없을 때 빈 상태 표시
+        <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+          <Heart className="h-12 w-12 mb-4 text-slate-200" />
+          <p className="text-base font-medium">좋아요한 아티스트가 없어요</p>
+          <p className="text-sm mt-1">아티스트 페이지에서 하트를 눌러보세요</p>
+        </div>
+      ) : (
+        <div className="divide-y divide-gray-100 mt-8">
+          {favorites.map((artist) => (
+            <FavoriteArtistItem
+              key={artist.artistId}
+              artistId={artist.artistId}
+              artistName={artist.artistName}
+              profileImageUrl={artist.profileImageUrl}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

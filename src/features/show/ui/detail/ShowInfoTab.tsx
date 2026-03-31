@@ -1,6 +1,7 @@
 "use client";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useFavoriteStore } from "@/features/artists/stores/useFavoriteStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clock, Heart, Sparkles, ChevronDown } from "lucide-react";
 import { useArtistLike } from "../../hooks/useArtistLike";
@@ -117,12 +118,10 @@ export default function ShowInfoTab({ show }: { show: ShowDetail }) {
   );
 }
 
-import { useArtistStore } from "@/features/artists/stores/useArtistStore";
-
 function ArtistAvatar({ artist }: { artist: Casting }) {
-  // 전역 상태에서 좋아요 여부 가져오기 (없으면 서버 상태 사용)
-  const isLiked = useArtistStore((state) => state.likes[artist.artistId] ?? artist.isLiked ?? false);
-  const { toggle, isPending } = useArtistLike(artist.artistId, isLiked);
+  // favorites 배열에서 현재 아티스트 존재 여부 확인 (Array 구조 대응)
+  const isLiked = useFavoriteStore((state) => state.favorites.some((a) => a.artistId === artist.artistId));
+  const { toggle, isPending } = useArtistLike(artist.artistId, isLiked, artist.artistName, artist.profileImageUrl);
 
   // 좋아요 토글 핸들러 (낙관적 업데이트는 생략하거나 global store에서 처리)
   const handleLike = (e: React.MouseEvent) => {

@@ -8,7 +8,33 @@ import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Link from "next/link";
-import { ARTIST_LIST } from "@/shared/data/artists";
+
+const RECOMMEND_ARTIST_LIST: Artist[] = [
+  {
+    artistId: 1,
+    artistName: "이재환",
+    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/leejaehwan.png",
+    isLiked: false,
+  },
+  {
+    artistId: 5,
+    artistName: "신재범",
+    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/shinjaebeom.png",
+    isLiked: false,
+  },
+  {
+    artistId: 9,
+    artistName: "김호영",
+    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/kimhoyoung.png",
+    isLiked: false,
+  },
+  {
+    artistId: 2,
+    artistName: "서경수",
+    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/seokyungsu.png",
+    isLiked: false,
+  },
+];
 
 export default function Sidebar() {
   const { isExpanded, setExpanded } = useSidebarStore();
@@ -139,16 +165,16 @@ export default function Sidebar() {
         <Separator className="bg-muted-foreground" />
       </div>
 
-      {/* 배우 */}
+      {/* 추천 아티스트 */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
         <div className="flex flex-col gap-4 w-full">
-          {ARTIST_LIST.slice(0, 4).map((artist) => (
+          {RECOMMEND_ARTIST_LIST.map((artist) => (
             <Link
               key={artist.artistId}
               href={`/artists/${artist.artistId}`}
               className="flex items-center gap-4 w-full cursor-pointer group no-underline text-foreground"
             >
-              <Avatar className="size-9 rounded-lg shrink-0 transition-transform group-hover:scale-105">
+              <Avatar className="size-9 rounded-lg shrink-0 transition-transform">
                 <AvatarImage src={artist.profileImageUrl} className="object-cover" />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>

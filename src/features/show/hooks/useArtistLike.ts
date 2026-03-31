@@ -1,22 +1,30 @@
 import { artistService } from "@/features/artists/services/artistService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useArtistStore } from "@/features/artists/stores/useArtistStore";
+import { useFavoriteStore } from "@/features/artists/stores/useFavoriteStore";
 
 /**
  * 아티스트 좋아요 토글 훅
  * @param artistId 아티스트 ID
- * @param isLiked 현재 좋아요 여부 (UI의 즉각적인 반영을 위해 컴포넌트에서 전달)
+ * @param isLiked 현재 좋아요 여부
+ * @param artistName 아티스트 이름 (store 저장용)
+ * @param profileImageUrl 프로필 이미지 URL (store 저장용)
  */
-export function useArtistLike(artistId: number, isLiked: boolean) {
+export function useArtistLike(
+  artistId: number,
+  isLiked: boolean,
+  artistName?: string,
+  profileImageUrl?: string
+) {
   const queryClient = useQueryClient();
-  const setArtistLike = useArtistStore((state) => state.setArtistLike);
+  const addFavorite = useFavoriteStore((state) => state.addFavorite);
+  const removeFavorite = useFavoriteStore((state) => state.removeFavorite);
 
   // 좋아요 등록
   const likeMutation = useMutation({
     mutationFn: () => artistService.likeArtist(artistId),
-    onSuccess: () => {
-      // 전역 상태 업데이트: 좋아요(true)
-      setArtistLike(artistId, true);
+    onSettled: () => {
+      // API 성공/실패 무관하게 로컬 store 업데이트 (백엔드 없는 개발 환경 대응)
+      addFavorite({ artistId, artistName: artistName ?? "", profileImageUrl });
       queryClient.invalidateQueries({ queryKey: ["artist", artistId] });
       queryClient.invalidateQueries({ queryKey: ["show"] });
     },
@@ -25,9 +33,9 @@ export function useArtistLike(artistId: number, isLiked: boolean) {
   // 좋아요 취소
   const unlikeMutation = useMutation({
     mutationFn: () => artistService.unlikeArtist(artistId),
-    onSuccess: () => {
-      // 전역 상태 업데이트: 취소(false)
-      setArtistLike(artistId, false);
+    onSettled: () => {
+      // API 성공/실패 무관하게 로컬 store 업데이트 (백엔드 없는 개발 환경 대응)
+      removeFavorite(artistId);
       queryClient.invalidateQueries({ queryKey: ["artist", artistId] });
       queryClient.invalidateQueries({ queryKey: ["show"] });
     },

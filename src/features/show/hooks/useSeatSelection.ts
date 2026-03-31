@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { seatService } from "../services/seatService";
 
 const MAX_SEATS = 4;
-const HEARTBEAT_INTERVAL = 3 * 60 * 1000; // 3분마다 heartbeat (7분 만료 전에 연장)
+const HEARTBEAT_INTERVAL = 3 * 60 * 1000; // 3분마다 heartbeat
 
 export const useSeatSelection = (showScheduleId: number) => {
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);

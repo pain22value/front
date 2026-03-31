@@ -11,7 +11,7 @@ export default function ArtistCard({ artist }: { artist: Artist }) {
         <CardContent className="flex flex-col gap-6 p-0">
           {/* 이미지 */}
           <div className="relative aspect-3/4 shrink-0 overflow-hidden rounded-2xl transition-transform hover:scale-[1.02]">
-            <Image src={artist.profileImageUrl} alt={artist.artistName} fill className="object-cover" sizes="220px" />
+            <Image src={artist.profileImageUrl} alt={artist.artistName} width={300} height={400} className="w-full h-full object-cover" />
           </div>
 
           {/* 텍스트 영역 */}

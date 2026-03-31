@@ -11,7 +11,6 @@ import ShowReviewMeta from "./ShowReviewMeta";
 import ShowReviewItem from "./ShowReviewItem";
 import ShowReviewPagination from "./ShowReviewPagination";
 import ShowReviewFilter from "./ShowReviewFilter";
-import { REVIEW_LIST } from "@/shared/data/reviews";
 
 export default function ShowReviewTab() {
   const { showId } = useParams();
@@ -22,9 +21,8 @@ export default function ShowReviewTab() {
   const { data, status } = useReviews(Number(showId), page);
 
   const currentReviews = data?.content || [];
-  const baseReviews = currentReviews.length > 0 ? currentReviews : REVIEW_LIST;
 
-  const displayReviews = baseReviews.filter((review) => {
+  const displayReviews = currentReviews.filter((review) => {
     if (sentimentFilter === "all") return true;
     if (sentimentFilter === "good") return review.positive === true;
     if (sentimentFilter === "bad") return review.positive === false;

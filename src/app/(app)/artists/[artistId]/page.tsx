@@ -1,4 +1,6 @@
-import ArtistDetail from "@/features/artists/ui/ArtistDetail";
+import ArtistDetailTabs from "@/features/artists/ui/ArtistDetailTabs";
+import ArtistHero from "@/features/artists/ui/ArtistHero";
+import ArtistSide from "@/features/artists/ui/ArtistSide";
 
 type Params = Promise<{ artistId: string }>;
 
@@ -7,7 +9,15 @@ export default async function ArtistDetailPage(props: { params: Params }) {
 
   return (
     <main className="artist-detail-page">
-      <ArtistDetail artistId={params.artistId} />
+      <ArtistHero artistId={params.artistId} />
+      <section>
+        <section className="grid grid-cols-[minmax(550px,1fr)_400px] gap-6 py-10">
+          <ArtistDetailTabs artistId={params.artistId} />
+          <div className="self-start sticky/ top-[calc(var(--header-height)+2.5rem)]">
+            <ArtistSide />
+          </div>
+        </section>
+      </section>
     </main>
   );
 }

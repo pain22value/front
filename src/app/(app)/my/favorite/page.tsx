@@ -1,10 +1,10 @@
-import ArtistList from "@/features/my/ui/ActorList";
+import FavoriteList from "@/features/my/ui/FavoriteList";
 
 export default function FavoritePage() {
   return (
     <main className="favorite-page">
       <section>
-        <ArtistList />
+        <FavoriteList />
       </section>
     </main>
   );

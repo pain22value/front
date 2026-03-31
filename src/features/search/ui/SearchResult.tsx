@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import ArtistCard from "@/features/artists/ui/ArtistCard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -30,8 +31,9 @@ export default function SearchResult({ query }: { query?: string }) {
           <Image
             src="https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427942/Frame_2085665719_r3hpi9.png"
             alt="데스노트 더 뮤지컬"
-            fill
-            className="object-contain object-bottom"
+            width={1000}
+            height={1000}
+            className="w-full h-full object-contain object-bottom"
           />
         </div>
       </section>
@@ -57,14 +59,22 @@ export default function SearchResult({ query }: { query?: string }) {
         <Separator className="mt-4 my-6" />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {showsList.map((show: SearchShow) => (
-            <div key={show.showId}>
+            <Link key={show.showId} href={`/shows/${show.showId}`} className="block group">
               <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden mb-4 bg-muted">
-                {show.posterUrl && <Image src={show.posterUrl} alt={show.title} fill className="object-cover" />}
+                {show.posterUrl && (
+                  <Image
+                    src={show.posterUrl}
+                    alt={show.title}
+                    width={300}
+                    height={400}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                )}
               </div>
-              <p className="font-semibold">{show.title}</p>
+              <p className="font-semibold group-hover:underline">{show.title}</p>
               <p className="text-sm text-muted-foreground">{show.venueName}</p>
               <p className="text-sm text-muted-foreground">{show.date}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

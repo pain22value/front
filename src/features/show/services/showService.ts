@@ -1,6 +1,5 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
-import { MOCK_SHOW_DETAIL } from "@/shared/data/shows";
 
 // 공연 목록 조회
 const getShows = async (params?: ShowsListParams): Promise<ShowsData> => {

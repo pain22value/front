@@ -9,7 +9,7 @@ import useCarouselPagination from "@/shared/hooks/useCarouselPagination";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function HomeHeroSection() {
+export default function HomeHero() {
   const [api, setApi] = useState<CarouselApi>();
   const { data: banners, isLoading } = useHomeBanners();
   const plugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true }));
@@ -32,7 +32,13 @@ export default function HomeHeroSection() {
           {displayBanners?.map((banner) => (
             <CarouselItem key={banner.bannerId}>
               <div className="relative w-full aspect-21/9">
-                <Image src={banner.posterUrl} alt={banner.showTitle} fill className="object-contain object-bottom" />
+                <Image
+                  src={banner.posterUrl}
+                  alt={banner.showTitle}
+                  width={2100}
+                  height={900}
+                  className="w-full h-full object-contain object-bottom"
+                />
               </div>
             </CarouselItem>
           ))}

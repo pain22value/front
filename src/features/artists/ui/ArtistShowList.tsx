@@ -4,7 +4,7 @@ import ShowCardList from "@/features/show/ui/ShowCardList";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-export default function ArtistShowListSection({
+export default function ArtistShowList({
   artistId,
   nowShows,
   isNowLoading,

@@ -7,8 +7,10 @@ import Modal from "@/components/ui/modal";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { Seat } from "@/shared/types/seat";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 export default function CheckoutPage() {
+  const { user } = useAuthStore();
   // 데모용 가격 계산
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
 
@@ -23,8 +25,8 @@ export default function CheckoutPage() {
   const total = ticketTotal + bookingFee;
   const orderName = `${selectedSeats[0]?.grade ?? ""}석 ${ticketQty}매`;
 
-  const clientKey = "test_ck_jExPeJWYVQxDje9xG7Mj349R5gvN";
-  const customerKey = "EkTWyj8AhmS5rtOMSB4Ck";
+  const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
+  const customerKey = user?.email ?? crypto.randomUUID();
 
 
   const [paying, setPaying] = useState(false);

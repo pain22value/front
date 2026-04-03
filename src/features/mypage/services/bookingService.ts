@@ -241,4 +241,53 @@ const getBookingOrder = async (reservationNumber: string): Promise<BookingOrder>
   };
 };
 
-export const bookingService = { getBookings, getBookingDetail, getBookingOrder };
+// 취소 조회 응답 타입
+export interface CancelInfoResponse {
+  refundInfo: {
+    method: string;
+    paidAmount: number;
+    cancelFee: number;
+    refundAmount: number;
+  };
+  tickets: {
+    ticketId: number;
+    title: string;
+    seatDetail: string;
+  }[];
+  status: string;
+}
+
+// 취소 수수료 조회
+const getCancelInfo = async (
+  reservationNumber: string,
+  ticketIds?: number[]
+): Promise<CancelInfoResponse> => {
+  const params = new URLSearchParams();
+  if (ticketIds) {
+    ticketIds.forEach((id) => params.append("ticketIds", String(id)));
+  }
+  const { data } = await api.get<ApiResponse<CancelInfoResponse>>(
+    `/bookings/${reservationNumber}/cancel${params.toString() ? `?${params.toString()}` : ""}`
+  );
+  return data.data;
+};
+
+// 취소 요청
+const cancelBooking = async (
+  reservationNumber: string,
+  body: { cancelReason: string; ticketIds: number[] }
+): Promise<{ canceledTicketIds: number[] }> => {
+  const { data } = await api.post<ApiResponse<{ canceledTicketIds: number[] }>>(
+    `/bookings/${reservationNumber}/cancel`,
+    body
+  );
+  return data.data;
+};
+
+export const bookingService = {
+  getBookings,
+  getBookingDetail,
+  getBookingOrder,
+  getCancelInfo,
+  cancelBooking,
+};

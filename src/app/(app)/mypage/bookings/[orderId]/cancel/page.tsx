@@ -2,8 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { paymentService } from "@/features/payments/services/paymentService";
-import { bookingService, BookingOrder } from "@/features/mypage/services/bookingService";
+import { bookingService, CancelInfoResponse } from "@/features/mypage/services/bookingService";
 import { useRouter, useParams } from "next/navigation";
 
 const CANCEL_REASONS = [
@@ -12,8 +11,6 @@ const CANCEL_REASONS = [
   "캐스트 변경",
   "단순 변심",
 ];
-
-const CANCEL_FEE_RATE = 0.2;
 
 const CANCEL_POLICY = {
   title: "취소 수수료 기준",
@@ -45,7 +42,7 @@ export default function BookingCancelPage() {
   const params = useParams();
   const orderId = params.orderId as string;
 
-  const [booking, setBooking] = useState<BookingOrder | null>(null);
+  const [cancelInfo, setCancelInfo] = useState<CancelInfoResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
   const [cancelReason, setCancelReason] = useState("");
@@ -53,19 +50,39 @@ export default function BookingCancelPage() {
   const [policyExpanded, setPolicyExpanded] = useState(false);
   const [isCanceling, setIsCanceling] = useState(false);
 
+  // 전체 취소 수수료 조회
   useEffect(() => {
-    const fetchBooking = async () => {
+    const fetchCancelInfo = async () => {
       try {
-        const data = await bookingService.getBookingOrder(orderId);
-        setBooking(data);
+        const data = await bookingService.getCancelInfo(orderId);
+        setCancelInfo(data);
       } catch (e) {
         console.error(e);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchBooking();
+    fetchCancelInfo();
   }, [orderId]);
+
+  // 선택한 티켓이 바뀔 때마다 취소 수수료 재조회
+  useEffect(() => {
+    if (!cancelInfo) return;
+    if (checkedItems.size === 0) return;
+
+    const fetchCancelFee = async () => {
+      try {
+        const selectedTicketIds = cancelInfo.tickets
+          .filter((_, idx) => checkedItems.has(idx))
+          .map((t) => t.ticketId);
+        const data = await bookingService.getCancelInfo(orderId, selectedTicketIds);
+        setCancelInfo(data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchCancelFee();
+  }, [checkedItems, orderId]);
 
   if (isLoading) return (
     <div className="flex items-center justify-center py-20">
@@ -73,7 +90,7 @@ export default function BookingCancelPage() {
     </div>
   );
 
-  if (!booking) return (
+  if (!cancelInfo) return (
     <div className="flex-1 py-10 bg-white min-h-screen pl-20">
       <p className="text-[16px] text-[#68677E]">예매 정보를 찾을 수 없습니다.</p>
     </div>
@@ -84,23 +101,26 @@ export default function BookingCancelPage() {
     setIsCanceling(true);
 
     try {
-      const result = await paymentService.cancel(orderId, {
+      const selectedTicketIds = cancelInfo.tickets
+        .filter((_, idx) => checkedItems.has(idx))
+        .map((t) => t.ticketId);
+
+      await bookingService.cancelBooking(orderId, {
         cancelReason,
-        cancelAmount: selectedAmount,
+        ticketIds: selectedTicketIds,
       });
 
-      // ← 여기가 추가된 부분
       sessionStorage.setItem("cancelResult", JSON.stringify({
-        showTitle: booking.show.title,
-        cancelDatetime: result.canceledAt,
-        cancelSeats: booking.items
+        showTitle: cancelInfo.tickets[0]?.title ?? "",
+        cancelDatetime: new Date().toLocaleString("ko-KR"),
+        cancelSeats: cancelInfo.tickets
           .filter((_, idx) => checkedItems.has(idx))
-          .map((item) => item.name),
-        refundStatus: result.cancelStatus,
-        paymentAmount: selectedAmount,
-        cancelFee: result.refundFee,
-        refundAmount: result.refundAmount,
-        paymentMethod: "카드 환불",
+          .map((t) => t.seatDetail),
+        refundStatus: cancelInfo.status,
+        paymentAmount: cancelInfo.refundInfo.paidAmount,
+        cancelFee: cancelInfo.refundInfo.cancelFee,
+        refundAmount: cancelInfo.refundInfo.refundAmount,
+        paymentMethod: cancelInfo.refundInfo.method,
       }));
 
       router.push(`/mypage/bookings/${orderId}/cancel/success`);
@@ -111,13 +131,13 @@ export default function BookingCancelPage() {
     }
   };
 
-  const allChecked = checkedItems.size === booking.items.length;
+  const allChecked = checkedItems.size === cancelInfo.tickets.length;
 
   const toggleAll = () => {
     if (allChecked) {
       setCheckedItems(new Set());
     } else {
-      setCheckedItems(new Set(booking.items.map((_, i) => i)));
+      setCheckedItems(new Set(cancelInfo.tickets.map((_, i) => i)));
     }
   };
 
@@ -130,13 +150,6 @@ export default function BookingCancelPage() {
     }
     setCheckedItems(next);
   };
-
-  const selectedAmount = booking.items
-    .filter((_, idx) => checkedItems.has(idx))
-    .reduce((sum, item) => sum + item.amount, 0);
-
-  const cancelFee = Math.floor(selectedAmount * CANCEL_FEE_RATE);
-  const refundAmount = selectedAmount - cancelFee;
 
   return (
     <div className="flex-1 py-10 bg-white min-h-screen pl-20">
@@ -156,7 +169,7 @@ export default function BookingCancelPage() {
           <p className="text-[16px] text-[#23222A] font-medium mb-1">지금 예약 취소 시</p>
           <p className="text-[16px] text-[#23222A] font-medium">
             취소 수수료로{" "}
-            <span className="text-[16px] font-bold text-[#23222A]">{formatAmount(cancelFee)}</span>이 발생합니다.
+            <span className="text-[16px] font-bold text-[#23222A]">{formatAmount(cancelInfo.refundInfo.cancelFee)}</span>이 발생합니다.
           </p>
         </div>
 
@@ -182,13 +195,13 @@ export default function BookingCancelPage() {
           <span className="text-[14px] font-semibold text-[#68677E]">전체 선택</span>
         </label>
 
-        {/* 티켓 항목 - 좌석별로 표시 */}
+        {/* 티켓 항목 */}
         <div className="flex flex-col gap-3 mb-4">
-          {booking.items.map((item, idx) => {
+          {cancelInfo.tickets.map((ticket, idx) => {
             const isChecked = checkedItems.has(idx);
             return (
               <label
-                key={idx}
+                key={ticket.ticketId}
                 className={`flex items-center gap-3 rounded-sm border px-4 py-4 cursor-pointer transition-colors ${
                   isChecked
                     ? "border-[#F11322] bg-[#FFE6E8]"
@@ -202,39 +215,35 @@ export default function BookingCancelPage() {
                   className="w-4 h-4 accent-[#F11322]"
                 />
                 <div>
-                  <p className="text-[14px] font-bold text-[#23222A]">
-                    {booking.show.title} {booking.show.showDate}
-                  </p>
-                  <p className="text-[13px] text-[#68677E]">
-                    {item.grade}석 · {item.name} · {formatAmount(item.amount)}
-                  </p>
+                  <p className="text-[14px] font-bold text-[#23222A]">{ticket.title}</p>
+                  <p className="text-[13px] text-[#68677E]">{ticket.seatDetail}</p>
                 </div>
               </label>
             );
           })}
         </div>
 
-        {/* 금액 정보 */}
+        {/* 금액 정보 - API에서 받아온 값 사용 */}
         <div className="flex flex-col gap-2 mb-2">
           <div className="flex justify-between text-[14px] font-medium text-[#68677E]">
             <span>결제 금액</span>
-            <span>{formatAmount(selectedAmount)}</span>
+            <span>{formatAmount(cancelInfo.refundInfo.paidAmount)}</span>
           </div>
           <div className="flex justify-between text-[14px] font-medium text-[#68677E]">
             <span>취소 수수료</span>
-            <span>{formatAmount(cancelFee)}</span>
+            <span>{formatAmount(cancelInfo.refundInfo.cancelFee)}</span>
           </div>
           <hr className="border-[#F1F1F4] my-1" />
           <div className="flex justify-between text-[14px] font-medium text-[#68677E]">
             <span>환불 방법</span>
-            <span>카드 환불</span>
+            <span>{cancelInfo.refundInfo.method}</span>
           </div>
         </div>
 
         <div className="flex justify-between items-center mb-8">
           <span className="text-[16px] font-bold text-[#23222A]">최종 환불 금액</span>
           <span className="text-[16px] font-bold text-[#23222A]">
-            {formatAmount(refundAmount)}
+            {formatAmount(cancelInfo.refundInfo.refundAmount)}
           </span>
         </div>
 

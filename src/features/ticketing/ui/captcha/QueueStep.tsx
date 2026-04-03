@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { useEffect, useRef, useLayoutEffect } from "react";
 import { Users, Bell, CheckLine, UsersRound } from "lucide-react";
 import { useQueueStatus } from "../../hooks/useQueue";
-import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 import { useRouter } from "next/navigation";
 import { useTicketingStore } from "../../stores/useTicketingStore";
 import gsap from "gsap";
@@ -25,23 +24,17 @@ export default function QueueStep({
   const pollingStatus = queueData?.status ?? "WAITING";
   const pollingMs = queueData?.pollingMs ?? 3000;
 
-  const { setPageStage } = useTelemetryStore();
   const { setAdmissionToken } = useTicketingStore();
-
-  useEffect(() => {
-    setPageStage("queue");
-  }, [setPageStage]);
 
   useEffect(() => {
     if (!queueData) return;
 
     if (pollingStatus !== "WAITING" && queueData.admissionToken) {
       setAdmissionToken(queueData.admissionToken);
-      setPageStage("seatmap");
       onOpenChange(false);
       router.push(`/shows/${showId}/seat`); // 좌석 선택 화면으로 이동
     }
-  }, [queueData, pollingStatus, onOpenChange, setPageStage, setAdmissionToken, showId, router]);
+  }, [queueData, pollingStatus, onOpenChange, setAdmissionToken, showId, router]);
 
   useLayoutEffect(() => {
     if (!progressRef.current) return;

@@ -22,7 +22,6 @@ export default function ArtistHero({ artistId }: { artistId: string }) {
             alt={artist.artistName}
             width={500}
             height={500}
-            quality={100}
             className="w-full h-full object-contain object-bottom"
             priority
           />

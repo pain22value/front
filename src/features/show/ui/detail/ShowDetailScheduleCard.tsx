@@ -9,7 +9,6 @@ import { isSameDay } from "date-fns";
 import { useCastingSchedules } from "../../hooks/useCastingSchedules";
 import ShowTicketOpenNoticeModal from "./ShowTicketOpenNoticeModal";
 // import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 import CaptchaModal from "@/features/ticketing/ui/captcha/CaptchaModal";
 import ShowDetailScheduleList from "./ShowDetailScheduleList";
 import ShowNoticeModal from "./ShowNoticeModal";
@@ -57,7 +56,6 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
   } else if (round !== "") {
     setRound("");
   }
-  const { startTracking, setPageStage } = useTelemetryStore();
   // const user = useAuthStore((state) => state.user);
 
   const handleTicketing = () => {
@@ -72,9 +70,6 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
     if (admissionToken) {
       clearTicketing();
     }
-
-    startTracking();
-    setPageStage("captcha");
 
     setIsCaptchaModalOpen(true);
   };

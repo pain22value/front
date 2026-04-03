@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useFavoriteStore } from "@/features/artists/stores/useFavoriteStore";

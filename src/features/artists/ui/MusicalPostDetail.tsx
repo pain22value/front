@@ -4,16 +4,26 @@ import { ArrowLeft, Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useArtistPostDetail } from "../hooks/useArtistPostQuery";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MusicalPostDetail({ postId, onBack }: { postId: number; onBack: () => void }) {
+  const { data: post, isLoading } = useArtistPostDetail(postId);
+
+  if (isLoading) {
+    return <MusicalPostDetailSkeleton onBack={onBack} />;
+  }
+
+  if (!post) return null;
+
   return (
-    <div>
+    <div className="animate-in fade-in duration-500">
       {/* 뒤로가기 버튼 */}
       <button
         onClick={onBack}
         className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 transition-colors mb-6"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="size-4" />
         목록으로
       </button>
 
@@ -22,12 +32,12 @@ export default function MusicalPostDetail({ postId, onBack }: { postId: number; 
         <CardHeader className="flex flex-row items-center justify-between p-4 space-y-0">
           <div className="flex items-center space-x-3">
             <Avatar className="h-10 w-10 border border-zinc-100">
-              <AvatarImage src="/api/placeholder/40/40" alt="고은성" />
-              <AvatarFallback>고</AvatarFallback>
+              <AvatarImage src="https://placehold.co/40x40" alt={post.author} />
+              <AvatarFallback>{post.author[0]}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">고은성</span>
-              <span className="text-xs text-zinc-500">03. 24. 13:32</span>
+              <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{post.author}</span>
+              <span className="text-xs text-zinc-500">{post.date}</span>
             </div>
           </div>
           <Button variant="ghost" size="icon" className="text-zinc-500">
@@ -37,26 +47,17 @@ export default function MusicalPostDetail({ postId, onBack }: { postId: number; 
 
         {/* Content Text */}
         <div className="px-4 pb-3">
-          <p className="text-[15px] leading-relaxed text-zinc-800 dark:text-zinc-200">
-            데스노트 무대 인사: 3/10(화) 공연 종료 후
-          </p>
+          <p className="text-[15px] leading-relaxed text-zinc-800 dark:text-zinc-200">{post.content}</p>
         </div>
 
         {/* Image Grid (4-Panel Style) */}
         <CardContent className="p-0">
-          <div className="grid/ grid-cols-2 gap-[2px] bg-zinc-100 overflow-hidden">
-            <div className="aspect-square overflow-hidden bg-zinc-200">
-              <img src="/api/placeholder/400/400" alt="데스노트 프로필" className="w-full h-full object-cover" />
-            </div>
-            <div className="aspect-square overflow-hidden bg-zinc-200">
-              <img src="/api/placeholder/400/400" alt="무대 위 고은성" className="w-full h-full object-cover" />
-            </div>
-            <div className="aspect-square overflow-hidden bg-zinc-200">
-              <img src="/api/placeholder/400/400" alt="데스노트 장면" className="w-full h-full object-cover" />
-            </div>
-            <div className="aspect-square overflow-hidden bg-zinc-200 relative">
-              <img src="/api/placeholder/400/400" alt="대기실 셀카" className="w-full h-full object-cover" />
-            </div>
+          <div className="grid grid-cols-2 gap-[2px] bg-zinc-100 overflow-hidden">
+            {post.images.map((src, idx) => (
+              <div key={idx} className="aspect-square overflow-hidden bg-zinc-200">
+                <img src={src.replace("/api/placeholder", "https://placehold.co")} alt={`이미지 ${idx + 1}`} className="w-full h-full object-cover" />
+              </div>
+            ))}
           </div>
         </CardContent>
 
@@ -65,11 +66,11 @@ export default function MusicalPostDetail({ postId, onBack }: { postId: number; 
           <div className="flex items-center space-x-4 w-full">
             <div className="flex items-center space-x-1 cursor-pointer text-zinc-600 hover:text-red-500 transition-colors">
               <Heart className="h-5 w-5" />
-              <span className="text-sm font-medium">1,000</span>
+              <span className="text-sm font-medium">{post.likes.toLocaleString()}</span>
             </div>
             <div className="flex items-center space-x-1 cursor-pointer text-zinc-600 hover:text-blue-500 transition-colors">
               <MessageCircle className="h-5 w-5" />
-              <span className="text-sm font-medium">500</span>
+              <span className="text-sm font-medium">{post.comments.toLocaleString()}</span>
             </div>
             <div className="ml-auto">
               <Share2 className="h-5 w-5 text-zinc-600 cursor-pointer hover:text-zinc-900" />
@@ -80,3 +81,14 @@ export default function MusicalPostDetail({ postId, onBack }: { postId: number; 
     </div>
   );
 }
+
+const MusicalPostDetailSkeleton = ({ onBack }: { onBack: () => void }) => (
+  <div>
+    <button onClick={onBack} className="flex items-center gap-2 text-sm text-zinc-500 mb-6">
+      <ArrowLeft className="size-4" />
+      목록으로
+    </button>
+    <Skeleton className="h-[500px] w-full rounded-xl" />
+  </div>
+);
+

@@ -7,10 +7,10 @@ import MembershipPaymentStep from "@/features/artists/ui/membership/MembershipPa
 import ArtistCarousel from "@/features/artists/ui/ArtistCarousel";
 import ArtistProfile from "@/features/artists/ui/ArtistProfile";
 import { ARTIST_LIST } from "@/shared/data/artists";
-import MembershipCompleteStep from "./MembershipCompleteStep";
+import MembershipSuccessStep from "./MembershipSuccessStep";
 
-export default function ArtistMembershipSubscribe({ artistId }: { artistId: string }) {
-  const [currentStep, setCurrentStep] = useState(1);
+export default function ArtistMembershipSubscribe({ artistId, isSuccess }: { artistId: string; isSuccess?: boolean }) {
+  const [currentStep, setCurrentStep] = useState(isSuccess ? 3 : 1);
 
   // URL 에서 전달받은 artistId를 숫자로 변환하여 찾아오는 구조 (fallback 포함)
   const currentArtist = ARTIST_LIST.find((a) => a.artistId === Number(artistId)) || ARTIST_LIST[0];
@@ -21,25 +21,23 @@ export default function ArtistMembershipSubscribe({ artistId }: { artistId: stri
   return (
     <div>
       <MembershipStepper currentStep={currentStep} />
-      <div className="mt-8">
-        {currentStep === 1 && (
-          <div>
-            <ArtistProfile artist={currentArtist} />
-            <MembershipSelectStep onNext={handleNextStep} />
-            <ArtistCarousel />
-          </div>
-        )}
-        {currentStep === 2 && (
-          <div>
-            <MembershipPaymentStep onPrev={handlePrevStep} onNext={handleNextStep} artist={currentArtist} />
-          </div>
-        )}
-        {currentStep === 3 && (
-          <div>
-            <MembershipCompleteStep onPrev={handlePrevStep} />
-          </div>
-        )}
-      </div>
+      {currentStep === 1 && (
+        <div>
+          <ArtistProfile artist={currentArtist} />
+          <MembershipSelectStep onNext={handleNextStep} />
+          <ArtistCarousel />
+        </div>
+      )}
+      {currentStep === 2 && (
+        <div>
+          <MembershipPaymentStep onPrev={handlePrevStep} onNext={handleNextStep} artist={currentArtist} />
+        </div>
+      )}
+      {currentStep === 3 && (
+        <div>
+          <MembershipSuccessStep />
+        </div>
+      )}
     </div>
   );
 }

@@ -6,6 +6,8 @@ import { useSeatSelection } from "../../hooks/useSeatSelection";
 import { SeatCanvas } from "./SeatCanvas";
 import { SeatGradeLegend } from "./SeatGradeLegend";
 import { SeatPanel } from "./SeatPanel";
+import { usePageTelemetry } from "@/shared/hooks/usePageTelemetry";
+import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 
 interface SeatMapProps {
   showScheduleId: number;
@@ -15,6 +17,9 @@ export const SeatMap = ({ showScheduleId }: SeatMapProps) => {
   const router = useRouter();
   const { data: sections, isLoading, isError } = useGetSeats(showScheduleId);
   const { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll } = useSeatSelection(showScheduleId);
+  const stopTracking = useTelemetryStore((state) => state.stopTracking);
+
+  usePageTelemetry("seatmap");
 
   if (isLoading) return <div className="flex items-center justify-center h-full">로딩 중...</div>;
   if (!sections || sections.length === 0)
@@ -22,6 +27,9 @@ export const SeatMap = ({ showScheduleId }: SeatMapProps) => {
 
   const handlePayment = () => {
     if (selectedSeats.length === 0) return;
+
+    // 결제 과정 진입 전, 즉시 명시적으로 분석을 종료하고 데이터를 전송
+    stopTracking();
 
     // 선택한 좌석 정보 sessionStorage에 저장
     sessionStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));

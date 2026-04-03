@@ -13,7 +13,7 @@ export default async function ArtistDetailPage(props: { params: Params }) {
       <section>
         <section className="grid grid-cols-[minmax(550px,1fr)_400px] gap-6 py-10">
           <ArtistDetailTabs artistId={params.artistId} />
-          <div className="self-start sticky/ top-[calc(var(--header-height)+2.5rem)]">
+          <div className="self-start sticky top-[calc(var(--header-height)+2.5rem)]">
             <ArtistSide />
           </div>
         </section>

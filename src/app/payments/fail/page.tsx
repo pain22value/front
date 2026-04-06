@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 type Props = {
-  searchParams: { code?: string; message?: string; orderId?: string };
+  searchParams: Promise<{ code?: string; message?: string; orderId?: string }>;
 };
 
-export default function Page({ searchParams }: Props) {
-  const { code, message, orderId } = searchParams;
+export default async function Page({ searchParams }: Props) {
+  const { code, message, orderId } = await searchParams;
 
   // 실패 사유 매핑
   const failReason = message ?? code ?? "결제 제한 시간 초과";

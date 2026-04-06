@@ -16,8 +16,7 @@ export function useArtistLike(
   profileImageUrl?: string
 ) {
   const queryClient = useQueryClient();
-  const addFavorite = useFavoriteStore((state) => state.addFavorite);
-  const removeFavorite = useFavoriteStore((state) => state.removeFavorite);
+  const { addFavorite, removeFavorite } = useFavoriteStore();
 
   // 좋아요 등록
   const likeMutation = useMutation({

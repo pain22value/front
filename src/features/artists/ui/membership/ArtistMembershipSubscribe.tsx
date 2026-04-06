@@ -24,7 +24,7 @@ export default function ArtistMembershipSubscribe({ artistId, isSuccess }: { art
       {currentStep === 1 && (
         <div>
           <ArtistProfile artist={currentArtist} />
-          <MembershipSelectStep onNext={handleNextStep} />
+          <MembershipSelectStep artistId={artistId} onNext={handleNextStep} />
           <ArtistCarousel />
         </div>
       )}

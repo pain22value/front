@@ -12,7 +12,7 @@ import { MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function ShowReviewItem({ review }: { review: Review }) {
-  const user = useAuthStore((state) => state.user);
+  const { user } = useAuthStore();
   // const isMyReview = user?.id === review.userId;
   const isMyReview = false;
 

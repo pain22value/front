@@ -14,7 +14,7 @@ import { SigninFormValues, signinSchema } from "@/shared/schemas/authSchema";
 
 export default function SigninForm() {
   const router = useRouter();
-  const signin = useAuthStore((state) => state.signin);
+  const { signin } = useAuthStore();
   const [error, setError] = useState("");
 
   const {

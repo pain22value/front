@@ -3,9 +3,9 @@
 import { Card } from "@/components/ui/card";
 import { useEffect, useRef, useLayoutEffect } from "react";
 import { Users, Bell, CheckLine, UsersRound } from "lucide-react";
-import { useQueueStatus } from "../../hooks/useQueue";
+import { useQueueStatus } from "../hooks/useQueue";
 import { useRouter } from "next/navigation";
-import { useTicketingStore } from "../../stores/useTicketingStore";
+import { useTicketingStore } from "../stores/useTicketingStore";
 import gsap from "gsap";
 
 export default function QueueStep({

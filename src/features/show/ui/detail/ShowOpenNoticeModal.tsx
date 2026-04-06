@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { CalendarCheck, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function ShowTicketOpenNoticeModal({
+export default function ShowOpenNoticeModal({
   open,
   onOpenChange,
   title = "뮤지컬 <킹키부츠>",
@@ -15,12 +15,15 @@ export default function ShowTicketOpenNoticeModal({
   openDate?: string;
 }) {
   const [timeLeft, setTimeLeft] = useState<{ d: string; h: string; m: string; s: string }>({
-    d: "00", h: "00", m: "00", s: "00"
+    d: "00",
+    h: "00",
+    m: "00",
+    s: "00",
   });
 
   useEffect(() => {
     if (!open || !openDate) return;
-    
+
     // 날짜 포맷 표준화 (2026.01.26 -> 2026-01-26)
     const normalizedOpenDate = openDate.replaceAll(".", "-");
     const targetDate = +new Date(normalizedOpenDate);
@@ -29,10 +32,18 @@ export default function ShowTicketOpenNoticeModal({
       const difference = targetDate - +new Date();
       if (difference > 0) {
         setTimeLeft({
-          d: Math.floor(difference / (1000 * 60 * 60 * 24)).toString().padStart(2, "0"),
-          h: Math.floor((difference / (1000 * 60 * 60)) % 24).toString().padStart(2, "0"),
-          m: Math.floor((difference / 1000 / 60) % 60).toString().padStart(2, "0"),
-          s: Math.floor((difference / 1000) % 60).toString().padStart(2, "0"),
+          d: Math.floor(difference / (1000 * 60 * 60 * 24))
+            .toString()
+            .padStart(2, "0"),
+          h: Math.floor((difference / (1000 * 60 * 60)) % 24)
+            .toString()
+            .padStart(2, "0"),
+          m: Math.floor((difference / 1000 / 60) % 60)
+            .toString()
+            .padStart(2, "0"),
+          s: Math.floor((difference / 1000) % 60)
+            .toString()
+            .padStart(2, "0"),
         });
       }
     };
@@ -48,7 +59,7 @@ export default function ShowTicketOpenNoticeModal({
     day: "2-digit",
     weekday: "short",
   });
-  
+
   const formattedTime = new Date(openDate).toLocaleTimeString("ko-KR", {
     hour12: false,
     hour: "2-digit",
@@ -84,7 +95,9 @@ export default function ShowTicketOpenNoticeModal({
             <CalendarCheck className="text-red-500" />
             <div>
               <p className="font-medium text-foreground">티켓 오픈</p>
-              <p className="text-sm text-muted-foreground">{formattedDate} {formattedTime}</p>
+              <p className="text-sm text-muted-foreground">
+                {formattedDate} {formattedTime}
+              </p>
             </div>
           </div>
         </div>
@@ -105,7 +118,10 @@ export default function ShowTicketOpenNoticeModal({
 
         {/* Footer */}
         <div className="p-6 pt-0">
-          <Button className="w-full rounded-xl bg-red-500 hover:bg-red-600 text-white border-none" onClick={() => onOpenChange(false)}>
+          <Button
+            className="w-full rounded-xl bg-red-500 hover:bg-red-600 text-white border-none"
+            onClick={() => onOpenChange(false)}
+          >
             확인
           </Button>
         </div>

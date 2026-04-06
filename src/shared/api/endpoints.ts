@@ -49,12 +49,14 @@ export const ENDPOINTS = {
     DETAIL: (artistId: number | string) => `/musical/artists/${artistId}`,
     LIKE: (artistId: number | string) => `/musical/artists/${artistId}/likes`,
     PAST_SHOWS: (artistId: number | string) => `/musical/artists/${artistId}/past-shows`,
+    MEMBERSHIP_PAYMENT: (artistId: number | string) => `/musical/artists/${artistId}/membership/payment`,
   },
 
   // 대기열
   QUEUE: {
     ENTER: (showId: number | string) => `/queue/${showId}/enter`,
     STATUS: (showId: number | string) => `/queue/${showId}/status`,
+    CANCEL: (showId: number | string) => `/queue/${showId}/cancel`,
   },
 
   // 결제

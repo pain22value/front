@@ -13,7 +13,14 @@ const getQueueStatus = async (showId: string | number): Promise<QueueStatusRespo
   return data.data;
 };
 
+const cancelQueue = async (showId: string | number) => {
+  const { data } = await api.delete<ApiResponse<string>>(ENDPOINTS.QUEUE.CANCEL(showId));
+  if (data.code !== "ok") throw new Error(data.message || "대기열 취소에 실패했습니다.");
+  return data.data;
+};
+
 export const queueService = {
   enterQueue,
   getQueueStatus,
+  cancelQueue,
 };

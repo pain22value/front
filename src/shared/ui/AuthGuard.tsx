@@ -6,7 +6,7 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const accessToken = useAuthStore((state) => state.accessToken);
+  const { accessToken } = useAuthStore();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

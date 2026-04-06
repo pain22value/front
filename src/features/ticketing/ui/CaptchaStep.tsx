@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ShieldCheck } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { useState } from "react";
-import { useEnterQueue } from "../../hooks/useQueue";
+import { useEnterQueue } from "../hooks/useQueue";
 
 export default function CaptchaStep({ onNext, showId }: { onNext: () => void; showId: string | number }) {
   const [selectedTile, setSelectedTile] = useState<number | null>(null);

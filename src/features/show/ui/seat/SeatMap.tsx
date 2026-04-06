@@ -17,7 +17,7 @@ export const SeatMap = ({ showScheduleId }: SeatMapProps) => {
   const router = useRouter();
   const { data: sections, isLoading, isError } = useGetSeats(showScheduleId);
   const { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll } = useSeatSelection(showScheduleId);
-  const stopTracking = useTelemetryStore((state) => state.stopTracking);
+  const { stopTracking } = useTelemetryStore();
 
   usePageTelemetry("seatmap");
 

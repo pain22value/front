@@ -43,7 +43,7 @@ function FavoriteArtistItem({
 
 export default function FavoriteList() {
   // favorites 배열 직접 구독 (배열 참조가 바뀔때만 리렌더)
-  const favorites = useFavoriteStore((state) => state.favorites);
+  const { favorites } = useFavoriteStore();
 
   return (
     <div className="w-full mt-10">

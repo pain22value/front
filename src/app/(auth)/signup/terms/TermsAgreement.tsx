@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function TermsAgreement() {
   const router = useRouter();
-  const setSignupTerms = useAuthStore((state) => state.setSignupTerms);
+  const { setSignupTerms } = useAuthStore();
 
   const [agreed, setAgreed] = useState({
     service: false,

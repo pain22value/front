@@ -29,3 +29,9 @@ export const useQueueStatus = (showId: string | number) => {
   });
 };
 
+export const useCancelQueue = () => {
+  return useMutation({
+    mutationFn: (showId: string | number) => queueService.cancelQueue(showId),
+  });
+};
+

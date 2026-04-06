@@ -52,3 +52,19 @@ interface ArtistPastShowsResponse {
   hasNext: boolean;
   hasPrevious: boolean;
 }
+
+// 아티스트 멤버십 결제 준비 요청
+interface PrepareMembershipPaymentRequest {
+  paymentMethod: string;
+  termsAgreed: boolean;
+  privacyAgreed: boolean;
+  autoPaymentAgreed: boolean;
+}
+
+// 아티스트 멤버십 결제 준비 응답 데이터
+interface PrepareMembershipPaymentResponse {
+  paymentMethod: string;
+  termsAgreed: boolean;
+  privacyAgreed: boolean;
+  autoPaymentAgreed: boolean;
+}

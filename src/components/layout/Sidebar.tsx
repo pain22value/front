@@ -203,13 +203,9 @@ export default function Sidebar() {
             size="icon"
             className="size-9 rounded-lg shrink-0
               bg-gray-900 group-hover:bg-white
-              [&_svg]:fill-white [&_svg]:stroke-white
-              group-hover:[&_svg]:fill-black group-hover:[&_svg]:stroke-black
-              dark:bg-white dark:group-hover:bg-gray-900
-              dark:[&_svg]:fill-black dark:[&_svg]:stroke-black
-              dark:group-hover:[&_svg]:fill-white dark:group-hover:[&_svg]:stroke-white"
+              dark:bg-white dark:group-hover:bg-gray-900"
           >
-            <Heart className="size-5" />
+            <Heart className="size-5 text-red-500 fill-red-500 transition-colors" />
           </Button>
           <span
             className="sidebar-label hidden font-medium whitespace-nowrap relative

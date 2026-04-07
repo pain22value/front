@@ -36,8 +36,8 @@ export default function ArtistMembershipJoinSection({ artist }: { artist: Artist
           <Heart
             className={`w-8 h-8 transition-colors duration-300 cursor-pointer ${
               isLiked
-                ? "text-pink-500 fill-pink-500"
-                : "text-slate-300 fill-slate-300 hover:text-pink-300 hover:fill-pink-300"
+                ? "text-red-500 fill-red-500"
+                : "text-slate-300 fill-slate-300 hover:text-red-300 hover:fill-red-300"
             }`}
           />
         </button>

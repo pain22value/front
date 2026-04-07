@@ -1,15 +1,15 @@
 "use client";
 
 import { useRef } from "react";
-import { useArtistPostStore } from "../../stores/useArtistPostStore";
 import ArtistPostCard from "./ArtistPostCard";
 import MusicalPostDetail from "../MusicalPostDetail";
 import useArtistPostAnimation from "../../hooks/useArtistPostAnimation";
 import { useArtistPosts } from "../../hooks/useArtistPostQuery";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useArtistStore } from "../../stores/useArtistStore";
 
 export default function ArtistPostsTab({ artistId }: { artistId: string }) {
-  const { selectedPostId, selectPost, clearPost } = useArtistPostStore();
+  const { selectedPostId, selectPost, clearPost } = useArtistStore();
 
   const detailRef = useRef<HTMLDivElement>(null);
   const { activePostId } = useArtistPostAnimation({ selectedPostId, detailRef });
@@ -26,7 +26,6 @@ export default function ArtistPostsTab({ artistId }: { artistId: string }) {
       <div>
         {/* 전체 목록 레이아웃 레이블 */}
         <div className="flex items-center gap-2 text-sm text-zinc-500 font-medium px-1 mb-6">전체 포스트</div>
-
         <div className="flex flex-col gap-8">
           {posts?.map((post) => (
             <ArtistPostCard key={post.id} postId={post.id} onClick={selectPost} />

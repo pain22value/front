@@ -3,15 +3,13 @@
 import { useEffect, useState, RefObject } from "react";
 import gsap from "gsap";
 
-interface UseArtistPostAnimationProps {
-  selectedPostId: number | null;
-  detailRef: RefObject<HTMLDivElement | null>;
-}
-
 export default function useArtistPostAnimation({
   selectedPostId,
   detailRef,
-}: UseArtistPostAnimationProps) {
+}: {
+  selectedPostId: number | null;
+  detailRef: RefObject<HTMLDivElement | null>;
+}) {
   // 애니메이션을 위해 렌더링 지연을 관리할 로컬 상태
   const [activePostId, setActivePostId] = useState<number | null>(selectedPostId);
 

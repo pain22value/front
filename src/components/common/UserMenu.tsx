@@ -33,10 +33,10 @@ export function UserMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[320] p-4 bg-popover shadow-lg rounded-lg">
         {/* 사용자 이름 섹션 */}
-        <DropdownMenuItem asChild className="p-0 focus:bg-transparent">
+        <DropdownMenuItem className="p-0 focus:bg-transparent">
           <Link
             href="/my/profile"
-            className="flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
+            className="w-full flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
           >
             <span className="text-xl font-bold text-foreground">{user.nickname}님</span>
             <ChevronRight className="h-5 w-5 text-muted-foreground" />
@@ -45,25 +45,31 @@ export function UserMenu() {
 
         {/* 메뉴 리스트 */}
         <div className="flex flex-col mt-2">
-          <DropdownMenuItem asChild className="p-0 focus:bg-transparent">
-            <Button variant="ghost" asChild className="w-full justify-start text-lg font-medium h-12 px-2">
-              <Link href="/mypage/bookings">마이 티켓</Link>
-            </Button>
+          <DropdownMenuItem className="p-0 focus:bg-transparent">
+            <Link
+              href="/mypage/bookings"
+              className="w-full h-12 text-lg font-medium flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
+            >
+              마이 티켓
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild className="p-0 focus:bg-transparent">
-            <Button variant="ghost" asChild className="w-full justify-start text-lg font-medium h-12 px-2">
-              <Link href="/my/membership">마이 멤버십</Link>
-            </Button>
+          <DropdownMenuItem className="p-0 focus:bg-transparent">
+            <Link
+              href="/my/membership"
+              className="w-full h-12 text-lg font-medium flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
+            >
+              마이 멤버십
+            </Link>
           </DropdownMenuItem>
         </div>
 
         {/* 로그아웃 버튼 */}
         <div className="mt-4">
-          <DropdownMenuItem asChild className="p-0 focus:bg-transparent">
+          <DropdownMenuItem className="p-0 focus:bg-transparent">
             <Button
               variant="ghost"
               onClick={signout}
-              className="w-fit text-muted-foreground hover:text-foreground font-normal p-2 h-auto text-base hover:bg-transparent"
+              className="w-full h-12 text-lg font-medium flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
             >
               로그아웃
             </Button>

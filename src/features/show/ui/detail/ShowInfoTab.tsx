@@ -145,7 +145,7 @@ function ArtistAvatar({ artist }: { artist: Casting }) {
         >
           <Heart
             className={`w-4 h-4 transition-colors ${
-              isLiked ? "text-pink-500 fill-pink-500" : "text-neutral-300 fill-neutral-300"
+              isLiked ? "text-red-500 fill-red-500" : "text-neutral-300 fill-neutral-300"
             }`}
           />
         </Button>

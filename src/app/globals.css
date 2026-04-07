@@ -223,6 +223,12 @@
       }
     }
 
+    .membership-page {
+      > section {
+        @apply max-w-[850] mx-auto;
+      }
+    }
+
     .privacy-policy-page,
     .service-term-page,
     .finance-term-page {

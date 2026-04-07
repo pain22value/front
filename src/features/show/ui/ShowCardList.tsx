@@ -4,9 +4,7 @@ import ShowCard from "./ShowCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ShowCardList({ shows, isLoading }: { shows?: Show[]; isLoading?: boolean }) {
-  const showSkeleton = isLoading || !shows || shows.length === 0;
-
-  if (showSkeleton)
+  if (isLoading)
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {[...Array(10)].map((_, i) => (
@@ -19,6 +17,8 @@ export default function ShowCardList({ shows, isLoading }: { shows?: Show[]; isL
         ))}
       </div>
     );
+
+  if (!shows || shows.length === 0) return null;
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">

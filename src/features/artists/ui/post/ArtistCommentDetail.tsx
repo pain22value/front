@@ -74,8 +74,8 @@ export default function ArtistCommentDetail({ onBack }: { onBack?: () => void })
           <CardContent className="p-4 pt-0">
             <p className="text-md mb-4">{mainComment.content}</p>
             <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Heart className="w-4 h-4" />
+              <div className="flex items-center gap-1 text-red-500">
+                <Heart className="w-4 h-4 fill-red-500" />
                 <span>{mainComment.likes}</span>
               </div>
               <div className="flex items-center gap-1">
@@ -118,8 +118,8 @@ export default function ArtistCommentDetail({ onBack }: { onBack?: () => void })
                 </div>
                 <p className="text-sm py-1">{reply.content}</p>
                 <div className="flex items-center gap-4 pt-1">
-                  <button className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Heart className="w-3.5 h-3.5" />
+                  <button className="flex items-center gap-1 text-xs text-red-500">
+                    <Heart className="w-3.5 h-3.5 fill-red-500" />
                     {reply.likes}
                   </button>
                   <button className="text-xs text-muted-foreground">

@@ -101,13 +101,13 @@ export default function CheckoutPage() {
         datetime: "2026.01.26(월) 오후 7:00",
         seats: selectedSeats.map((s) => `${s.section} ${s.row}행 ${s.col}열`),
         method: payMethod,
-        orderId: reservationNumber, // ← crypto.randomUUID() 대신 reservationNumber 사용
+        orderId: reservationNumber, // crypto.randomUUID() 대신 reservationNumber 사용
         amount: total,
       }));
 
       // 4. Toss 결제 요청
       await requestPayment({
-        orderId: reservationNumber, // ← 여기도
+        orderId: reservationNumber, // 여기도
         orderName,
         amountValue: total,
         method: payMethod,

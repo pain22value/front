@@ -9,10 +9,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar />
       {children}
       <Footer />
-      {/* <section className="flex">
-        <Sidebar />
-        {children}
-      </section> */}
     </>
   );
 }

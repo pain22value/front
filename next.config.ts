@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
   // 매크로 제작자가 .map 파일로 원본 소스 복원하는 것을 차단
   productionBrowserSourceMaps: false,
 
+  // ─── [보안] Turbopack 활성화 시 Webpack 설정 무시 경고 방지 ───
+  turbopack: {},
+
   // ─── [보안] SWC 컴파일러 옵션 ───
   compiler: {
     // production 빌드에서 console.log / console.debug 자동 제거

@@ -33,7 +33,7 @@ function FavoriteArtistItem({
       <div className="flex items-center space-x-3">
         <Button variant="ghost" size="icon" className="hover:bg-transparent" onClick={toggle} disabled={isPending}>
           <Heart
-            className={`h-6 w-6 transition-colors ${isLiked ? "fill-pink-500 text-pink-500" : "fill-slate-300 text-slate-300"}`}
+            className={`h-6 w-6 transition-colors ${isLiked ? "fill-red-500 text-red-500" : "fill-slate-300 text-slate-300"}`}
           />
         </Button>
       </div>
@@ -52,7 +52,7 @@ export default function FavoriteList() {
       {favorites.length === 0 ? (
         // 좋아요한 아티스트가 없을 때 빈 상태 표시
         <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-          <Heart className="h-12 w-12 mb-4 text-slate-200" />
+          <Heart className="h-12 w-12 mb-4 text-red-500/20" />
           <p className="text-base font-medium">좋아요한 아티스트가 없어요</p>
           <p className="text-sm mt-1">아티스트 페이지에서 하트를 눌러보세요</p>
         </div>

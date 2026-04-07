@@ -3,7 +3,7 @@
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { ko } from "date-fns/locale";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Separator } from "@/components/ui/separator";
 import { isSameDay } from "date-fns";
 import { useCastingSchedules } from "../../hooks/useCastingSchedules";

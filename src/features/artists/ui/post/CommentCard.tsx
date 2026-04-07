@@ -36,7 +36,7 @@ export default function CommentCard({ comment, onClick }: { comment: CommentData
             </p>
 
             <div className="flex items-center gap-4 pt-1">
-              <div className="flex items-center gap-1.5 text-slate-900 dark:text-slate-400 cursor-pointer hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
+              <div className="flex items-center gap-1.5 text-slate-900 dark:text-slate-400 cursor-pointer hover:text-red-500 dark:hover:text-red-400 transition-colors">
                 <Heart className="w-5 h-5" strokeWidth={1.5} />
                 <span className="text-sm font-medium">{comment.likes}</span>
               </div>

@@ -6,34 +6,37 @@ import Link from "next/link";
 
 export default function ArtistShowList({
   artistId,
-  nowShows,
-  isNowLoading,
-  pastShows,
-  isPastLoading,
-  hasMorePast,
+  isLoading,
+  data,
 }: {
   artistId: string | number;
-  nowShows?: Show[];
-  isNowLoading: boolean;
-  pastShows?: Show[];
-  isPastLoading: boolean;
-  hasMorePast?: boolean;
+  isLoading: boolean;
+  data: ArtistDetail;
 }) {
+  const { currentShows, pastShows, artist } = data;
+
+  // 기존 Show 타입과 맞추기 위해 title을 showTitle로 매핑
+  const mappedCurrentShows: ArtistShow[] = currentShows.map((show) => ({ ...show, showTitle: show.title }));
+  const mappedPastShows: ArtistShow[] = pastShows.shows.map((show) => ({ ...show, showTitle: show.title }));
+
   return (
     <section className="space-y-16 pt-8">
       <section>
         <div className="space-y-2 mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-tight">현재 상영중인 작품</h2>
-          <Link href={`#`} className="gap-1 text-muted-foreground flex items-center">
+          <Link
+            href={`/search?query=${encodeURIComponent(artist?.artistName || "")}`}
+            className="gap-1 text-muted-foreground flex items-center hover:text-white transition-colors"
+          >
             더보기 <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
-        <ShowCardList shows={nowShows} isLoading={isNowLoading} />
+        <ShowCardList shows={mappedCurrentShows} isLoading={isLoading} />
       </section>
       <section>
         <div className="space-y-2 mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold tracking-tight">지난 출연 작품</h2>
-          {hasMorePast && (
+          {pastShows.hasMore && (
             <Link
               href={`/artists/${artistId}/past-shows`}
               className="gap-1 text-muted-foreground flex items-center hover:text-white transition-colors"
@@ -42,7 +45,7 @@ export default function ArtistShowList({
             </Link>
           )}
         </div>
-        <ShowCardList shows={pastShows} isLoading={isPastLoading} />
+        <ShowCardList shows={mappedPastShows} isLoading={isLoading} />
       </section>
     </section>
   );

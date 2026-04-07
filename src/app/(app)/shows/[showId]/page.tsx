@@ -33,7 +33,7 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
           <ShowDetailCard {...show} />
           <ShowDetailTabs show={show} />
         </div>
-        <div className="hidden/ md:block/ sticky top-[calc(var(--header-height)+2.5rem)] self-start">
+        <div className="sticky top-[calc(var(--header-height)+2.5rem)] self-start">
           <ShowDetailScheduleCard show={show} />
         </div>
       </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import Autoplay from "embla-carousel-autoplay";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { useRef, useState } from "react";
@@ -31,7 +32,7 @@ export default function HomeHero() {
         <CarouselContent>
           {displayBanners?.map((banner) => (
             <CarouselItem key={banner.bannerId}>
-              <div className="relative w-full aspect-21/9">
+              <Link href={`/shows/${banner.showId}`} className="block relative w-full aspect-21/9 cursor-pointer">
                 <Image
                   src={banner.posterUrl}
                   alt={banner.showTitle}
@@ -39,7 +40,7 @@ export default function HomeHero() {
                   height={900}
                   className="w-full h-full object-contain object-bottom"
                 />
-              </div>
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>

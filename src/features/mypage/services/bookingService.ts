@@ -112,6 +112,8 @@ export interface BookingOrder {
   serviceFee: number;
 }
 
+const S3_BASE_URL = "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/";
+
 // ─── API → Booking 타입 변환 ─────────────────────────────────
 const toBookingStatus = (label: string): BookingStatus => {
   if (label === "예매확정") return "CONFIRMED";
@@ -135,7 +137,7 @@ const adaptBooking = (api: ApiBooking): Booking => ({
     date: api.show.showDate,
     time: api.show.showTime,
     seat: api.gradeSummary,
-    posterUrl: api.show.posterUrl,
+    posterUrl: api.show.posterUrl ? `${S3_BASE_URL}${api.show.posterUrl}` : "",
   },
 });
 
@@ -152,7 +154,7 @@ const adaptBookingDetail = (apiData: ApiBookingDetail): BookingDetail => ({
     date: apiData.show.showDate,
     time: apiData.show.showTime,
     seat: apiData.gradeSummary,
-    posterUrl: apiData.show.posterUrl,
+    posterUrl: apiData.show.posterUrl ? `${S3_BASE_URL}${apiData.show.posterUrl}` : "",
   },
   finalAmount: apiData.price.totalPrice,
   totalAmount: apiData.price.totalPrice,

@@ -55,6 +55,11 @@ export default function CheckoutPage() {
   });
 
   const handlePay = async () => {
+    if (total <= 0) {
+      setModal("결제 금액이 올바르지 않습니다.");
+      return;
+    }
+
     const newErrors = {
       name: !customerInfo.name || customerInfo.name === "미기입" ? "이름을 입력해주세요" : "",
       birth: !customerInfo.birth || customerInfo.birth === "미기입" ? "8자리의 생년월일을 입력해주세요" : "",
@@ -96,13 +101,13 @@ export default function CheckoutPage() {
         datetime: "2026.01.26(월) 오후 7:00",
         seats: selectedSeats.map((s) => `${s.section} ${s.row}행 ${s.col}열`),
         method: payMethod,
-        orderId: reservationNumber, // ← crypto.randomUUID() 대신 reservationNumber 사용
+        orderId: reservationNumber, // crypto.randomUUID() 대신 reservationNumber 사용
         amount: total,
       }));
 
       // 4. Toss 결제 요청
       await requestPayment({
-        orderId: reservationNumber, // ← 여기도
+        orderId: reservationNumber, // 여기도
         orderName,
         amountValue: total,
         method: payMethod,
@@ -407,7 +412,7 @@ export default function CheckoutPage() {
                   type="button"
                   className="mt-4 w-full rounded-md bg-[#F93E4B] px-4 py-3 text-[16px] font-semibold text-[#FFFFFF] hover:bg-red-600 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handlePay}
-                  disabled={!isReady || paying}
+                  disabled={!isReady || paying || total <= 0}
                 >
                   총 {total.toLocaleString()}원 결제하기
                 </button>

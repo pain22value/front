@@ -1,129 +1,10 @@
 // mypage/bookings : 예매 내역 확인 페이지
 "use client";
-
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Booking, BookingStatus, STATUS_LABEL, STATUS_COLOR, STATUS_BG } from "@/shared/types/booking";
 import { bookingService } from "@/features/mypage/services/bookingService";
-
-// TODO: 백엔드 연동 시 실제 데이터로 교체
-const MOCK_BOOKINGS: Booking[] = [
-  {
-    id: "1",
-    orderId: "47ce8f65-796b-408b-af53-8e13767c42b2",
-    bookedAt: "2026.01.20",
-    status: "CONFIRMED",
-    showId: "1",
-    entryTime: "1월 11시간 11분 뒤 입장 가능",
-    show: {
-      title: "뮤지컬 <킹키부츠>",
-      venue: "샤롯데씨어터",
-      address: "서울 송파구 올림픽로 240",
-      date: "2026.01.26.(월)",
-      time: "오후 7:00-9:30",
-      seat: "VIP석 2인",
-      posterUrl: "",
-    },
-  },
-  {
-    id: "2",
-    orderId: "58df9g76-897c-519c-bg64-9f24878d53c3",
-    bookedAt: "2026.01.20",
-    status: "PENDING_PAYMENT",
-    showId: "1",
-    dueTime: "2시간 22분까지 입금",
-    show: {
-      title: "뮤지컬 <킹키부츠>",
-      venue: "샤롯데씨어터",
-      address: "서울 송파구 올림픽로 240",
-      date: "2026.01.26.(월)",
-      time: "오후 7:00-9:30",
-      seat: "VIP석 2인",
-      posterUrl: "",
-    },
-  },
-  {
-    id: "3",
-    orderId: "69eg0h87-908d-620d-ch75-0g35989e64d4",
-    bookedAt: "2026.01.20",
-    status: "PARTIAL_CANCEL",
-    showId: "1",
-    show: {
-      title: "뮤지컬 <킹키부츠>",
-      venue: "샤롯데씨어터",
-      address: "서울 송파구 올림픽로 240",
-      date: "2026.01.26.(월)",
-      time: "오후 7:00-9:30",
-      seat: "VIP석 2인",
-      posterUrl: "",
-    },
-  },
-  {
-    id: "4",
-    orderId: "70fh1i98-019e-731e-di86-1h46090f75e5",
-    bookedAt: "2025.12.10",
-    status: "WATCHED",
-    showId: "2",
-    show: {
-      title: "뮤지컬 <슬립노모어>",
-      venue: "블랙박스씨어터",
-      address: "서울 송파구 올림픽로 240",
-      date: "2025.12.15.(일)",
-      time: "오후 3:00-5:30",
-      seat: "R석 1인",
-      posterUrl: "",
-    },
-  },
-  // 취소 - 킹키부츠
-  {
-    id: "7",
-    orderId: "03ik4l21-342h-064h-gl19-4k79323i08h8",
-    bookedAt: "2025.09.15",
-    status: "CANCELED",
-    showId: "2",
-    show: {
-      title: "뮤지컬 <킹키부츠>",
-      venue: "샤롯데씨어터",
-      address: "서울 송파구 올림픽로 240",
-      date: "2025.09.20.(토)",
-      time: "오후 7:00-9:30",
-      seat: "S석 2인",
-      posterUrl: "",
-    },
-  },
-];
-
-// 포스터 placeholder
-function PosterPlaceholder({ title }: { title: string }) {
-  const isSlipNoMore = title.includes("슬립노모어");
-  return (
-    <div className="h-[90px] w-[64px] shrink-0 rounded-md overflow-hidden flex items-center justify-center">
-      {isSlipNoMore ? (
-        // 슬립노모어 SVG
-        <svg width="100%" height="100%" viewBox="0 0 200 267" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet">
-        <path d="M0 8C0 3.58172 3.58172 0 8 0H192C196.418 0 200 3.58172 200 8V259C200 263.418 196.418 267 192 267H8C3.58173 267 0 263.418 0 259V8Z" fill="url(#pattern0_563_7124)"/>
-        <defs>
-        <pattern id="pattern0_563_7124" patternContentUnits="objectBoundingBox" width="1" height="1">
-        <use xlinkHref="#image0_563_7124" transform="matrix(0.001335 0 0 0.001 -0.000625 0)"/>
-        </pattern>
-        </defs>
-        </svg>
-
-      ) : (
-        // 킹키부츠 SVG
-        <svg width="200" height="267" viewBox="0 0 200 267" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-        <path d="M0 8C0 3.58172 3.58172 0 8 0H192C196.418 0 200 3.58172 200 8V259C200 263.418 196.418 267 192 267H8C3.58173 267 0 263.418 0 259V8Z" fill="url(#pattern0_563_7125)"/>
-        <defs>
-        <pattern id="pattern0_563_7125" patternContentUnits="objectBoundingBox" width="1" height="1">
-        <use xlinkHref="#image0_563_7125" transform="matrix(0.001335 0 0 0.001 -0.000625 0)"/>
-        </pattern>
-        </defs>
-        </svg>
-
-      )}
-    </div>
-  );
-}
 
 function BookingCard({ booking }: { booking: Booking }) {
   const isPendingPayment = booking.status === "PENDING_PAYMENT";
@@ -162,7 +43,18 @@ function BookingCard({ booking }: { booking: Booking }) {
       <div className="bg-white mx-3 mb-3 px-1 py-3">
         <div className="flex items-start gap-3">
           {/* 포스터 */}
-          <PosterPlaceholder title={booking.show.title} />
+          <div className="h-[90px] w-[64px] shrink-0 rounded-md overflow-hidden relative">
+            {booking.show.posterUrl ? (
+              <Image
+                src={booking.show.posterUrl}
+                alt={booking.show.title}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-[#F1F1F4]" />
+            )}
+          </div>
 
           {/* 텍스트 정보 */}
           <div className="flex-1 min-w-0">
@@ -228,7 +120,7 @@ function BookingCard({ booking }: { booking: Booking }) {
         </div>
       </div>
 
-      {/* 토스트 ← 여기 추가 */}
+      {/* 토스트 */}
       {showToast && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 rounded-lg px-6 py-3 bg-[#322F35] w-[calc(100%-32px)] max-w-[800px]">
           <p className="text-[16px] font-normal text-[#F5EFF7]">주소가 복사되었습니다.</p>

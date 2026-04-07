@@ -6,38 +6,6 @@ import Link from "next/link";
 import { Booking, BookingStatus, STATUS_LABEL, STATUS_COLOR, STATUS_BG } from "@/shared/types/booking";
 import { bookingService } from "@/features/mypage/services/bookingService";
 
-// 포스터 placeholder
-function PosterPlaceholder({ title }: { title: string }) {
-  const isSlipNoMore = title.includes("슬립노모어");
-  return (
-    <div className="h-[90px] w-[64px] shrink-0 rounded-md overflow-hidden flex items-center justify-center">
-      {isSlipNoMore ? (
-        // 슬립노모어 SVG
-        <svg width="100%" height="100%" viewBox="0 0 200 267" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet">
-        <path d="M0 8C0 3.58172 3.58172 0 8 0H192C196.418 0 200 3.58172 200 8V259C200 263.418 196.418 267 192 267H8C3.58173 267 0 263.418 0 259V8Z" fill="url(#pattern0_563_7124)"/>
-        <defs>
-        <pattern id="pattern0_563_7124" patternContentUnits="objectBoundingBox" width="1" height="1">
-        <use xlinkHref="#image0_563_7124" transform="matrix(0.001335 0 0 0.001 -0.000625 0)"/>
-        </pattern>
-        </defs>
-        </svg>
-
-      ) : (
-        // 킹키부츠 SVG
-        <svg width="200" height="267" viewBox="0 0 200 267" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-        <path d="M0 8C0 3.58172 3.58172 0 8 0H192C196.418 0 200 3.58172 200 8V259C200 263.418 196.418 267 192 267H8C3.58173 267 0 263.418 0 259V8Z" fill="url(#pattern0_563_7125)"/>
-        <defs>
-        <pattern id="pattern0_563_7125" patternContentUnits="objectBoundingBox" width="1" height="1">
-        <use xlinkHref="#image0_563_7125" transform="matrix(0.001335 0 0 0.001 -0.000625 0)"/>
-        </pattern>
-        </defs>
-        </svg>
-
-      )}
-    </div>
-  );
-}
-
 function BookingCard({ booking }: { booking: Booking }) {
   const isPendingPayment = booking.status === "PENDING_PAYMENT";
   const isWatched = booking.status === "WATCHED";
@@ -152,7 +120,7 @@ function BookingCard({ booking }: { booking: Booking }) {
         </div>
       </div>
 
-      {/* 토스트 ← 여기 추가 */}
+      {/* 토스트 */}
       {showToast && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 rounded-lg px-6 py-3 bg-[#322F35] w-[calc(100%-32px)] max-w-[800px]">
           <p className="text-[16px] font-normal text-[#F5EFF7]">주소가 복사되었습니다.</p>

@@ -80,6 +80,6 @@ export const ENDPOINTS = {
     HEARTBEAT: "/ticketing/:showScheduleId/heartbeat", // POST 세션 연장
   },
 
-  // 텔레메트리
-  TELEMETRY: "http://api.truve.site/telemetry",
+  // 텔레메트리 (프록시 경로 사용)
+  TELEMETRY: "/telemetry",
 } as const;

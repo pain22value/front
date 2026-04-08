@@ -132,7 +132,7 @@ export default function ShowOpenNoticeModal({
 
 function TimeBox({ value, label }: { value: string; label: string }) {
   return (
-    <div className="flex flex-col items-center min-w-[48]">
+    <div className="flex flex-col items-center min-w-[48px]">
       <span className="text-2xl font-bold text-foreground">{value}</span>
       <span className="text-xs text-muted-foreground">{label}</span>
     </div>

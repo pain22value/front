@@ -32,7 +32,7 @@ export default function AccountDeletePage() {
   };
 
   return (
-    <section className="pl-20 max-w-[1200] mx-auto">
+    <section className="pl-20 max-w-[1200px] mx-auto">
       <div className="min-h-screen flex justify-center">
         <div className="w-full max-w-3xl px-6 py-16 space-y-10">
           {/* 페이지 타이틀 */}

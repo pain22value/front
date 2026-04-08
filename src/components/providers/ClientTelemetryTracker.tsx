@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
-// import api from "@/shared/api/axios";
+import { ENDPOINTS } from "@/shared/api/endpoints";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 // 마우스 움직임 샘플링 간격 (100ms) - 초당 10번만 궤적 기록
 const MOUSE_TRACKING_SAMPLE_RATE_MS = 100;
@@ -56,8 +57,19 @@ export function ClientTelemetryTracker() {
       );
 
       try {
-        // 🚨 서버의 분석 이벤트 엔드포인트가 구현된 후 아래 주석을 해제해주세요.
-        // await api.post("/telemetry/events", payload);
+        const { accessToken } = useAuthStore.getState();
+        // next.config.js의 rewrites(/api)를 거치지 않고 직접 통신하기 위해 fetch 사용
+        // http://api.truve.site/telemetry 로 직접 전송
+        await fetch(ENDPOINTS.TELEMETRY, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+          },
+          body: JSON.stringify(payload),
+          // 텔레메트리 데이터 전송은 페이지가 닫혀도 안정적으로 전송되도록 keepalive 옵션 사용을 권장합니다.
+          // keepalive: true,
+        });
       } catch (error) {
         console.error("텔레메트리 데이터를 보내는 데 실패했습니다.", error);
       }

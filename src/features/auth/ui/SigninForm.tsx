@@ -42,7 +42,7 @@ export default function SigninForm() {
   };
 
   return (
-    <div className="w-full max-w-[400] mx-auto flex items-center justify-center">
+    <div className="w-full max-w-[400px] mx-auto flex items-center justify-center">
       <Card className="w-full border-none shadow-none bg-transparent!">
         <CardContent className="space-y-6">
           <div className="text-center space-y-2">

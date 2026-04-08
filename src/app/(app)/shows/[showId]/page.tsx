@@ -1,11 +1,11 @@
 import { showService } from "@/features/show/services/showService";
-import { ShowDetailCard } from "@/features/show/ui/detail/ShowDetailCard";
 import { ShowDetailTabs } from "@/features/show/ui/detail/ShowDetailTabs";
 import ShowDetailScheduleCard from "@/features/show/ui/detail/ShowDetailScheduleCard";
 import { ENDPOINTS } from "@/shared/api/endpoints";
+import ShowDetailCard from "@/features/show/ui/detail/ShowDetailCard";
 // import { notFound } from "next/navigation";
 
-// export const revalidate = 60; // 재검증시간설정 : n초동안캐시
+export const revalidate = 60; // 재검증시간설정 : n초동안캐시
 
 export async function generateStaticParams() {
   try {
@@ -31,9 +31,14 @@ export default async function ShowDetailPage({ params }: { params: Promise<{ sho
       <section className="grid grid-cols-1 md:grid-cols-[minmax(550px,1fr)_300px] gap-0 md:gap-8">
         <div className="col-span-[100%] md:col-span-[65%] space-y-20">
           <ShowDetailCard {...show} />
+          {/* 모바일 화면: 카드 바로 아래 표시 */}
+          <div className="md:hidden">
+            <ShowDetailScheduleCard show={show} />
+          </div>
           <ShowDetailTabs show={show} />
         </div>
-        <div className="sticky top-[calc(var(--header-height)+2.5rem)] self-start">
+        {/* 데스크톱 화면: 우측 사이드바 고정 */}
+        <div className="hidden md:block sticky top-[calc(var(--header-height)+2.5rem)] self-start">
           <ShowDetailScheduleCard show={show} />
         </div>
       </section>

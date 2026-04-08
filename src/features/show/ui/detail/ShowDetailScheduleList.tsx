@@ -38,6 +38,7 @@ export default function ShowDetailScheduleList({
           schedule={schedule}
           index={index}
           isSelected={value === schedule.scheduleId.toString()}
+          onSelect={onValueChange}
         />
       ))}
     </RadioGroup>

@@ -16,7 +16,7 @@ export default function SearchResult({ query }: { query?: string }) {
     showLimit: 20,
   });
 
-  console.log({ data });
+  // console.log({ data });
 
   if (isLoading) {
     return <SearchSkeleton />;

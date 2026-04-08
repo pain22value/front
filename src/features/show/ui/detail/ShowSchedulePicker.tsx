@@ -18,7 +18,7 @@ export default function ShowSchedulePicker({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" id="dates" className="w-[300] justify-start text-left font-normal">
+        <Button variant="outline" id="dates" className="w-[300px] justify-start text-left font-normal">
           <CalendarIcon className="mr-2" />
           {range?.from && range?.to ? (
             <>

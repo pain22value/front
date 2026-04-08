@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useFavoriteStore } from "@/features/artists/stores/useFavoriteStore";
 import { useArtistLike } from "@/features/show/hooks/useArtistLike";
 import { Heart } from "lucide-react";
+import Link from "next/link";
 
 // 즐겨찾기 아이템 컴포넌트 (각 아티스트별 좋아요 훅 사용)
 function FavoriteArtistItem({
@@ -22,13 +23,13 @@ function FavoriteArtistItem({
 
   return (
     <div className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
-      <div className="flex items-center space-x-4">
+      <Link href={`/artists/${artistId}`} className="flex items-center space-x-4 flex-1">
         <Avatar className="h-12 w-12 border">
           <AvatarImage src={profileImageUrl} alt={artistName} className="object-cover" />
           <AvatarFallback>{artistName[0]}</AvatarFallback>
         </Avatar>
-        <span className="text-lg font-medium text-slate-900">{artistName}</span>
-      </div>
+        <span className="text-lg font-medium text-slate-900 hover:underline">{artistName}</span>
+      </Link>
 
       <div className="flex items-center space-x-3">
         <Button variant="ghost" size="icon" className="hover:bg-transparent" onClick={toggle} disabled={isPending}>

@@ -79,4 +79,7 @@ export const ENDPOINTS = {
     RELEASE: "/ticketing/:showScheduleId/hold/seat", // DELETE 좌석 반납
     HEARTBEAT: "/ticketing/:showScheduleId/heartbeat", // POST 세션 연장
   },
+
+  // 텔레메트리
+  TELEMETRY: "http://api.truve.site/telemetry",
 } as const;

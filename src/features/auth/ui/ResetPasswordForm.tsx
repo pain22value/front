@@ -9,10 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { LoaderSpinner } from "@/components/ui/spinner";
-import {
-  resetPasswordSchema,
-  ResetPasswordFormValues,
-} from "@/shared/schemas/authSchema";
+import { resetPasswordSchema, ResetPasswordFormValues } from "@/shared/schemas/authSchema";
 import { authService } from "@/features/auth/services/authService";
 import { useRouter } from "next/navigation";
 
@@ -51,11 +48,7 @@ export default function ResetPasswordForm() {
   const verificationCodeValue = watch("verificationCode");
 
   const isInputFilled =
-    !!emailValue &&
-    !!verificationCodeValue &&
-    !!passwordValue &&
-    !!passwordConfirmValue &&
-    isVerified;
+    !!emailValue && !!verificationCodeValue && !!passwordValue && !!passwordConfirmValue && isVerified;
 
   const isEmailInputValid = !!emailValue && !errors.email;
 
@@ -98,11 +91,7 @@ export default function ResetPasswordForm() {
       setTimeLeft(180);
       toast.success("인증코드가 발송되었습니다.");
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "인증코드 발송에 실패했습니다.",
-      );
+      toast.error(error instanceof Error ? error.message : "인증코드 발송에 실패했습니다.");
     } finally {
       setIsSendingVerification(false);
     }
@@ -120,11 +109,7 @@ export default function ResetPasswordForm() {
       setIsVerified(true);
       toast.success("인증되었습니다.");
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "인증번호가 올바르지 않습니다.",
-      );
+      toast.error(error instanceof Error ? error.message : "인증번호가 올바르지 않습니다.");
     } finally {
       setIsVerifying(false);
     }
@@ -141,37 +126,22 @@ export default function ResetPasswordForm() {
       // 3. 성공 시 로그인 페이지로 이동
       router.push("/signin");
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "비밀번호 변경에 실패했습니다. 다시 시도해주세요.",
-      );
+      toast.error(error instanceof Error ? error.message : "비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full mx-auto max-w-[400] space-y-6"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-[400px] space-y-6">
       <h1 className="text-center text-2xl font-bold">비밀번호 재설정</h1>
 
       {/* ================= 이메일 ================= */}
       <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">
-          이메일
-        </Label>
+        <Label className="text-sm text-muted-foreground font-medium">이메일</Label>
 
         <div className="flex gap-2">
           <div className="relative w-full">
-            <Input
-              {...register("email")}
-              disabled={isVerified}
-              aria-invalid={!!errors.email}
-            />
-            {isVerified && (
-              <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 w-4 h-4" />
-            )}
+            <Input {...register("email")} disabled={isVerified} aria-invalid={!!errors.email} />
+            {isVerified && <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 w-4 h-4" />}
           </div>
 
           {!isVerified && (
@@ -194,9 +164,7 @@ export default function ResetPasswordForm() {
           )}
         </div>
 
-        {errors.email && (
-          <p className="text-sm text-destructive">{errors.email.message}</p>
-        )}
+        {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
 
         {/* ================= 인증코드 영역 ================= */}
         {isVerificationSent && (
@@ -241,9 +209,7 @@ export default function ResetPasswordForm() {
 
       {/* ================= 새 비밀번호 ================= */}
       <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">
-          새 비밀번호
-        </Label>
+        <Label className="text-sm text-muted-foreground font-medium">새 비밀번호</Label>
 
         <div className="relative">
           <Input
@@ -257,28 +223,18 @@ export default function ResetPasswordForm() {
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           >
-            {showPassword ? (
-              <EyeOff className="w-4 h-4" />
-            ) : (
-              <Eye className="w-4 h-4" />
-            )}
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
 
-        <p className="text-xs text-muted-foreground">
-          영문, 숫자, 특수문자 포함 8~32자
-        </p>
+        <p className="text-xs text-muted-foreground">영문, 숫자, 특수문자 포함 8~32자</p>
 
-        {errors.password && (
-          <p className="text-sm text-destructive">{errors.password.message}</p>
-        )}
+        {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
       </div>
 
       {/* ================= 비밀번호 확인 ================= */}
       <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">
-          비밀번호 확인
-        </Label>
+        <Label className="text-sm text-muted-foreground font-medium">비밀번호 확인</Label>
 
         <div className="relative">
           <Input
@@ -292,19 +248,11 @@ export default function ResetPasswordForm() {
             onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           >
-            {showPasswordConfirm ? (
-              <EyeOff className="w-4 h-4" />
-            ) : (
-              <Eye className="w-4 h-4" />
-            )}
+            {showPasswordConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
 
-        {errors.passwordConfirm && (
-          <p className="text-sm text-destructive">
-            {errors.passwordConfirm.message}
-          </p>
-        )}
+        {errors.passwordConfirm && <p className="text-sm text-destructive">{errors.passwordConfirm.message}</p>}
       </div>
 
       {/* ================= 변경 버튼 ================= */}

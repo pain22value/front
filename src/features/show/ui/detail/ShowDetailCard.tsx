@@ -4,10 +4,9 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { formatShowPeriod } from "@/shared/utils/date";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { useReviewMeta } from "../../hooks/useReviews";
 
-export function ShowDetailCard(props: ShowDetail) {
+export default function ShowDetailCard(props: ShowDetail) {
   const {
     showId,
     title,
@@ -31,7 +30,7 @@ export function ShowDetailCard(props: ShowDetail) {
   const ageLimitString = ageLimit === 0 ? "전체 관람가" : `${ageLimit}세 이상 관람가능`;
 
   return (
-    <Card className="w-8/10 py-0 bg-transparent! border-none! shadow-none!">
+    <Card className="py-0 bg-transparent! border-none! shadow-none!">
       <CardHeader className="p-0">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">{title}</h2>
@@ -41,15 +40,21 @@ export function ShowDetailCard(props: ShowDetail) {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex gap-2 xs:gap-4 sm:gap-6 md:gap-8 px-0">
-        <div className="relative min-w-[250px] aspect-3/4 shrink-0 overflow-hidden rounded-md">
+      <CardContent className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 md:gap-8 px-0">
+        <div className="flex-1 w-full min-w-[150px] relative max-w-[300px] aspect-3/4 overflow-hidden rounded-md">
           {posterUrl ? (
-            <Image src={posterUrl} alt={`${title} 포스터`} width={300} height={400} className="w-full h-full object-cover" />
+            <Image
+              src={posterUrl}
+              alt={`${title} 포스터`}
+              width={300}
+              height={400}
+              className="w-full h-full object-cover"
+            />
           ) : (
             <Skeleton className="size-full" />
           )}
         </div>
-        <div className="space-y-8 whitespace-nowrap">
+        <div className="flex-[1.5] w-full space-y-8">
           <dl className="grid grid-cols-[6rem_1fr] gap-y-4 text-sm [&_dt]:font-medium [&_dt]:text-muted-foreground">
             <dt>장소</dt>
             <dd>{venue.name}</dd>
@@ -63,9 +68,9 @@ export function ShowDetailCard(props: ShowDetail) {
             <dd>
               <ul className="space-y-1">
                 {seatGrades.map((grade) => (
-                  <li key={grade.showSeatGradeId} className="flex justify-between">
-                    <span>{grade.gradeName}</span>
-                    <span>{grade.price.toLocaleString()}원</span>
+                  <li key={grade.showSeatGradeId} className="flex gap-4">
+                    <span className="font-semibold text-muted-foreground">{grade.gradeName}석</span>
+                    <span className="font-medium">{grade.price.toLocaleString()}원</span>
                   </li>
                 ))}
               </ul>

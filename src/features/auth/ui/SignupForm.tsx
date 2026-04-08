@@ -158,7 +158,7 @@ export default function SignupForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-[400] space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-[400px] space-y-6">
       <h1 className="text-center text-2xl font-bold">회원가입</h1>
 
       {/* ================= 이메일 ================= */}

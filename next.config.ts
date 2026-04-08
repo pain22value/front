@@ -67,6 +67,10 @@ const nextConfig: NextConfig = {
         source: "/api/:path*",
         destination: `${process.env.API_URL}/:path*`,
       },
+      {
+        source: "/telemetry",
+        destination: `${process.env.API_URL!.replace(/\/api$/, "")}/telemetry`,
+      },
     ];
   },
   images: {

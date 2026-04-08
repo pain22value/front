@@ -1,6 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useFavoriteStore } from "@/features/artists/stores/useFavoriteStore";
 import { useArtistLike } from "@/features/show/hooks/useArtistLike";
@@ -32,6 +33,13 @@ function FavoriteArtistItem({
       </Link>
 
       <div className="flex items-center space-x-3">
+        <Badge
+          variant="outline"
+          className="px-4 py-1.5 text-teal-500 border-teal-500 font-medium rounded-lg hover:bg-teal-50 cursor-default"
+        >
+          멤버십 가입중
+        </Badge>
+
         <Button variant="ghost" size="icon" className="hover:bg-transparent" onClick={toggle} disabled={isPending}>
           <Heart
             className={`h-6 w-6 transition-colors ${isLiked ? "fill-red-500 text-red-500" : "fill-slate-300 text-slate-300"}`}

@@ -55,7 +55,7 @@ export default function ArtistCommentDetail({ onBack }: { onBack?: () => void })
 
       <div className="p-4">
         {/* Main Post/Comment */}
-        <Card className="border-border shadow-sm mb-6 bg-card text-card-foreground">
+        <Card className="border-border border-none shadow-sm mb-6 bg-card text-card-foreground">
           <CardHeader className="flex flex-row items-center space-x-3 p-4">
             <Avatar className="w-12 h-12">
               <AvatarImage src={`https://placehold.co/48x48`} alt={mainComment.author} />
@@ -159,4 +159,3 @@ const ArtistCommentDetailSkeleton = ({ onBack }: { onBack?: () => void }) => (
     </div>
   </div>
 );
-

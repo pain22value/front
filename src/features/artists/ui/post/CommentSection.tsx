@@ -4,7 +4,7 @@ import CommentCard from "./CommentCard";
 
 export default function CommentSection({ onCommentClick }: { onCommentClick?: () => void }) {
   return (
-    <div className="max-w-[600px] mx-auto p-4 bg-background min-h-screen font-sans border-x border-border transition-colors">
+    <div className="max-w-[600px] mx-auto p-4 bg-background min-h-screen font-sans transition-colors">
       {/* --- 댓글 작성 섹션 --- */}
       <section className="mb-8 p-1">
         <h2 className="font-bold text-lg mb-4 text-foreground italic tracking-tight">댓글 작성</h2>

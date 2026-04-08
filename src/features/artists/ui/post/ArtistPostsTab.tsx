@@ -21,7 +21,7 @@ export default function ArtistPostsTab({ artistId }: { artistId: string }) {
   }
 
   return (
-    <div className="relative w-full overflow-hidden min-h-[600px]">
+    <div className="relative w-full overflow-hidden min-h-[600px] pb-10">
       {/* 포스트 목록 섹션 (애니메이션 중에도 레이아웃 유지를 위해 항상 렌더링) */}
       <div>
         {/* 전체 목록 레이아웃 레이블 */}

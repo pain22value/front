@@ -27,7 +27,7 @@ export default function MusicalPostDetail({ postId, onBack }: { postId: number; 
         목록으로
       </button>
 
-      <Card className="w-full bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 shadow-sm">
+      <Card className="w-full bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 shadow-sm/ shadow-none">
         {/* Header */}
         <CardHeader className="flex flex-row items-center justify-between p-4 space-y-0">
           <div className="flex items-center space-x-3">
@@ -55,7 +55,11 @@ export default function MusicalPostDetail({ postId, onBack }: { postId: number; 
           <div className="grid grid-cols-2 gap-[2px] bg-zinc-100 overflow-hidden">
             {post.images.map((src, idx) => (
               <div key={idx} className="aspect-square overflow-hidden bg-zinc-200">
-                <img src={src.replace("/api/placeholder", "https://placehold.co")} alt={`이미지 ${idx + 1}`} className="w-full h-full object-cover" />
+                <img
+                  src={src.replace("/api/placeholder", "https://placehold.co")}
+                  alt={`이미지 ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
               </div>
             ))}
           </div>
@@ -91,4 +95,3 @@ const MusicalPostDetailSkeleton = ({ onBack }: { onBack: () => void }) => (
     <Skeleton className="h-[500px] w-full rounded-xl" />
   </div>
 );
-

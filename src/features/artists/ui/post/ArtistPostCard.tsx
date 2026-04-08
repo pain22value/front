@@ -17,7 +17,7 @@ export default function ArtistPostCard({ postId, onClick }: { postId: number; on
   return (
     <Card
       className="w-full bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 
-      shadow-sm cursor-pointer hover:shadow-md transition-shadow group"
+      cursor-pointer shadow-none hover:shadow-md transition-shadow group"
       onClick={() => onClick?.(postId)}
     >
       {/* Header */}
@@ -94,4 +94,3 @@ const ArtistPostCardSkeleton = () => (
     </CardContent>
   </Card>
 );
-

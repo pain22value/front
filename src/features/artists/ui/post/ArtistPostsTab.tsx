@@ -25,7 +25,7 @@ export default function ArtistPostsTab({ artistId }: { artistId: string }) {
       {/* 포스트 목록 섹션 (애니메이션 중에도 레이아웃 유지를 위해 항상 렌더링) */}
       <div>
         {/* 전체 목록 레이아웃 레이블 */}
-        <div className="flex items-center gap-2 text-sm text-zinc-500 font-medium px-1 mb-6">전체 포스트</div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium px-1 mb-6">전체 포스트</div>
         <div className="flex flex-col gap-8">
           {posts?.map((post) => (
             <ArtistPostCard key={post.id} postId={post.id} onClick={selectPost} />
@@ -37,7 +37,7 @@ export default function ArtistPostsTab({ artistId }: { artistId: string }) {
       <div
         ref={detailRef}
         style={{ transform: "translateX(-100%)" }}
-        className="absolute inset-0 z-20 w-full h-full bg-white dark:bg-slate-950"
+        className="absolute inset-0 z-20 w-full h-full bg-background"
       >
         {activePostId !== null && <MusicalPostDetail postId={activePostId} onBack={clearPost} />}
       </div>

@@ -72,7 +72,7 @@ export default function MembershipCard({
         </div>
 
         {/* 결제 정보 섹션 */}
-        <div className="flex flex-col w-full md:max-w-[297]">
+        <div className="flex flex-col w-full md:max-w-[297px]">
           {/* 결제 정보 카드 */}
           <Card className="rounded-xl border-none bg-slate-50 shadow-none p-0">
             <CardContent className="p-5 space-y-3">

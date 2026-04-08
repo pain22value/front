@@ -31,7 +31,7 @@ export function UserMenu() {
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[320] p-4 bg-popover shadow-lg rounded-lg">
+      <DropdownMenuContent align="end" className="min-w-[320px] p-4 bg-popover shadow-lg rounded-lg">
         {/* 사용자 이름 섹션 */}
         <DropdownMenuItem className="p-0 focus:bg-transparent">
           <Link

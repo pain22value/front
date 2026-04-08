@@ -13,8 +13,8 @@ export function ChatMessages({
   };
 }) {
   return (
-    <ScrollArea className="flex-1 p-6 bg-slate-50/30">
-      <div className="text-center text-xs text-slate-400 mb-6">2026.02.25. (수)</div>
+    <ScrollArea className="flex-1 p-6 bg-muted/30">
+      <div className="text-center text-xs text-muted-foreground mb-6">2026.02.25. (수)</div>
 
       {/* Artist Message */}
       <div className="flex items-start gap-3 mb-4">
@@ -24,14 +24,14 @@ export function ChatMessages({
         </Avatar>
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm font-bold">{chat.name}</span>
-            <span className="bg-cyan-100 text-[10px] text-cyan-600 px-1.5 py-0.5 rounded font-bold">ARTIST</span>
+            <span className="text-sm font-bold text-foreground">{chat.name}</span>
+            <span className="bg-cyan-100 text-[10px] text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400 px-1.5 py-0.5 rounded font-bold">ARTIST</span>
           </div>
           <div className="flex items-end gap-2">
-            <div className="bg-black text-white px-4 py-2 rounded-2xl rounded-tl-none text-sm leading-relaxed">
+            <div className="bg-primary text-primary-foreground px-4 py-2 rounded-2xl rounded-tl-none text-sm leading-relaxed">
               {chat.message}
             </div>
-            <span className="text-[10px] text-slate-400">오후 8:20</span>
+            <span className="text-[10px] text-muted-foreground">오후 8:20</span>
           </div>
         </div>
       </div>
@@ -40,8 +40,8 @@ export function ChatMessages({
       {/* User Message */}
       <div className="flex flex-col items-end gap-2 mb-4">
         <div className="flex items-end gap-2">
-          <span className="text-[10px] text-slate-400 font-medium">오후 8:20</span>
-          <div className="bg-white border px-4 py-2 rounded-2xl rounded-tr-none text-sm shadow-sm">안녕하세요</div>
+          <span className="text-[10px] text-muted-foreground font-medium">오후 8:20</span>
+          <div className="bg-background text-foreground border px-4 py-2 rounded-2xl rounded-tr-none text-sm shadow-sm">안녕하세요</div>
         </div>
       </div>
     </ScrollArea>

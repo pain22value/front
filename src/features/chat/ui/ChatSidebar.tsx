@@ -26,14 +26,14 @@ export function ChatSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))] border-r bg-white">
-      <SidebarHeader className="h-16 px-4 py-0 border-b flex flex-row items-center gap-2">
+    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))] border-r">
+      <SidebarHeader className="h-16 px-4 py-0 border-b flex flex-row items-center gap-2 text-sidebar-foreground">
         <Link href="/">
-          <ChevronLeft className="w-5 h-5 cursor-pointer text-slate-900" />
+          <ChevronLeft className="w-5 h-5 cursor-pointer text-sidebar-foreground" />
         </Link>
-        <h1 className="font-bold text-lg text-center flex-1 text-slate-900 pr-5">채팅 목록</h1>
+        <h1 className="font-bold text-lg text-center flex-1 pr-5 text-sidebar-foreground">채팅 목록</h1>
       </SidebarHeader>
-      <SidebarContent className="bg-white px-2 py-2">
+      <SidebarContent className="px-2 py-2">
         <SidebarGroup className="p-0">
           <SidebarMenu>
             {CHAT_SESSIONS.map((session) => (
@@ -69,17 +69,17 @@ function ChatItem({
         asChild
         isActive={active}
         size="lg"
-        className="h-auto p-4 cursor-pointer hover:bg-slate-50 transition-colors"
+        className="h-auto p-4 cursor-pointer hover:bg-sidebar-accent transition-colors text-sidebar-foreground data-[active=true]:bg-sidebar-accent"
       >
         <Link href={`/chat/${id}`} className="flex items-center gap-3">
           <Avatar className="w-12 h-12 border shrink-0">
-            <AvatarFallback className="bg-white text-slate-900 border text-base font-medium">
+            <AvatarFallback className="bg-background text-foreground border text-base font-medium">
               {name[0]}
             </AvatarFallback>
           </Avatar>
-          <div className="flex-1 min-w-0 text-slate-900">
+          <div className="flex-1 min-w-0 text-sidebar-foreground">
             <div className="font-bold text-sm">{name}</div>
-            <div className="text-xs text-slate-500 truncate">{message}</div>
+            <div className="text-xs text-muted-foreground truncate">{message}</div>
           </div>
         </Link>
       </SidebarMenuButton>

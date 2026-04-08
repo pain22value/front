@@ -22,12 +22,14 @@ export default function ShowReviewTab() {
 
   const currentReviews = data?.content || [];
 
-  const displayReviews = currentReviews.filter((review) => {
-    if (sentimentFilter === "all") return true;
-    if (sentimentFilter === "good") return review.positive === true;
-    if (sentimentFilter === "bad") return review.positive === false;
-    return true;
-  });
+  const displayReviews = currentReviews
+    .filter((review) => {
+      if (sentimentFilter === "all") return true;
+      if (sentimentFilter === "good") return review.positive === true;
+      if (sentimentFilter === "bad") return review.positive === false;
+      return true;
+    })
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
   const handleFilterChange = (value: string) => {
     setSentimentFilter(value);
@@ -52,7 +54,15 @@ export default function ShowReviewTab() {
       />
 
       {/* 리뷰 작성 카드 */}
-      {isWriting && <ShowReviewWriteCard showId={Number(showId)} onWriteSuccess={() => setIsWriting(false)} />}
+      {isWriting && (
+        <ShowReviewWriteCard
+          showId={Number(showId)}
+          onWriteSuccess={() => {
+            setIsWriting(false);
+            setPage(1);
+          }}
+        />
+      )}
 
       {/* 리뷰 리스트 */}
       <div className="space-y-4">

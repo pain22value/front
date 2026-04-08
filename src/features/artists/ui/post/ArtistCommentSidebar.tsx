@@ -43,7 +43,7 @@ export default function ArtistCommentSidebar() {
   }, [showDetail]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-background border border-border rounded-xl shadow-sm">
+    <div className="relative w-full h-full overflow-hidden bg-background border rounded-xl shadow-sm/">
       {/* 댓글 목록 섹션 */}
       <div className="w-full h-full overflow-y-auto">
         <CommentSection onCommentClick={() => setShowDetail(true)} />
@@ -60,7 +60,7 @@ export default function ArtistCommentSidebar() {
       <div
         ref={detailRef}
         style={{ transform: "translateX(100%)" }}
-        className="absolute top-0 right-0 z-20 w-[90%] h-full bg-background shadow-[-20px_0_50px_rgba(0,0,0,0.2)] dark:shadow-none"
+        className="absolute top-0 right-0 z-20 w-[90%] h-full bg-background/"
       >
         <ArtistCommentDetail onBack={() => setShowDetail(false)} />
       </div>

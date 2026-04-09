@@ -3,9 +3,9 @@
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { ko } from "date-fns/locale";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
-import { isSameDay } from "date-fns";
+import { isSameDay, format, startOfToday } from "date-fns";
 import { useCastingSchedules } from "../../hooks/useCastingSchedules";
 import ShowOpenNoticeModal from "./ShowOpenNoticeModal";
 import ShowWaitingModal from "@/features/ticketing/ui/ShowWaitingModal";
@@ -21,13 +21,25 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
 
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [round, setRound] = useState("1");
-  const { data: scheduleData, isLoading } = useCastingSchedules(showId);
 
-  // 선택된 날짜에 해당하는 스케줄 필터링
+  // 공연 전체 일정 필터링을 위한 시간 설정
+  // 선택된 날짜에 해당하는 스케줄 조회
+  const { data: scheduleData, isLoading } = useCastingSchedules(showId, {
+    from: date ? format(date, "yyyy-MM-dd") : undefined,
+    to: date ? format(date, "yyyy-MM-dd") : undefined,
+  });
+
+  // scheduleData 로깅
+  useEffect(() => {
+    if (scheduleData) {
+      console.log("scheduleData:", scheduleData);
+    }
+  }, [scheduleData]);
+
+  // 조회된 스케줄 사용 (이미 서버에서 필터링됨)
   const filteredSchedules = useMemo(() => {
-    if (!scheduleData || !date) return [];
-    return scheduleData.rows.filter((s) => isSameDay(new Date(s.showTime), date));
-  }, [scheduleData, date]);
+    return scheduleData?.rows || [];
+  }, [scheduleData]);
 
   // 필터링된 스케줄이 변경될 때 선택된 회차를 검증 및 업데이트 (렌더링 도중 상태 조정)
   if (filteredSchedules.length > 0) {

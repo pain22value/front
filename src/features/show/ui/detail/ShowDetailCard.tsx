@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { formatShowPeriod } from "@/shared/utils/date";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReviewMeta } from "../../hooks/useReviews";
+import { Users, TrendingUp } from "lucide-react";
 
 export default function ShowDetailCard(props: ShowDetail) {
   const {
@@ -34,9 +35,15 @@ export default function ShowDetailCard(props: ShowDetail) {
       <CardHeader className="p-0">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">{title}</h2>
-          <div className="flex items-center gap-4 text-sm">
-            {ranking && <span>{ranking}</span>}
-            <div className="flex items-center font-medium">truve 지수 {displayTruveIndex}%</div>
+          <div className="flex items-center gap-3 text-sm">
+            <div className="flex items-center gap-1.5 font-medium text-foreground">
+              <Users className="h-4 w-4 text-muted-foreground" />
+              <span>뮤지컬 주간 {reviewMeta?.weeklyRanking || 0}위</span>
+            </div>
+            <div className="flex items-center gap-1.5 font-medium text-foreground">
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <span>truve 지수 {displayTruveIndex}%</span>
+            </div>
           </div>
         </div>
       </CardHeader>

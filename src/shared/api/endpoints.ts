@@ -54,10 +54,11 @@ export const ENDPOINTS = {
 
   // 대기열
   QUEUE: {
-    ENTER: (showId: number | string) => `/queue/${showId}/enter`,
-    STATUS: (showId: number | string) => `/queue/${showId}/status`,
-    CANCEL: (showId: number | string) => `/queue/${showId}/cancel`,
+    ENTER: (scheduleId: number | string) => `/queue/${scheduleId}/enter`,
+    STATUS: (scheduleId: number | string) => `/queue/${scheduleId}/status`,
+    CANCEL: (scheduleId: number | string) => `/queue/${scheduleId}/cancel`,
   },
+
 
   // 결제
   PAYMENTS: {

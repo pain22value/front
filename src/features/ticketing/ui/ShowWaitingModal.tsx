@@ -12,11 +12,15 @@ export default function ShowWaitingModal({
   open,
   onOpenChange,
   showId,
+  scheduleId,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   showId: string | number;
+  scheduleId: string | number;
 }) {
+
+
   const [step, setStep] = useState<"captcha" | "queue">("captcha");
   const { confirm, openConfirm, closeConfirm } = useModalStore();
   const { mutate: cancelQueue } = useCancelQueue();
@@ -41,7 +45,7 @@ export default function ShowWaitingModal({
         description: "대기열에서 이탈하시겠습니까? 다시 입장하려면 대기 순서가 밀릴 수 있습니다.",
         confirmLabel: "확인",
         onConfirm: () => {
-          cancelQueue(showId, {
+          cancelQueue(scheduleId, {
             onSuccess: () => {
               onOpenChange(false);
               setTimeout(() => setStep("captcha"), 300);
@@ -55,7 +59,7 @@ export default function ShowWaitingModal({
         },
       });
     },
-    [confirm, step, openConfirm, onOpenChange, cancelQueue, showId],
+    [confirm, step, openConfirm, onOpenChange, cancelQueue, scheduleId],
   );
 
   // 내부에서 강제로 닫아야 할 때 (입장 성공 등)를 위한 전용 핸들러
@@ -70,11 +74,13 @@ export default function ShowWaitingModal({
       <DialogTitle />
       <DialogContent className="max-w-md p-0 overflow-hidden sm:max-w-[520px]">
         {step === "captcha" ? (
-          <CaptchaStep onNext={() => setStep("queue")} showId={showId} />
+          <CaptchaStep onNext={() => setStep("queue")} scheduleId={scheduleId} />
         ) : (
-          <QueueStep onOpenChange={handleForceClose} showId={showId} />
+          <QueueStep onOpenChange={handleForceClose} showId={showId} scheduleId={scheduleId} />
         )}
+
       </DialogContent>
     </Dialog>
+
   );
 }

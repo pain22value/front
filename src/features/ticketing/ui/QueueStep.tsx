@@ -11,12 +11,15 @@ import gsap from "gsap";
 export default function QueueStep({
   onOpenChange,
   showId,
+  scheduleId,
 }: {
   onOpenChange: (open: boolean) => void;
   showId: string | number;
+  scheduleId: string | number;
 }) {
   const router = useRouter();
-  const { data: queueData } = useQueueStatus(showId);
+  const { data: queueData } = useQueueStatus(scheduleId);
+
   const progressRef = useRef<HTMLDivElement>(null);
 
   const currentRank = queueData?.rank ?? 0;

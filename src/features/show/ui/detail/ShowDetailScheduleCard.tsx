@@ -76,7 +76,10 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
         />
       </div>
 
-      <Button onClick={handleTicketing} className="w-full h-12 bg-red-500 hover:bg-red-600 text-white mb-0">
+      <Button
+        onClick={() => handleTicketing(Number(round))}
+        className="w-full h-12 bg-red-500 hover:bg-red-600 text-white mb-0"
+      >
         예매하기
       </Button>
 
@@ -90,7 +93,13 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
       />
 
       {/* 대기열 모달 (캡차 -> 대기열 -> 입장 성공) */}
-      <ShowWaitingModal open={isWaitingModalOpen} onOpenChange={setIsWaitingModalOpen} showId={showId} />
+      <ShowWaitingModal
+        open={isWaitingModalOpen}
+        onOpenChange={setIsWaitingModalOpen}
+        showId={showId}
+        scheduleId={Number(round)}
+      />
+
     </div>
   );
 }

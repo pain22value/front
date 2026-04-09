@@ -7,10 +7,10 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 export default function useTicketing(showId: string | number) {
   const router = useRouter();
   const { user } = useAuthStore();
-  const { clearTicketing, getIsValid } = useTicketingStore();
+  const { clearTicketing, getIsValid, setScheduleId } = useTicketingStore();
   const [isWaitingModalOpen, setIsWaitingModalOpen] = useState(false);
 
-  const handleTicketing = () => {
+  const handleTicketing = (scheduleId: number) => {
     // 0. 로그인 여부 확인
     if (!user) {
       toast.error("로그인이 필요한 서비스입니다.");
@@ -27,8 +27,10 @@ export default function useTicketing(showId: string | number) {
 
     // 2. 무효한 토큰이 있거나 처음인 경우, 초기화 후 대기열 모달 오픈
     clearTicketing();
+    setScheduleId(scheduleId);
     setIsWaitingModalOpen(true);
   };
+
 
   return {
     isWaitingModalOpen,

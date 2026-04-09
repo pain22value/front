@@ -7,7 +7,7 @@ import { cn } from "@/shared/utils/cn";
 import { useState } from "react";
 import { useEnterQueue } from "../hooks/useQueue";
 
-export default function CaptchaStep({ onNext, showId }: { onNext: () => void; showId: string | number }) {
+export default function CaptchaStep({ onNext, scheduleId }: { onNext: () => void; scheduleId: string | number }) {
   const [selectedTile, setSelectedTile] = useState<number | null>(null);
   const { mutate: enterQueue, isPending } = useEnterQueue();
 
@@ -15,7 +15,7 @@ export default function CaptchaStep({ onNext, showId }: { onNext: () => void; sh
   const handleSubmit = () => {
     if (selectedTile === null) return;
 
-    enterQueue(showId, {
+    enterQueue(scheduleId, {
       onSuccess: () => {
         // 성공 이후 다음 스텝(큐 화면)으로 이동 신호 전달
         onNext();
@@ -27,6 +27,7 @@ export default function CaptchaStep({ onNext, showId }: { onNext: () => void; sh
       },
     });
   };
+
 
   return (
     <>

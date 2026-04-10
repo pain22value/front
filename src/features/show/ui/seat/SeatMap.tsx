@@ -14,24 +14,26 @@ interface SeatMapProps {
 export const SeatMap = ({ showScheduleId }: SeatMapProps) => {
   const router = useRouter();
   const { data: sections, isLoading, isError } = useGetSeats(showScheduleId);
-  const { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll } =
+  const { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll, holdAll } =
     useSeatSelection(showScheduleId);
 
   if (isLoading) return <div className="flex items-center justify-center h-full">로딩 중...</div>;
   if (!sections || sections.length === 0) return <div className="flex items-center justify-center h-full">좌석 정보를 불러올 수 없습니다.</div>;
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (selectedSeats.length === 0) return;
-    
-    // 선택한 좌석 정보 sessionStorage에 저장
+
+    // 결제하기 누를 때 선택된 좌석를 리스트로 한번에 호출
+    const success = await holdAll();
+    if (!success) return;
+
     sessionStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
-    
     router.push(`/payments`);
   };
 
   return (
     <div className="flex h-full">
-     <div className="flex flex-col flex-1 items-center overflow-hidden relative">
+      <div className="flex flex-col flex-1 items-center overflow-hidden relative">
         <SeatCanvas
           sections={sections}
           selectedSeats={selectedSeats}

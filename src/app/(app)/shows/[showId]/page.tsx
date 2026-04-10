@@ -5,7 +5,7 @@ import { ENDPOINTS } from "@/shared/api/endpoints";
 import ShowDetailCard from "@/features/show/ui/detail/ShowDetailCard";
 // import { notFound } from "next/navigation";
 
-export const revalidate = 60; // 재검증시간설정 : n초동안캐시
+// export const revalidate = 60; // 재검증시간설정 : n초동안캐시
 
 export async function generateStaticParams() {
   try {

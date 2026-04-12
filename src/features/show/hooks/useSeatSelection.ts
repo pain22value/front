@@ -34,51 +34,37 @@ export const useSeatSelection = (showScheduleId: number) => {
     };
   }, [selectedSeats.length, showScheduleId]);
 
-  const selectSeat = async (seat: Seat) => {
+  // 좌석 선택할 때마다 api 호출하던 거 삭제하고, state만 업데이트 하도록 변경
+  const selectSeat = (seat: Seat) => {
     if (seat.status !== "available") return;
     if (selectedSeats.some((s) => s.seatId === seat.seatId)) return;
     if (selectedSeats.length >= MAX_SEATS) return;
-
-    const next = [...selectedSeats, seat];
-
-    try {
-      await seatService.holdSeats(
-        showScheduleId,
-        next.map((s) => Number(s.seatId))
-      );
-    } catch {
-      // mock 환경에서는 무시
-    } finally {
-      setSelectedSeats(next);
-    }
+    setSelectedSeats((prev) => [...prev, seat]);
   };
 
-  const cancelSeat = async (seatId: string) => {
-    const next = selectedSeats.filter((s) => s.seatId !== seatId);
-
-    try {
-      await seatService.releaseSeats(showScheduleId, [Number(seatId)]);
-    } catch {
-      // mock 환경에서는 무시
-    } finally {
-      setSelectedSeats(next);
-      if (next.length === 0) setExpiredAt(null);
-    }
+  const cancelSeat = (seatId: string) => {
+    setSelectedSeats((prev) => prev.filter((s) => s.seatId !== seatId));
+    if (selectedSeats.length === 1) setExpiredAt(null);
   };
 
-  const cancelAll = async () => {
-    try {
-      await seatService.releaseSeats(
-        showScheduleId,
-        selectedSeats.map((s) => Number(s.seatId))
-      );
-    } catch {
-      // mock 환경에서는 무시
-    } finally {
-      setSelectedSeats([]);
-      setExpiredAt(null);
-    }
+  const cancelAll = () => {
+    setSelectedSeats([]);
+    setExpiredAt(null);
   };
 
-  return { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll };
+  // 결제하기 버튼 누를 때 사용할 함수
+  const holdAll = async (): Promise<boolean> => {
+  if (selectedSeats.length === 0) return false;
+  try {
+    await seatService.holdSeats(
+      showScheduleId,
+      selectedSeats.map((s) => Number(s.seatId))
+    );
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+  return { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll, holdAll };
 };

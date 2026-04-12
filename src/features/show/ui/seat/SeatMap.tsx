@@ -6,6 +6,8 @@ import { useSeatSelection } from "../../hooks/useSeatSelection";
 import { SeatCanvas } from "./SeatCanvas";
 import { SeatGradeLegend } from "./SeatGradeLegend";
 import { SeatPanel } from "./SeatPanel";
+import { usePageTelemetry } from "@/shared/hooks/usePageTelemetry";
+import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 
 interface SeatMapProps {
   showScheduleId: number;
@@ -14,11 +16,14 @@ interface SeatMapProps {
 export const SeatMap = ({ showScheduleId }: SeatMapProps) => {
   const router = useRouter();
   const { data: sections, isLoading, isError } = useGetSeats(showScheduleId);
-  const { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll, holdAll } =
-    useSeatSelection(showScheduleId);
+  const { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll } = useSeatSelection(showScheduleId);
+  const { stopTracking } = useTelemetryStore();
+
+  usePageTelemetry("seatmap");
 
   if (isLoading) return <div className="flex items-center justify-center h-full">로딩 중...</div>;
-  if (!sections || sections.length === 0) return <div className="flex items-center justify-center h-full">좌석 정보를 불러올 수 없습니다.</div>;
+  if (!sections || sections.length === 0)
+    return <div className="flex items-center justify-center h-full">좌석 정보를 불러올 수 없습니다.</div>;
 
   const handlePayment = async () => {
     if (selectedSeats.length === 0) return;

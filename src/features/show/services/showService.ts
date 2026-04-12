@@ -1,6 +1,5 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
-import { MOCK_SHOW_DETAIL } from "@/shared/data/shows";
 
 // 공연 목록 조회
 const getShows = async (params?: ShowsListParams): Promise<ShowsData> => {
@@ -46,8 +45,25 @@ async function getShowDetail(showId: string): Promise<ShowDetail> {
 }
 
 // 공연 캐스팅 일정 조회
-const getCastingSchedules = async (showId: string | number): Promise<ShowScheduleData> => {
-  const { data } = await api.get<ApiResponse<ShowScheduleData>>(ENDPOINTS.SHOWS.CASTING_SCHEDULES(showId));
+const getCastingSchedules = async (
+  showId: string | number,
+  params?: {
+    from?: string;
+    to?: string;
+    artistIds?: number[];
+    page?: number;
+    size?: number;
+  }
+): Promise<ShowScheduleData> => {
+  const { data } = await api.get<ApiResponse<ShowScheduleData>>(ENDPOINTS.SHOWS.CASTING_SCHEDULES(showId), {
+    params: {
+      from: params?.from,
+      to: params?.to,
+      artistIds: params?.artistIds?.join(","),
+      page: params?.page ?? 0, // 0-based index 사용 (totalElements: 1인데 rows: []인 문제 해결)
+      size: params?.size ?? 100,
+    },
+  });
   if (!data.data) throw new Error("캐스팅 일정을 불러올 수 없습니다.");
   return data.data;
 };

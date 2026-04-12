@@ -30,7 +30,13 @@ export default function HomePromotions() {
         stopOnMouseEnter
         renderItem={(item) => (
           <div className={`h-[254] group relative overflow-hidden rounded-3xl transition-all duration-300 ease-in-out`}>
-            <Image src={item.posterUrl} alt="Promotion Banner" fill className="object-cover rounded-xl" />
+            <Image
+              src={item.posterUrl}
+              alt="Promotion Banner"
+              width={1200}
+              height={400}
+              className="w-full h-full object-cover rounded-xl"
+            />
           </div>
         )}
       />

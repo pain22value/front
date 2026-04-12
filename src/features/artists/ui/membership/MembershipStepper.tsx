@@ -10,7 +10,7 @@ export default function MembershipStepper({ currentStep = 1 }) {
   ];
 
   return (
-    <div className="flex items-center justify-center space-x-4 mb-10 text-sm font-semibold">
+    <div className="flex items-center justify-center space-x-4 my-10 text-sm font-semibold">
       {steps.map((step, index) => (
         <React.Fragment key={step.id}>
           <div className={cn("flex items-center", currentStep === step.id ? "text-slate-900" : "text-slate-400")}>

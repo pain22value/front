@@ -3,7 +3,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ShowCardList from "@/features/show/ui/ShowCardList";
 import { useShows } from "@/features/show/hooks/useShows";
-import { SHOW_LIST } from "@/shared/data/shows";
 
 export default function ShowListPage() {
   const { data: showsData, isLoading } = useShows(undefined, "all");

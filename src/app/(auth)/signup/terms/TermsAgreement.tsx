@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function TermsAgreement() {
   const router = useRouter();
-  const setSignupTerms = useAuthStore((state) => state.setSignupTerms);
+  const { setSignupTerms } = useAuthStore();
 
   const [agreed, setAgreed] = useState({
     service: false,
@@ -23,12 +23,7 @@ export default function TermsAgreement() {
 
   // 개별 항목이 모두 체크되면 자동으로 전체동의로 파생
   const isAllChecked = useMemo(
-    () =>
-      agreed.service &&
-      agreed.finance &&
-      agreed.privacy &&
-      agreed.marketing &&
-      agreed.age,
+    () => agreed.service && agreed.finance && agreed.privacy && agreed.marketing && agreed.age,
     [agreed],
   );
 
@@ -73,7 +68,7 @@ export default function TermsAgreement() {
   };
 
   return (
-    <div className="w-full max-w-[500] mx-auto flex items-center justify-center">
+    <div className="w-full max-w-[500px] mx-auto flex items-center justify-center">
       <Card className="w-full border-none shadow-none bg-transparent">
         <CardContent className="px-0">
           <div className="text-center my-8">
@@ -102,23 +97,17 @@ export default function TermsAgreement() {
               <TermItem
                 label="서비스 이용약관 동의 (필수)"
                 checked={agreed.service}
-                onChange={(checked) =>
-                  handleSingleAgree("service", Boolean(checked))
-                }
+                onChange={(checked) => handleSingleAgree("service", Boolean(checked))}
               />
               <TermItem
                 label="전자금융거래 이용약관 동의 (필수)"
                 checked={agreed.finance}
-                onChange={(checked) =>
-                  handleSingleAgree("finance", Boolean(checked))
-                }
+                onChange={(checked) => handleSingleAgree("finance", Boolean(checked))}
               />
               <TermItem
                 label="개인정보 수집 및 이용 동의 (필수)"
                 checked={agreed.privacy}
-                onChange={(checked) =>
-                  handleSingleAgree("privacy", Boolean(checked))
-                }
+                onChange={(checked) => handleSingleAgree("privacy", Boolean(checked))}
               />
 
               <Separator className="bg-gray-50" />
@@ -127,17 +116,13 @@ export default function TermsAgreement() {
                 label="마케팅 정보 수신 동의 (선택)"
                 showArrow={false}
                 checked={agreed.marketing}
-                onChange={(checked) =>
-                  handleSingleAgree("marketing", Boolean(checked))
-                }
+                onChange={(checked) => handleSingleAgree("marketing", Boolean(checked))}
               />
               <TermItem
                 label="만 14세 이상입니다. (필수)"
                 showArrow={false}
                 checked={agreed.age}
-                onChange={(checked) =>
-                  handleSingleAgree("age", Boolean(checked))
-                }
+                onChange={(checked) => handleSingleAgree("age", Boolean(checked))}
               />
             </div>
           </div>
@@ -176,13 +161,9 @@ function TermItem({
           onCheckedChange={(checked) => onChange(Boolean(checked))}
           className="w-6 h-6 border-gray-300"
         />
-        <span className="text-base text-gray-800 font-medium cursor-pointer">
-          {label}
-        </span>
+        <span className="text-base text-gray-800 font-medium cursor-pointer">{label}</span>
       </div>
-      {showArrow && (
-        <ChevronRight className="w-5 h-5 text-gray-400 cursor-pointer" />
-      )}
+      {showArrow && <ChevronRight className="w-5 h-5 text-gray-400 cursor-pointer" />}
     </div>
   );
 }

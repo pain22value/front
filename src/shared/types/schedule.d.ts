@@ -29,4 +29,9 @@ type Schedule = {
   showDateLabel: string;
   showTimeLabel: string;
   casts: Record<string, { artistId: number | null; artistName: string }>;
+  remainingSeats: {
+    gradeName: string;
+    remainingSeatCount: number;
+    totalCount: number;
+  }[];
 };

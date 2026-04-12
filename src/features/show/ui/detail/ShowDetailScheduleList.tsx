@@ -3,6 +3,7 @@
 import { RadioGroup } from "@/components/ui/radio-group";
 import ShowDetailScheduleItem from "./ShowDetailScheduleItem";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isBefore } from "date-fns";
 
 export default function ShowDetailScheduleList({
   schedules,
@@ -30,16 +31,23 @@ export default function ShowDetailScheduleList({
     return <div className="py-8 text-center text-sm text-muted-foreground">선택하신 날짜에 공연이 없습니다.</div>;
   }
 
+  const now = new Date();
+
   return (
     <RadioGroup value={value} onValueChange={onValueChange} className="space-y-3">
-      {schedules.map((schedule, index) => (
-        <ShowDetailScheduleItem
-          key={schedule.scheduleId}
-          schedule={schedule}
-          index={index}
-          isSelected={value === schedule.scheduleId.toString()}
-        />
-      ))}
+      {schedules.map((schedule, index) => {
+        const isDisabled = isBefore(new Date(schedule.showTime), now);
+        return (
+          <ShowDetailScheduleItem
+            key={schedule.scheduleId}
+            schedule={schedule}
+            index={index}
+            isSelected={value === schedule.scheduleId.toString()}
+            onSelect={onValueChange}
+            isDisabled={isDisabled}
+          />
+        );
+      })}
     </RadioGroup>
   );
 }

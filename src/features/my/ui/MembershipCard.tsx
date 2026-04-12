@@ -48,16 +48,19 @@ export default function MembershipCard({
   };
 
   return (
-    <Card className="w-full p-6">
-      <CardContent className="flex flex-col md:flex-row /items-center gap-6 p-0">
+    <Card className="w-full p-4 border-t-[3px] border-t-zinc-500 shadow-lg overflow-hidden">
+      <CardContent className="flex flex-col md:flex-row gap-4 p-0">
         {/* 프로필 섹션 */}
-        <div className="flex items-start gap-4 flex-1">
+        <div className="flex items-start/ self-start gap-4 flex-1">
           <Avatar className="size-25 cursor-pointer">
             <AvatarImage src={imageUrl} alt={name} className="object-cover" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
-          <div className="flex-1 space-y-1">
-            <Badge variant="secondary" className="bg-teal-50 text-teal-600 hover:bg-teal-50">
+          <div className="flex-1 space-y-3">
+            <Badge
+              variant="outline"
+              className="rounded-md  bg-teal-50 text-teal-600 border-teal-500 px-3 py-1 hover:bg-teal-50 font-bold"
+            >
               멤버십 가입중
             </Badge>
             <h2 className="text-2xl font-bold">{name}</h2>
@@ -69,36 +72,27 @@ export default function MembershipCard({
         </div>
 
         {/* 결제 정보 섹션 */}
-        <div className="flex flex-col gap-3 w-full max-w-sm">
+        <div className="flex flex-col w-full md:max-w-[297px]">
           {/* 결제 정보 카드 */}
-          <Card className="rounded-xl border-none bg-slate-50 shadow-none">
-            <CardContent className="p-5 space-y-4">
+          <Card className="rounded-xl border-none bg-slate-50 shadow-none p-0">
+            <CardContent className="p-5 space-y-3">
               <div className="flex justify-between items-start">
                 <span className="text-slate-500 font-medium">다음 결제일</span>
-                <Badge
-                  variant="secondary"
-                  className="bg-white border border-slate-200 text-slate-800 hover:bg-white font-normal rounded-lg"
-                >
+                <Badge variant="secondary" className="border border-slate-200 text-slate-800 font-normal rounded-md">
                   {daysLeft}
                 </Badge>
               </div>
-
-              <div className="text-2xl font-semibold text-slate-900 tracking-tight">{nextPaymentDate}</div>
-
+              <div className="text-lg font-semibold text-slate-900 tracking-tight">{nextPaymentDate}</div>
               <div className="border-t border-slate-200 pt-4 flex justify-between items-center">
                 <span className="text-slate-500">월 결제</span>
                 <span className="font-bold text-slate-900">{price}</span>
               </div>
             </CardContent>
           </Card>
-          <Button variant="outline" className="w-full h-12 rounded-xl text-md font-medium border-slate-200">
+          <Button variant="outline" className="w-full rounded-lg text-md font-medium border-slate-200 mt-3">
             아티스트 페이지 바로가기
           </Button>
-          <Button
-            variant="link"
-            className="text-sm text-red-500 hover:underline text-center mt-1"
-            onClick={handleCancelClick}
-          >
+          <Button variant="link" className="text-sm text-red-500 hover:underline" onClick={handleCancelClick}>
             멤버십 해지하기
           </Button>
         </div>

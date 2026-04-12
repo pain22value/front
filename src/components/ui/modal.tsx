@@ -1,13 +1,18 @@
-interface ModalProps {
+export default function Modal({
+  message,
+  subMessage,
+  onClose,
+  onConfirm,
+  confirmLabel = "확인",
+  cancelLabel = "취소",
+}: {
   message: string | null;
   subMessage?: string;
   onClose: () => void;
   onConfirm?: () => void;
   confirmLabel?: string;
   cancelLabel?: string;
-}
-
-export default function Modal({ message, subMessage, onClose, onConfirm, confirmLabel = "확인", cancelLabel = "취소" }: ModalProps) {
+}) {
   if (!message) return null;
 
   return (

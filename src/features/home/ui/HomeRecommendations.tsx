@@ -16,7 +16,7 @@ export default function HomeRecommendations() {
   const displayShows = data.shows;
 
   return (
-    <div className="space-y-8">
+    <section className="space-y-8">
       <h1 className="font-semibold text-2xl">이 뮤지컬 어떠세요?</h1>
       <BaseCarousel
         items={displayShows}
@@ -36,7 +36,13 @@ export default function HomeRecommendations() {
             )}
           >
             <div className="relative aspect-2/3 w-full">
-              <Image src={item.posterUrl} alt={item.showTitle} fill className="object-cover" />
+              <Image
+                src={item.posterUrl}
+                alt={item.showTitle}
+                width={400}
+                height={600}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="absolute bottom-0 w-full bg-linear-to-t from-black/80 to-transparent p-4">
               <h3 className="text-lg font-semibold text-white">{item.showTitle}</h3>
@@ -46,13 +52,13 @@ export default function HomeRecommendations() {
           </Link>
         )}
       />
-    </div>
+    </section>
   );
 }
 
 function HomeRecommendSectionSkeleton() {
   return (
-    <section className="max-w-[1200] mx-auto space-y-8">
+    <section className="max-w-[1200px] mx-auto space-y-8">
       <Skeleton className="h-8 w-48 bg-accent/50" />
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {Array.from({ length: 5 }).map((_, i) => (

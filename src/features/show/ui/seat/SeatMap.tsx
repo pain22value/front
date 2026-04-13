@@ -16,7 +16,7 @@ interface SeatMapProps {
 export const SeatMap = ({ showScheduleId }: SeatMapProps) => {
   const router = useRouter();
   const { data: sections, isLoading, isError } = useGetSeats(showScheduleId);
-  const { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll } = useSeatSelection(showScheduleId);
+  const { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll, holdAll } = useSeatSelection(showScheduleId);
   const { stopTracking } = useTelemetryStore();
 
   usePageTelemetry("seatmap");

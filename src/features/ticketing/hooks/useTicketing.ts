@@ -21,7 +21,7 @@ export default function useTicketing(showId: string | number) {
     // 1. 이미 유효한 토큰이 있는지 확인
     if (getIsValid(showId)) {
       toast.success("이미 유효한 입장 토큰이 있습니다.");
-      router.push(`/shows/${showId}/seat`);
+      router.push(`/shows/${scheduleId}/seat`);
       return;
     }
 

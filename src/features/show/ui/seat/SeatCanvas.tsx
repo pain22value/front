@@ -9,28 +9,17 @@ const STEP = SS + SG;
 
 const LOGICAL_W = 720;
 
-const GRADE_COLOR: Record<string, number> = {
-  VIP: 0xa78bfa,
-  R: 0x7c3aed,
-  S: 0x818cf8,
-  A: 0x86efac,
-  A2: 0xfbbf24,
-};
-
 const STATUS_OVERRIDE: Partial<Record<SeatStatus, number>> = {
   reserved: 0xaaaaaa,
   unavailable: 0xf1f1f4,
 };
 
-// fill 색 기준 hover 색 매핑
 const FILL_TO_HOVER: Record<number, number> = {
   0xdecffb: 0xbda0f8, // VIP
   0xc2f2d8: 0xa0eec3, // R
   0xccebf6: 0xa8d8f0, // S
   0xfde5be: 0xffd580, // A
 };
-
-const SELECTED_COLOR = 0xf11322;
 
 type Align = "left" | "right" | "center";
 
@@ -116,12 +105,10 @@ const drawCurvedBox = (
   topCurve: number,
   bottomCurve: number,
 ) => {
-  // 위쪽 - 오목 (안으로 들어가게)
   g.moveTo(x, y);
-  g.quadraticCurveTo(x + w / 2, y + topCurve, x + w, y); // ← 제어점이 아래로
+  g.quadraticCurveTo(x + w / 2, y + topCurve, x + w, y);
   g.lineTo(x + w, y + h);
-  // 아래쪽 - 볼록 (밖으로 나오게)
-  g.quadraticCurveTo(x + w / 2, y + h + bottomCurve, x, y + h); // ← 제어점이 더 아래로
+  g.quadraticCurveTo(x + w / 2, y + h + bottomCurve, x, y + h);
   g.closePath();
   g.fill({ color: 0xffffff });
 };
@@ -136,7 +123,6 @@ const drawCurvedBoxWithCut = (
   bottomCurve: number,
 ) => {
   const cutSize = topCurve * 2;
-
   g.moveTo(x + cutSize, y);
   g.lineTo(x, y + cutSize);
   g.lineTo(x, y + h);
@@ -157,10 +143,45 @@ interface SeatCanvasProps {
 export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<PIXI.Application | null>(null);
+  const seatGraphicsRef = useRef<Map<string, { g: PIXI.Graphics; style: { fill: number; stroke?: number } }>>(new Map());
+  const selectedSeatsRef = useRef<Seat[]>(selectedSeats);
 
+  // onSeatClick ref로 관리
+  const onSeatClickRef = useRef(onSeatClick);
+  useEffect(() => {
+    onSeatClickRef.current = onSeatClick;
+  }, [onSeatClick]);
+
+  // selectedSeats 변경 시 색상만 업데이트 (캔버스 재초기화 없음)
+  useEffect(() => {
+    selectedSeatsRef.current = selectedSeats;
+    const selectedIds = new Set(selectedSeats.map((s) => s.seatId));
+
+    seatGraphicsRef.current.forEach(({ g, style }, seatId) => {
+      g.clear();
+      if (selectedIds.has(seatId)) {
+        // 선택된 좌석 - hover 색상으로 표시
+        const hoverFill = FILL_TO_HOVER[style.fill] ?? style.fill;
+        if (style.stroke) {
+          g.roundRect(0, 0, SS, SS, 2).fill({ color: hoverFill }).stroke({ color: style.stroke, width: 1 });
+        } else {
+          g.roundRect(0, 0, SS, SS, 2).fill({ color: hoverFill });
+        }
+      } else {
+        // 선택 해제 - 원래 색상으로 복원
+        if (style.stroke) {
+          g.roundRect(0, 0, SS, SS, 2).fill({ color: style.fill }).stroke({ color: style.stroke, width: 1 });
+        } else {
+          g.roundRect(0, 0, SS, SS, 2).fill({ color: style.fill });
+        }
+      }
+    });
+  }, [selectedSeats]);
+
+  // sections 변경 시에만 캔버스 초기화
   useEffect(() => {
     if (!wrapperRef.current) return;
-    if (wrapperRef.current.querySelector("canvas")) return; // 이미 캔버스가 있으면 스킵
+    if (wrapperRef.current.querySelector("canvas")) return;
     const wrapper = wrapperRef.current;
 
     const opRows = sections.find((s) => s.sectionId === "OP")?.rows.length ?? 3;
@@ -194,6 +215,8 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       appRef.current = null;
     }
 
+    seatGraphicsRef.current.clear();
+
     const app = new PIXI.Application();
     appRef.current = app;
 
@@ -211,7 +234,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
         canvas.style.display = "block";
         wrapper.appendChild(canvas);
 
-        const selectedIds = new Set(selectedSeats.map((s) => s.seatId));
+        const selectedIds = new Set(selectedSeatsRef.current.map((s) => s.seatId));
         const CX = LOGICAL_W / 2;
         const BOX_PX = 55;
 
@@ -226,7 +249,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
         const A_startX = B_startX - SIDE_GAP - a1MaxCols * STEP + SG;
         const C_startX = B_endX + SIDE_GAP + SG;
 
-        // ── Stage ─────────────────────────────────────────────
+        // Stage
         const stageBar = new PIXI.Graphics();
         stageBar.roundRect(CX - 170, 12, 340, 22, 6).fill({ color: 0xdddde4 });
         app.stage.addChild(stageBar);
@@ -234,7 +257,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
 
         const BOX1_Y = 32;
 
-        // ── OP ────────────────────────────────────────────────
+        // OP
         const OP_Y = BOX1_Y + 60;
         const opSecRows = sections.find((s) => s.sectionId === "OP")?.rows ?? [];
 
@@ -276,11 +299,14 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
             g.x = rx + ci * STEP;
             g.y = ry;
 
-            if (seat.status === "available" && !isSelected) {
+            if (seat.status === "available") {
+              seatGraphicsRef.current.set(String(seat.seatId), { g, style });
+
               g.eventMode = "static";
               g.cursor = "pointer";
 
               g.on("pointerover", () => {
+                if (selectedSeatsRef.current.some((s) => s.seatId === seat.seatId)) return;
                 g.clear();
                 const hoverFill = FILL_TO_HOVER[style.fill] ?? style.fill;
                 if (style.stroke) {
@@ -291,6 +317,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
               });
 
               g.on("pointerout", () => {
+                if (selectedSeatsRef.current.some((s) => s.seatId === seat.seatId)) return;
                 g.clear();
                 if (style.stroke) {
                   g.roundRect(0, 0, SS, SS, 2).fill({ color: style.fill }).stroke({ color: style.stroke, width: 1 });
@@ -299,14 +326,14 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
                 }
               });
 
-              g.on("pointerdown", () => onSeatClick(seat));
+              g.on("pointerdown", () => onSeatClickRef.current(seat));
             }
 
             app.stage.addChild(g);
           });
         });
 
-        // ── 공통 섹션 렌더 ────────────────────────────────────
+        // 공통 섹션 렌더
         const renderSection = (sectionId: string, baseX: number, align: Align, maxCols: number, startY: number) => {
           const sec = sections.find((s) => s.sectionId === sectionId);
           if (!sec) return;
@@ -366,11 +393,14 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
               g.x = rx + (seat.col - 1) * STEP;
               g.y = ry;
 
-              if (seat.status === "available" && !isSelected) {
+              if (seat.status === "available") {
+                seatGraphicsRef.current.set(String(seat.seatId), { g, style });
+
                 g.eventMode = "static";
                 g.cursor = "pointer";
 
                 g.on("pointerover", () => {
+                  if (selectedSeatsRef.current.some((s) => s.seatId === seat.seatId)) return;
                   g.clear();
                   const hoverFill = FILL_TO_HOVER[style.fill] ?? style.fill;
                   if (style.stroke) {
@@ -381,6 +411,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
                 });
 
                 g.on("pointerout", () => {
+                  if (selectedSeatsRef.current.some((s) => s.seatId === seat.seatId)) return;
                   g.clear();
                   if (style.stroke) {
                     g.roundRect(0, 0, SS, SS, 2).fill({ color: style.fill }).stroke({ color: style.stroke, width: 1 });
@@ -389,7 +420,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
                   }
                 });
 
-                g.on("pointerdown", () => onSeatClick(seat));
+                g.on("pointerdown", () => onSeatClickRef.current(seat));
               }
 
               app.stage.addChild(g);
@@ -397,7 +428,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
           });
         };
 
-        // ── 1F A/B/C ─────────────────────────────────────────
+        // 1F A/B/C
         const SEC1_Y = OP_Y + opSecRows.length * STEP + 16;
 
         const labelPos1F: Record<string, number> = {
@@ -440,7 +471,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
         app.stage.addChild(b1g);
         app.stage.addChild(makeText("1F", { fontSize: 9, fill: 0xffffff, fontWeight: "bold" }, CX - 6, BADGE1_Y - 5));
 
-        // ── 2F ───────────────────────────────────────────────
+        // 2F
         const BOX2_Y = BADGE1_Y + 16;
         const SEC2_Y = BOX2_Y + 55;
 
@@ -483,7 +514,7 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
         app.stage.addChild(b2g);
         app.stage.addChild(makeText("2F", { fontSize: 9, fill: 0xffffff, fontWeight: "bold" }, CX - 6, BADGE2_Y - 5));
 
-        // ── ResizeObserver ────────────────────────────────────
+        // ResizeObserver
         const applyScale = () => {
           const { clientWidth, clientHeight } = wrapper;
           if (!clientWidth || !clientHeight) return;
@@ -505,13 +536,12 @@ export const SeatCanvas = ({ sections, selectedSeats, onSeatClick }: SeatCanvasP
       if (appRef.current) {
         try {
           appRef.current.destroy(true);
-        } catch (e) {
-          // ignore
-        }
+        } catch (e) {}
         appRef.current = null;
       }
+      seatGraphicsRef.current.clear();
     };
-  }, [sections, selectedSeats]);
+  }, [sections]); // onSeatClick, selectedSeats 제거!
 
   return <div ref={wrapperRef} className="w-full h-full flex items-center justify-center bg-[#EDEEF4]" />;
 };

@@ -35,7 +35,7 @@ export default function QueueStep({
     if (pollingStatus !== "WAITING" && queueData.admissionToken) {
       setAdmissionToken(queueData.admissionToken);
       onOpenChange(false);
-      router.push(`/shows/${showId}/seat`); // 좌석 선택 화면으로 이동
+      router.push(`/shows/${scheduleId}/seat`); // 좌석 선택 화면으로 이동
     }
   }, [queueData, pollingStatus, onOpenChange, setAdmissionToken, showId, router]);
 

@@ -5,26 +5,25 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } fro
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useReviewMeta } from "../../hooks/useReviews";
-import { REVIEW_CHART_LEFT_MOCK, REVIEW_CHART_RIGHT_MOCK } from "@/shared/data/reviews";
 
 export default function ShowReviewChart({ showId }: { showId: number }) {
-  const { data } = useReviewMeta(showId);
+  const { data, isLoading } = useReviewMeta(showId);
 
   const dataLeft = useMemo(
-    () =>
-      data?.charmPointScores && data.charmPointScores.length > 0
-        ? data.charmPointScores.map((score) => ({ subject: score.label, value: score.score }))
-        : REVIEW_CHART_LEFT_MOCK,
+    () => data?.charmPointScores?.map((score) => ({ subject: score.label, value: score.score })) || [],
     [data],
   );
 
   const dataRight = useMemo(
-    () =>
-      data?.emotionPointScores && data.emotionPointScores.length > 0
-        ? data.emotionPointScores.map((score) => ({ subject: score.label, value: score.score }))
-        : REVIEW_CHART_RIGHT_MOCK,
+    () => data?.emotionPointScores?.map((score) => ({ subject: score.label, value: score.score })) || [],
     [data],
   );
+
+  if (isLoading || !data) return null;
+
+  // 데이터가 모두 0이거나 비어있으면 표시하지 않음
+  const hasData = (data.charmPointScores?.length ?? 0) > 0 || (data.emotionPointScores?.length ?? 0) > 0;
+  if (!hasData) return null;
 
   return (
     <section className="space-y-6">

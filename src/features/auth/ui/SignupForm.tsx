@@ -51,20 +51,18 @@ export default function SignupForm() {
   const nicknameValue = watch("nickname");
   const verificationCodeValue = watch("verificationCode");
   const isInputFilled =
-    !!emailValue &&
-    !!passwordValue &&
-    !!passwordConfirmValue &&
-    !!nicknameValue &&
-    !!verificationCodeValue;
+    !!emailValue && !!passwordValue && !!passwordConfirmValue && !!nicknameValue && !!verificationCodeValue;
   const isEmailInputValid = !!emailValue && !errors.email;
 
   /* ================= 약관 동의 확인 ================= */
   useEffect(() => {
-    if (!signupTerms) {
+    const currentTerms = useAuthStore.getState().signupTerms;
+    if (!currentTerms) {
       toast.error("약관 동의가 필요합니다.");
       router.replace("/signup/terms");
     }
-  }, [signupTerms, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
 
   /* ================= password 교차 검증 보완 ================= */
   useEffect(() => {
@@ -113,11 +111,7 @@ export default function SignupForm() {
       setSignupTerms(null);
       router.push("/signin");
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "서버와의 통신 중 문제가 발생했습니다.",
-      );
+      toast.error(error instanceof Error ? error.message : "서버와의 통신 중 문제가 발생했습니다.");
     }
   };
 
@@ -138,11 +132,7 @@ export default function SignupForm() {
       setTimeLeft(180);
       toast.success("인증코드가 발송되었습니다.");
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "인증코드 발송에 실패했습니다.",
-      );
+      toast.error(error instanceof Error ? error.message : "인증코드 발송에 실패했습니다.");
     } finally {
       setIsSendingVerification(false);
     }
@@ -161,38 +151,23 @@ export default function SignupForm() {
       setIsVerified(true);
       toast.success("인증되었습니다.");
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "인증번호가 올바르지 않습니다.",
-      );
+      toast.error(error instanceof Error ? error.message : "인증번호가 올바르지 않습니다.");
     } finally {
       setIsVerifying(false);
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full mx-auto max-w-[400] space-y-6"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-[400px] space-y-6">
       <h1 className="text-center text-2xl font-bold">회원가입</h1>
 
       {/* ================= 이메일 ================= */}
       <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">
-          이메일
-        </Label>
+        <Label className="text-sm text-muted-foreground font-medium">이메일</Label>
         <div className="flex gap-2">
           <div className="relative w-full">
-            <Input
-              {...register("email")}
-              aria-invalid={!!errors.email}
-              disabled={isVerified}
-            />
-            {isVerified && (
-              <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 w-4 h-4" />
-            )}
+            <Input {...register("email")} aria-invalid={!!errors.email} disabled={isVerified} />
+            {isVerified && <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 w-4 h-4" />}
           </div>
           {!isVerified && (
             <Button
@@ -213,9 +188,7 @@ export default function SignupForm() {
             </Button>
           )}
         </div>
-        {errors.email && (
-          <p className="text-sm text-destructive">{errors.email.message}</p>
-        )}
+        {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
 
         {/* ================= 인증코드 영역 ================= */}
         {isVerificationSent && (
@@ -259,9 +232,7 @@ export default function SignupForm() {
 
       {/* ================= 비밀번호 ================= */}
       <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">
-          비밀번호
-        </Label>
+        <Label className="text-sm text-muted-foreground font-medium">비밀번호</Label>
         <div className="relative">
           <Input
             type={showPassword ? "text" : "password"}
@@ -274,26 +245,16 @@ export default function SignupForm() {
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
           >
-            {showPassword ? (
-              <EyeOff className="w-4 h-4" />
-            ) : (
-              <Eye className="w-4 h-4" />
-            )}
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
-        <p className="text-xs text-muted-foreground">
-          영문, 숫자, 특수문자 포함 8~32자
-        </p>
-        {errors.password && (
-          <p className="text-sm text-destructive">{errors.password.message}</p>
-        )}
+        <p className="text-xs text-muted-foreground">영문, 숫자, 특수문자 포함 8~32자</p>
+        {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
       </div>
 
       {/* ================= 비밀번호 확인 ================= */}
       <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">
-          비밀번호 확인
-        </Label>
+        <Label className="text-sm text-muted-foreground font-medium">비밀번호 확인</Label>
         <div className="relative">
           <Input
             type={showPasswordConfirm ? "text" : "password"}
@@ -306,32 +267,18 @@ export default function SignupForm() {
             onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
           >
-            {showPasswordConfirm ? (
-              <EyeOff className="w-4 h-4" />
-            ) : (
-              <Eye className="w-4 h-4" />
-            )}
+            {showPasswordConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
-        {errors.passwordConfirm && (
-          <p className="text-sm text-destructive">
-            {errors.passwordConfirm.message}
-          </p>
-        )}
+        {errors.passwordConfirm && <p className="text-sm text-destructive">{errors.passwordConfirm.message}</p>}
       </div>
 
       {/* ================= 닉네임 ================= */}
       <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">
-          닉네임
-        </Label>
+        <Label className="text-sm text-muted-foreground font-medium">닉네임</Label>
         <Input {...register("nickname")} aria-invalid={!!errors.nickname} />
-        <p className="text-xs text-muted-foreground">
-          원하는 닉네임을 설정해 보세요. (1~32자, 특수문자 사용 불가)
-        </p>
-        {errors.nickname && (
-          <p className="text-sm text-destructive">{errors.nickname.message}</p>
-        )}
+        <p className="text-xs text-muted-foreground">원하는 닉네임을 설정해 보세요. (1~32자, 특수문자 사용 불가)</p>
+        {errors.nickname && <p className="text-sm text-destructive">{errors.nickname.message}</p>}
       </div>
 
       {/* ================= 가입 버튼 ================= */}

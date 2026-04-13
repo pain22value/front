@@ -49,13 +49,16 @@ export const ENDPOINTS = {
     DETAIL: (artistId: number | string) => `/musical/artists/${artistId}`,
     LIKE: (artistId: number | string) => `/musical/artists/${artistId}/likes`,
     PAST_SHOWS: (artistId: number | string) => `/musical/artists/${artistId}/past-shows`,
+    MEMBERSHIP_PAYMENT: (artistId: number | string) => `/musical/artists/${artistId}/membership/payment`,
   },
 
   // 대기열
   QUEUE: {
-    ENTER: (showId: number | string) => `/queue/${showId}/enter`,
-    STATUS: (showId: number | string) => `/queue/${showId}/status`,
+    ENTER: (scheduleId: number | string) => `/queue/${scheduleId}/enter`,
+    STATUS: (scheduleId: number | string) => `/queue/${scheduleId}/status`,
+    CANCEL: (scheduleId: number | string) => `/queue/${scheduleId}/cancel`,
   },
+
 
   // 결제
   PAYMENTS: {
@@ -77,4 +80,7 @@ export const ENDPOINTS = {
     RELEASE: "/ticketing/:showScheduleId/hold/seat", // DELETE 좌석 반납
     HEARTBEAT: "/ticketing/:showScheduleId/heartbeat", // POST 세션 연장
   },
+
+  // 텔레메트리 (프록시 경로 사용)
+  TELEMETRY: "/telemetry",
 } as const;

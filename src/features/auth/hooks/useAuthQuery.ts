@@ -4,7 +4,6 @@ import { profileService } from "@/features/my/services/profileService";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useEffect } from "react";
 import { AxiosError } from "axios";
-import { toast } from "sonner";
 // import { usePathname } from "next/navigation";
 
 export const useAuthQuery = () => {
@@ -26,11 +25,7 @@ export const useAuthQuery = () => {
     if (isError) {
       const err = error as AxiosError;
       // 401 에러(인증 실패)인 경우에만 로그아웃 처리
-      if (err.response?.status === 401) {
-        signout();
-      } else {
-        toast.error("서버 연결 실패", { description: "서버가 비활성화 상태이거나 네트워크 문제일 수 있습니다." });
-      }
+      if (err.response?.status === 401) signout();
     }
   }, [isError, error, signout]);
 

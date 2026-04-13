@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import ArtistCard from "@/features/artists/ui/ArtistCard";
+import ArtistCard from "@/features/search/ui/ArtistCard";
+import ShowCard from "@/features/search/ui/ShowCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSearch } from "../hooks/useSearch";
 
@@ -14,6 +15,8 @@ export default function SearchResult({ query }: { query?: string }) {
     showOffset: 0,
     showLimit: 20,
   });
+
+  // console.log({ data });
 
   if (isLoading) {
     return <SearchSkeleton />;
@@ -30,13 +33,14 @@ export default function SearchResult({ query }: { query?: string }) {
           <Image
             src="https://res.cloudinary.com/dfiaqyaug/image/upload/v1770427942/Frame_2085665719_r3hpi9.png"
             alt="데스노트 더 뮤지컬"
-            fill
-            className="object-contain object-bottom"
+            width={1000}
+            height={1000}
+            className="w-full h-full object-contain object-bottom"
           />
         </div>
       </section>
       <section>
-        <h2 className="text-2xl font-semibold">배우({data?.artistCount || 0})</h2>
+        <h2 className="text-2xl font-semibold italic tracking-tight">배우({data?.artistCount || 0})</h2>
         <Separator className="mt-4! mb-6!" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {artistsList.map((artist: Artist) => (
@@ -53,18 +57,11 @@ export default function SearchResult({ query }: { query?: string }) {
         </div>
       </section>
       <section>
-        <h2 className="text-2xl font-semibold">티켓({data?.showCount || 0})</h2>
+        <h2 className="text-2xl font-semibold italic tracking-tight">티켓({data?.showCount || 0})</h2>
         <Separator className="mt-4 my-6" />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {showsList.map((show: SearchShow) => (
-            <div key={show.showId}>
-              <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden mb-4 bg-muted">
-                {show.posterUrl && <Image src={show.posterUrl} alt={show.title} fill className="object-cover" />}
-              </div>
-              <p className="font-semibold">{show.title}</p>
-              <p className="text-sm text-muted-foreground">{show.venueName}</p>
-              <p className="text-sm text-muted-foreground">{show.date}</p>
-            </div>
+            <ShowCard key={show.showId} show={show} />
           ))}
         </div>
       </section>

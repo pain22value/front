@@ -15,7 +15,7 @@ export default function ShowReviewFilter({
   return (
     <div className="flex items-center justify-end gap-4">
       <Select value={sentimentFilter} onValueChange={onSentimentFilterChange}>
-        <SelectTrigger className="w-[120]">
+        <SelectTrigger className="w-[120px]">
           <SelectValue placeholder="전체보기" />
         </SelectTrigger>
         <SelectContent>

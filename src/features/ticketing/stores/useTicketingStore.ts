@@ -12,29 +12,34 @@ type AdmissionTokenPayload = {
 type TicketingState = {
   admissionToken: string | null;
   showId: string | number | null;
+  scheduleId: number | null; // 추가
   expiresAt: number | null;
   sessionToken: string | null; //  박영준 추가 0330
   setAdmissionToken: (token: string | null) => void;
   setSessionToken: (token: string | null) => void; // 박영준 추가 0330
+  setScheduleId: (id: number | null) => void; // 추가
   clearTicketing: () => void;
   getIsValid: (currentShowId: string | number) => boolean;
 };
+
 
 export const useTicketingStore = create<TicketingState>()(
   persist(
     (set, get) => ({
       admissionToken: null,
       showId: null,
+      scheduleId: null, // 추가
       expiresAt: null,
       sessionToken: null, // 박영준 추가 0330
 
       setAdmissionToken: (token) => {
         if (!token) {
-          set({ admissionToken: null, showId: null, expiresAt: null });
+          set({ admissionToken: null, showId: null, scheduleId: null, expiresAt: null });
           return;
         }
         try {
           const decoded = jwtDecode<AdmissionTokenPayload>(token);
+          console.log({ decoded });
           set({
             admissionToken: token,
             showId: decoded.show_id,
@@ -42,20 +47,29 @@ export const useTicketingStore = create<TicketingState>()(
           });
         } catch (error) {
           console.error("입장 토큰 디코딩 실패:", error);
-          set({ admissionToken: null, showId: null, expiresAt: null });
+          set({ admissionToken: null, showId: null, scheduleId: null, expiresAt: null });
         }
       },
 
-      setSessionToken: (token) => { // 박영준 추가 0330
+      setSessionToken: (token) => {
+        // 박영준 추가 0330
         set({ sessionToken: token });
       },
 
-      clearTicketing: () => set({
-        admissionToken: null,
-        showId: null,
-        expiresAt: null,
-        sessionToken: null, // 박영준 추가 0330
-      }),
+      setScheduleId: (id) => {
+        // 추가
+        set({ scheduleId: id });
+      },
+
+      clearTicketing: () =>
+        set({
+          admissionToken: null,
+          showId: null,
+          scheduleId: null, // 추가
+          expiresAt: null,
+          sessionToken: null, // 박영준 추가 0330
+        }),
+
 
       getIsValid: (currentShowId: string | number) => {
         const { admissionToken, showId, expiresAt } = get();

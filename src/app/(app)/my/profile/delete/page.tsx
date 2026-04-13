@@ -15,13 +15,7 @@ export default function AccountDeletePage() {
   const { user: storeUser } = useAuthStore();
   const { mutate: withdraw, isPending } = useWithdraw();
 
-  // 백엔드 문제로 인한 임시 데이터 처리
-  const user = storeUser || {
-    email: "abc*****@gmail.com",
-    nickname: "김관우",
-    marketingInfoAgreed: true,
-    emailNotificationAgreed: true,
-  };
+  const user = storeUser;
 
   const isValid = confirmText === "truve 탈퇴";
 
@@ -38,7 +32,7 @@ export default function AccountDeletePage() {
   };
 
   return (
-    <section className="pl-20 max-w-[1200] mx-auto">
+    <section className="pl-20 max-w-[1200px] mx-auto">
       <div className="min-h-screen flex justify-center">
         <div className="w-full max-w-3xl px-6 py-16 space-y-10">
           {/* 페이지 타이틀 */}
@@ -91,7 +85,7 @@ export default function AccountDeletePage() {
             {/* 이미지의 핑크색 강조 박스 재현 */}
             <p
               aria-label="입력 예시: truve 탈퇴"
-              className="flex items-center h-14 w-full rounded-md px-3 py-2 bg-red-50 text-red-500 text-sm select-none"
+              className="flex items-center h-14 w-full rounded-md px-3 py-2 bg-red-50 text-red-500 text-sm"
             >
               truve 탈퇴
             </p>

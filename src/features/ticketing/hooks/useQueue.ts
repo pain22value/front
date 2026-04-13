@@ -3,14 +3,14 @@ import { queueService } from "../services/queueService";
 
 export const useEnterQueue = () => {
   return useMutation({
-    mutationFn: (showId: string | number) => queueService.enterQueue(showId),
+    mutationFn: (scheduleId: string | number) => queueService.enterQueue(scheduleId),
   });
 };
 
-export const useQueueStatus = (showId: string | number) => {
+export const useQueueStatus = (scheduleId: string | number) => {
   return useQuery<QueueStatusResponse>({
-    queryKey: ["queueStatus", showId],
-    queryFn: () => queueService.getQueueStatus(showId),
+    queryKey: ["queueStatus", scheduleId],
+    queryFn: () => queueService.getQueueStatus(scheduleId),
     refetchInterval: (query) => {
       // 에러가 발생하면 폴링 중지
       if (query.state.error) return false;
@@ -28,4 +28,11 @@ export const useQueueStatus = (showId: string | number) => {
     },
   });
 };
+
+export const useCancelQueue = () => {
+  return useMutation({
+    mutationFn: (scheduleId: string | number) => queueService.cancelQueue(scheduleId),
+  });
+};
+
 

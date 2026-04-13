@@ -36,8 +36,14 @@ type Casting = {
 type ShowSchedule = {
   scheduleId: number;
   showTime: string;
-  status: string;
-  castings: Casting[];
+  showDateLabel: string;
+  showTimeLabel: string;
+  casts: Record<string, { artistId: number | null; artistName: string }>;
+  remainingSeats: {
+    gradeName: string;
+    remainingSeatCount: number;
+    totalCount: number;
+  }[];
 };
 
 type ShowSeatGrade = {

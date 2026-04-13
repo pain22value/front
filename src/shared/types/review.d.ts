@@ -1,7 +1,7 @@
 type EmotionPoint = "IMMERSION" | "TENSION" | "ENJOYMENT" | "CATHARSIS" | "TOUCHING";
 type CharmPoint = "STAGE_PRODUCTION" | "STORY" | "ACTING" | "DANCE" | "NUMBER";
 
-interface Review {
+type Review = {
   reviewId: number;
   userId: string;
   userNickname: string;
@@ -9,9 +9,9 @@ interface Review {
   content: string;
   createdAt: string;
   positive: boolean;
-}
+};
 
-interface ReviewListResponse {
+type ReviewListResponse = {
   content: Review[];
   totalCount: number;
   totalPages: number;
@@ -19,27 +19,26 @@ interface ReviewListResponse {
   size: number;
   hasNext: boolean;
   hasPrevious: boolean;
-}
+};
 
-interface ReviewPostRequest {
+type ReviewPostRequest = {
   isPositive: boolean;
   emotionPoints: EmotionPoint[];
   charmPoints: CharmPoint[];
   title: string;
   content: string;
-}
+};
 
-interface ReviewPointScore {
+type ReviewPointScore = {
   name: string;
   label: string;
   score: number;
-}
+};
 
-interface ReviewMetaResponse {
+type ReviewMetaResponse = {
   weeklyRanking: number;
   truveScore: number;
   showId: number;
   charmPointScores: ReviewPointScore[];
   emotionPointScores: ReviewPointScore[];
-}
-
+};

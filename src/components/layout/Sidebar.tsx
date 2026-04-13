@@ -5,23 +5,58 @@ import { Heart, LayoutGrid, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Link from "next/link";
-import { ARTIST_LIST } from "@/shared/data/artists";
+
+const RECOMMEND_ARTIST_LIST: Artist[] = [
+  {
+    artistId: 1,
+    artistName: "이재환",
+    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/leejaehwan.png",
+    isLiked: false,
+  },
+  {
+    artistId: 5,
+    artistName: "신재범",
+    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/shinjaebeom.png",
+    isLiked: false,
+  },
+  {
+    artistId: 9,
+    artistName: "김호영",
+    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/kimhoyoung.png",
+    isLiked: false,
+  },
+  {
+    artistId: 2,
+    artistName: "서경수",
+    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/seokyungsu.png",
+    isLiked: false,
+  },
+];
 
 export default function Sidebar() {
   const { isExpanded, setExpanded } = useSidebarStore();
+  const [isHovered, setIsHovered] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const borderRef = useRef<HTMLDivElement>(null);
+
+  const isSidebarVisible = isExpanded || isHovered;
+
+  // 메뉴 클릭 시 사이드바 접기
+  const handleMenuClick = () => {
+    setExpanded(false);
+    setIsHovered(false);
+  };
 
   useEffect(() => {
     if (!sidebarRef.current) return;
 
     // 사이드바 너비 애니메이션
     gsap.to(sidebarRef.current, {
-      width: isExpanded ? 220 : 80,
+      width: isSidebarVisible ? 220 : 80,
       duration: 0.4,
       ease: "power3.inOut",
     });
@@ -29,14 +64,14 @@ export default function Sidebar() {
     // 배경 및 테두리 투명도 애니메이션 (색상 번짐 방지)
     if (bgRef.current) {
       gsap.to(bgRef.current, {
-        opacity: isExpanded ? 1 : 0,
+        opacity: isSidebarVisible ? 1 : 0,
         duration: 0.4,
         ease: "power3.inOut",
       });
     }
     if (borderRef.current) {
       gsap.to(borderRef.current, {
-        opacity: isExpanded ? 1 : 0,
+        opacity: isSidebarVisible ? 1 : 0,
         duration: 0.4,
         ease: "power3.inOut",
       });
@@ -45,14 +80,14 @@ export default function Sidebar() {
     // 레이블 애니메이션
     const labels = sidebarRef.current.querySelectorAll(".sidebar-label");
     gsap.to(labels, {
-      opacity: isExpanded ? 1 : 0,
-      x: isExpanded ? 0 : -20,
+      opacity: isSidebarVisible ? 1 : 0,
+      x: isSidebarVisible ? 0 : -20,
       duration: 0.3,
       stagger: 0.05,
       ease: "power2.out",
-      display: isExpanded ? "block" : "none",
+      display: isSidebarVisible ? "block" : "none",
     });
-  }, [isExpanded]);
+  }, [isSidebarVisible]);
 
   // 사이드바 외부 클릭 감지
   useEffect(() => {
@@ -69,6 +104,8 @@ export default function Sidebar() {
   return (
     <aside
       ref={sidebarRef}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className="z-30 
       fixed top-(--header-height) left-0 
       h-[calc(100svh-var(--header-height))]/ 
@@ -86,7 +123,7 @@ export default function Sidebar() {
       {/* Top */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
         {/* 로고 */}
-        <Link href="/" className="flex items-center gap-4 w-full cursor-pointer group">
+        <Link href="/" className="flex items-center gap-4 w-full cursor-pointer group" onClick={handleMenuClick}>
           <Button
             variant="ghost"
             className="size-9 flex items-center justify-center rounded-lg text-2xl font-bold shrink-0
@@ -110,7 +147,7 @@ export default function Sidebar() {
         </Link>
 
         {/* 메뉴 */}
-        <Link href="/shows/now" className="flex items-center gap-4 w-full cursor-pointer group">
+        <Link href="/shows/now" className="flex items-center gap-4 w-full cursor-pointer group" onClick={handleMenuClick}>
           <Button
             variant="secondary"
             size="icon"
@@ -139,16 +176,17 @@ export default function Sidebar() {
         <Separator className="bg-muted-foreground" />
       </div>
 
-      {/* 배우 */}
+      {/* 추천 아티스트 */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
         <div className="flex flex-col gap-4 w-full">
-          {ARTIST_LIST.slice(0, 4).map((artist) => (
+          {RECOMMEND_ARTIST_LIST.map((artist) => (
             <Link
               key={artist.artistId}
               href={`/artists/${artist.artistId}`}
               className="flex items-center gap-4 w-full cursor-pointer group no-underline text-foreground"
+              onClick={handleMenuClick}
             >
-              <Avatar className="size-9 rounded-lg shrink-0 transition-transform group-hover:scale-105">
+              <Avatar className="size-9 rounded-lg shrink-0 transition-all group-hover:ring-2 group-hover:ring-white group-hover:opacity-80">
                 <AvatarImage src={artist.profileImageUrl} className="object-cover" />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
@@ -171,19 +209,15 @@ export default function Sidebar() {
 
       {/* Bottom Icons */}
       <div className="flex flex-col gap-4 pb-6 w-full px-5">
-        <Link href="/my/favorite" className="flex items-center gap-4 w-full cursor-pointer group">
+        <Link href="/my/favorite" className="flex items-center gap-4 w-full cursor-pointer group" onClick={handleMenuClick}>
           <Button
             variant="secondary"
             size="icon"
             className="size-9 rounded-lg shrink-0
               bg-gray-900 group-hover:bg-white
-              [&_svg]:fill-white [&_svg]:stroke-white
-              group-hover:[&_svg]:fill-black group-hover:[&_svg]:stroke-black
-              dark:bg-white dark:group-hover:bg-gray-900
-              dark:[&_svg]:fill-black dark:[&_svg]:stroke-black
-              dark:group-hover:[&_svg]:fill-white dark:group-hover:[&_svg]:stroke-white"
+              dark:bg-white dark:group-hover:bg-gray-900"
           >
-            <Heart className="size-5" />
+            <Heart className="size-5 text-red-500 fill-red-500 transition-colors" />
           </Button>
           <span
             className="sidebar-label hidden font-medium whitespace-nowrap relative

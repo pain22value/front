@@ -9,10 +9,10 @@ export default function ArtistProfile({ artist }: { artist: Artist }) {
           <Image
             src={artist.profileImageUrl}
             alt={artist.artistName}
-            fill
-            className="object-cover"
+            width={128}
+            height={160}
+            className="w-full h-full object-cover"
             priority
-            sizes="128px"
           />
         </div>
         <div className="flex flex-col justify-center text-center sm:text-left">

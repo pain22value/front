@@ -1,8 +1,33 @@
 import { Button } from "@/components/ui/button";
-import { artistComments, generalComments } from "@/shared/data/comments";
 import CommentCard from "./CommentCard";
+import { useArtistComments } from "../../hooks/useArtistPostQuery";
 
-export default function CommentSection({ onCommentClick }: { onCommentClick?: () => void }) {
+
+export default function CommentSection({
+  artistId,
+  postId,
+  onCommentClick,
+}: {
+  artistId: string | number;
+  postId: number | null;
+  onCommentClick?: () => void;
+}) {
+  const { data: allData, isLoading: isLoadingAll } = useArtistComments(artistId, postId, "ALL");
+  const { data: mineData } = useArtistComments(artistId, postId, "MINE");
+  const { data: artistData } = useArtistComments(artistId, postId, "ARTIST");
+
+  if (!postId) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-8 text-center">
+        <p>게시글을 선택하면 댓글을 볼 수 있습니다.</p>
+      </div>
+    );
+  }
+
+  if (isLoadingAll) {
+    return <CommentSectionSkeleton />;
+  }
+
   return (
     <div className="max-w-[600px] mx-auto p-4 bg-background min-h-screen font-sans transition-colors">
       {/* --- 댓글 작성 섹션 --- */}
@@ -28,34 +53,62 @@ export default function CommentSection({ onCommentClick }: { onCommentClick?: ()
       </section>
 
       {/* --- 내 댓글 섹션 --- */}
-      <section className="mb-8 p-1">
-        <h3 className="font-bold mb-4 text-foreground text-[15px]">내 댓글</h3>
-        <CommentCard comment={generalComments[0]} onClick={onCommentClick} />
-      </section>
+      {mineData?.comments && mineData.comments.length > 0 && (
+        <section className="mb-8 p-1">
+          <h3 className="font-bold mb-4 text-foreground text-[15px]">내 댓글</h3>
+          <div className="space-y-3">
+            {mineData.comments.map((comment) => (
+              <CommentCard key={comment.commentId} comment={comment} onClick={onCommentClick} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* --- 아티스트 댓글 섹션 --- */}
-      <section className="mb-8 p-1">
-        <h3 className="font-bold mb-4 flex items-center gap-2 text-foreground text-[15px]">
-          아티스트 댓글 <span className="text-muted-foreground font-medium text-xs">2</span>
-        </h3>
-        <div className="space-y-3">
-          {artistComments.map((comment) => (
-            <CommentCard key={comment.id} comment={comment} onClick={onCommentClick} />
-          ))}
-        </div>
-      </section>
+      {artistData?.comments && artistData.comments.length > 0 && (
+        <section className="mb-8 p-1">
+          <h3 className="font-bold mb-4 flex items-center gap-2 text-foreground text-[15px]">
+            아티스트 댓글 <span className="text-muted-foreground font-medium text-xs font-sans italic tracking-tighter">{artistData.summary.artistCount}</span>
+          </h3>
+          <div className="space-y-3">
+            {artistData.comments.map((comment) => (
+              <CommentCard key={comment.commentId} comment={comment} onClick={onCommentClick} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* --- 전체 댓글 섹션 --- */}
       <section className="p-1">
         <h3 className="font-bold mb-4 flex items-center gap-2 text-foreground text-[15px]">
-          전체 댓글 <span className="text-muted-foreground font-medium text-xs">12</span>
+          전체 댓글 <span className="text-muted-foreground font-medium text-xs font-sans italic tracking-tighter">{allData?.summary.totalCount || 0}</span>
         </h3>
         <div className="space-y-3 pb-20">
-          {generalComments.map((comment) => (
-            <CommentCard key={comment.id} comment={comment} onClick={onCommentClick} />
+          {allData?.comments.map((comment) => (
+            <CommentCard key={comment.commentId} comment={comment} onClick={onCommentClick} />
           ))}
+          {allData?.comments.length === 0 && (
+            <p className="text-center text-muted-foreground py-10 text-sm">첫 댓글을 남겨보세요!</p>
+          )}
         </div>
       </section>
+    </div>
+  );
+}
+
+function CommentSectionSkeleton() {
+  return (
+    <div className="p-4 space-y-8 animate-pulse">
+      <div className="space-y-4">
+        <div className="h-6 w-32 bg-slate-100 rounded" />
+        <div className="h-24 w-full bg-slate-100 rounded-lg" />
+      </div>
+      {[...Array(3)].map((_, i) => (
+        <div key={i} className="space-y-4">
+          <div className="h-5 w-24 bg-slate-100 rounded" />
+          <div className="h-20 w-full bg-slate-100 rounded-lg" />
+        </div>
+      ))}
     </div>
   );
 }

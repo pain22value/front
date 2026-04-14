@@ -1,19 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { authService } from "@/features/auth/services/authService";
-import { profileService } from "@/features/my/services/profileService";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useEffect } from "react";
 import { AxiosError } from "axios";
 // import { usePathname } from "next/navigation";
 
-export const useAuthQuery = () => {
+export const useAuthQuery = (enabled: boolean = true) => {
   const { signout, refresh } = useAuthStore();
   // const pathname = usePathname();
 
   const { data, isError, isSuccess, error, isLoading } = useQuery({
     queryKey: ["auth", "refresh"],
     queryFn: () => refresh(),
-    // enabled: !!pathname && !pathname.startsWith("/oauth/callback"), // OAuth 콜백 페이지에서는 토큰 갱신 요청을 보내지 않음
+    enabled,
     retry: false, // 인증 실패 시 재시도 하지 않음
     // refetchOnWindowFocus: true, // 브라우저 포커스 시 토큰 갱신 시도
     refetchOnWindowFocus: (query) => query.state.status !== "error", // 로그인 실패 상태면 포커스 시 재요청 안함

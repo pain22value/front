@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ko } from "date-fns/locale";
 import { useState, useMemo, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
-import { isSameDay, format, startOfToday } from "date-fns";
+import { format } from "date-fns";
 import { useCastingSchedules } from "../../hooks/useCastingSchedules";
 import ShowOpenNoticeModal from "./ShowOpenNoticeModal";
 import ShowWaitingModal from "@/features/ticketing/ui/ShowWaitingModal";

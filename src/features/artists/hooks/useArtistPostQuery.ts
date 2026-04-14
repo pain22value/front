@@ -22,10 +22,10 @@ export function useArtistPostDetail(postId: number | null) {
 }
 
 // 댓글 목록 페칭 훅
-export function useArtistComments(postId: number | null) {
+export function useArtistComments(artistId: string | number, postId: number | null, filter: CommentFilter = "ALL") {
   return useQuery({
-    queryKey: ["artistComments", postId],
-    queryFn: () => artistPostService.getComments(postId!),
-    enabled: !!postId,
+    queryKey: ["artistComments", artistId, postId, filter],
+    queryFn: () => artistPostService.getComments(artistId, postId!, filter),
+    enabled: !!artistId && !!postId,
   });
 }

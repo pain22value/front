@@ -34,6 +34,13 @@ const verifyEmail = async (email: string, code: string): Promise<void> => {
   await api.post(ENDPOINTS.EMAIL.VERIFY, { email, code });
 };
 
+// 소셜 추가 회원가입 완료
+const socialSignupComplete = async (request: SocialSignupRequest): Promise<SigninResponse> => {
+  const { data } = await api.post<SigninResponse>(ENDPOINTS.OAUTH.SOCIAL_SIGNUP_COMPLETE, request);
+  if (!data || !data.accessToken) throw new Error("소셜 회원가입 응답 데이터가 없습니다.");
+  return data;
+};
+
 export const authService = {
   signup,
   signin,
@@ -41,4 +48,5 @@ export const authService = {
   refresh,
   sendVerificationCode,
   verifyEmail,
+  socialSignupComplete,
 };

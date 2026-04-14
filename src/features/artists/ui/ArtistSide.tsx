@@ -9,7 +9,11 @@ export default function ArtistSide({ artistId }: { artistId: string }) {
 
   return (
     <div className="h-[calc(100vh-var(--header-height)-120px)]">
-      {activeTab === "posts" ? <ArtistCommentSidebar /> : <ArtistLiveChat artistId={artistId} />}
+      {activeTab === "posts" ? (
+        <ArtistCommentSidebar artistId={artistId} />
+      ) : (
+        <ArtistLiveChat artistId={artistId} />
+      )}
     </div>
   );
 }

@@ -4,45 +4,57 @@ import { Heart, MessageCircle } from "lucide-react";
 import { AVATAR_URL } from "@/shared/constants/avatar";
 import ArtistCheckIcon from "./ArtistCheckIcon";
 
-export default function CommentCard({ comment, onClick }: { comment: CommentData; onClick?: () => void }) {
+export default function CommentCard({ comment, onClick }: { comment: ArtistComment; onClick?: () => void }) {
+  const { 
+    authorName, 
+    authorThumbnailUrl, 
+    createdAt, 
+    content, 
+    likeCount, 
+    replyCount, 
+    isArtist, 
+    likedByMe 
+  } = comment;
+
   return (
-    <Card 
+    <Card
       onClick={onClick}
       className="border-border shadow-none rounded-lg bg-background hover:bg-muted/50 overflow-hidden cursor-pointer active:scale-[0.98] transition-all"
     >
       <CardContent className="p-5">
         <div className="flex gap-3">
           <Avatar className="w-12 h-12 border border-border">
-            <AvatarImage src={comment.avatarUrl || AVATAR_URL} />
-            <AvatarFallback>{comment.author[0]}</AvatarFallback>
+            <AvatarImage src={authorThumbnailUrl || AVATAR_URL} />
+            <AvatarFallback>{authorName[0]}</AvatarFallback>
           </Avatar>
 
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-[15px] text-foreground">{comment.author}</span>
-              {comment.isArtist && (
+              <span className="font-bold text-[15px] text-foreground">{authorName}</span>
+              {isArtist && (
                 <div className="flex items-center justify-center">
                   <ArtistCheckIcon />
                 </div>
               )}
-              <span className="text-muted-foreground text-sm ml-1">{comment.date}</span>
+              <span className="text-muted-foreground text-sm ml-1">
+                {new Date(createdAt).toLocaleDateString()}
+              </span>
             </div>
 
-            <p className="text-[15px] leading-relaxed text-foreground/90">
-              {comment.mention && (
-                <span className="font-bold mr-1 text-foreground">@{comment.mention}</span>
-              )}
-              {comment.content}
-            </p>
+            <p className="text-[15px] leading-relaxed text-foreground/90">{content}</p>
 
             <div className="flex items-center gap-4 pt-1">
-              <div className="flex items-center gap-1.5 text-muted-foreground cursor-pointer hover:text-red-500 transition-colors">
-                <Heart className="w-5 h-5" strokeWidth={1.5} />
-                <span className="text-sm font-medium">{comment.likes}</span>
+              <div
+                className={`flex items-center gap-1.5 cursor-pointer transition-colors ${
+                  likedByMe ? "text-red-500" : "text-muted-foreground hover:text-red-500"
+                }`}
+              >
+                <Heart className={`w-5 h-5 ${likedByMe ? "fill-current" : ""}`} strokeWidth={1.5} />
+                <span className="text-sm font-medium">{likeCount.toLocaleString()}</span>
               </div>
               <div className="flex items-center gap-1.5 text-muted-foreground cursor-pointer hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">
                 <MessageCircle className="w-5 h-5" strokeWidth={1.5} />
-                {comment.replies > 0 && <span className="text-sm font-medium">{comment.replies}</span>}
+                {replyCount > 0 && <span className="text-sm font-medium">{replyCount}</span>}
               </div>
             </div>
           </div>

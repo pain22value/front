@@ -33,6 +33,7 @@ export default function SuccessClient({ searchParams }: Props) {
   } | null>(null);
 
   useEffect(() => {
+    console.log({ isValid, confirmed, paymentKey, orderId, amount }); // ← 추가
     if (!isValid || confirmed) return;
 
     (async () => {
@@ -40,12 +41,16 @@ export default function SuccessClient({ searchParams }: Props) {
         setConfirming(true);
         setErrorMsg(null);
         const result = await paymentService.confirm({ paymentKey, orderId, amount });
+        console.log("confirm 성공:", result); // ← 추가
         setPaymentResult(result);
         setConfirmed(true);
-      } catch (e) {
-        console.error(e);
-        setConfirmed(true); // 백엔드 미완성 상태에서 임시로 성공 처리
+      } catch (e: unknown) {
+        console.log("confirm 에러:", e); // ← 추가
+        const err = e as { response?: { data?: { message?: string } } };
+        setErrorMsg(err?.response?.data?.message ?? "결제 승인 중 오류가 발생했습니다.");
+        setConfirmed(true);
       } finally {
+        console.log("finally 실행"); // ← 추가
         setConfirming(false);
       }
     })();

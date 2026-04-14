@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { profileService } from "@/features/my/services/profileService";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { toast } from "sonner";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 
 // 내 정보 조회 훅
 export function useMyInfo() {

@@ -14,9 +14,9 @@ export default function ArtistPostsTab({ artistId }: { artistId: string }) {
   const detailRef = useRef<HTMLDivElement>(null);
   const { activePostId } = useArtistPostAnimation({ selectedPostId, detailRef });
 
-  const { data: posts, isLoading } = useArtistPosts(artistId);
+  const { data: posts, isLoading, isError } = useArtistPosts(artistId);
 
-  if (isLoading) {
+  if (isLoading || isError || !posts || posts.length === 0) {
     return <ArtistPostsSkeleton />;
   }
 
@@ -28,18 +28,22 @@ export default function ArtistPostsTab({ artistId }: { artistId: string }) {
         <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium px-1 mb-6">전체 포스트</div>
         <div className="flex flex-col gap-8">
           {posts?.map((post) => (
-            <ArtistPostCard key={post.id} postId={post.id} onClick={selectPost} />
+            <ArtistPostCard key={post.postId} post={post} onClick={selectPost} />
           ))}
         </div>
       </div>
 
-      {/* 포스트 상세 섹션 (좌측에서 100% 너비로 슬라이딩 오버레이) */}
       <div
         ref={detailRef}
         style={{ transform: "translateX(-100%)" }}
         className="absolute inset-0 z-20 w-full h-full bg-background"
       >
-        {activePostId !== null && <MusicalPostDetail postId={activePostId} onBack={clearPost} />}
+        {activePostId !== null && (
+          <MusicalPostDetail
+            post={posts.find((p) => p.postId === activePostId)!}
+            onBack={clearPost}
+          />
+        )}
       </div>
     </div>
   );

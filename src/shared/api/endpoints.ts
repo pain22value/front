@@ -17,6 +17,7 @@ export const ENDPOINTS = {
     KAKAO: "/auth/kakao/login",
     NAVER: "/auth/naver/login",
     GOOGLE: "/auth/google/login",
+    SOCIAL_SIGNUP_COMPLETE: "/auth/social/sign-up/complete",
   },
   EMAIL: {
     SEND_CODE: "/auth/email/send-code",
@@ -27,6 +28,11 @@ export const ENDPOINTS = {
     NICKNAME: "/auth/me/nickname",
     MARKETING_CONSENT: "/auth/me/marketing-consent",
     EMAIL_NOTIFICATION: "/auth/me/email-notification",
+  },
+
+  // 마이페이지 (뮤지컬 관련)
+  MY: {
+    MEMBERSHIP: "/musical/my/membership",
   },
 
   // 검색
@@ -50,6 +56,9 @@ export const ENDPOINTS = {
     LIKE: (artistId: number | string) => `/musical/artists/${artistId}/likes`,
     PAST_SHOWS: (artistId: number | string) => `/musical/artists/${artistId}/past-shows`,
     MEMBERSHIP_PAYMENT: (artistId: number | string) => `/musical/artists/${artistId}/membership/payment`,
+    MEMBERSHIP_COMPLETE: (artistId: number | string) => `/musical/artists/${artistId}/membership/complete`,
+    BOARD: (artistId: number | string) => `/musical/artists/${artistId}/board`,
+    BOARD_COMMENTS: (artistId: number | string, postId: number | string) => `/musical/artists/${artistId}/board/${postId}/comments`,
   },
 
   // 대기열

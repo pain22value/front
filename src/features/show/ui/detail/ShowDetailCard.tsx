@@ -18,7 +18,6 @@ export default function ShowDetailCard(props: ShowDetail) {
     endTime,
     posterUrl,
     seatGrades,
-    ranking,
     truveIndex,
     benefit,
   } = props;

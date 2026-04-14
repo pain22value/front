@@ -42,6 +42,16 @@ export const resetPasswordSchema = z
     message: "비밀번호가 일치하지 않습니다.",
   });
 
+export const socialSignupSchema = z.object({
+  verificationCode: z.string().optional(),
+  nickname: z
+    .string()
+    .min(1, "닉네임을 입력해주세요.")
+    .max(32, "닉네임은 32자 이하입니다.")
+    .regex(/^[a-zA-Z0-9가-힣]+$/, "특수문자는 사용할 수 없습니다."),
+});
+
 export type SignupFormValues = z.infer<typeof signupSchema>;
 export type SigninFormValues = z.infer<typeof signinSchema>;
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
+export type SocialSignupFormValues = z.infer<typeof socialSignupSchema>;

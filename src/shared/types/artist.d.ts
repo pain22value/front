@@ -93,8 +93,20 @@ type PrepareMembershipPaymentRequest = {
 
 // 아티스트 멤버십 결제 준비 응답 데이터
 type PrepareMembershipPaymentResponse = {
+  artistId: number;
+  artistName: string;
+  planName: string;
+  amount: number;
+  orderId: string;
   paymentMethod: string;
-  termsAgreed: boolean;
-  privacyAgreed: boolean;
-  autoPaymentAgreed: boolean;
+};
+
+// 아티스트 멤버십 가입 완료 정보
+type ArtistMembershipCompleteData = {
+  artistId: number;
+  artistName: string;
+  planName: string;
+  amount: number;
+  joinedAt: string;
+  nextBillingAt: string;
 };

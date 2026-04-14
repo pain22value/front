@@ -4,71 +4,60 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Eye, EyeOff } from "lucide-react";
+import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { SignupFormValues, signupSchema } from "@/shared/schemas/authSchema";
 import { Label } from "@/components/ui/label";
 import { LoaderSpinner } from "@/components/ui/spinner";
-import { authService } from "../services/authService";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { authService } from "@/features/auth/services/authService";
+import { SocialSignupFormValues, socialSignupSchema } from "@/shared/schemas/authSchema";
 
-export default function SignupForm() {
+export default function SocialSignupForm() {
   const router = useRouter();
-  const { signup, signupTerms, setSignupTerms } = useAuthStore();
+  const { socialSignupData, socialSignupComplete, setSocialSignupData, signupTerms, setSignupTerms } = useAuthStore();
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isSendingVerification, setIsSendingVerification] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     getValues,
-    trigger,
     watch,
-  } = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema),
+  } = useForm<SocialSignupFormValues>({
+    resolver: zodResolver(socialSignupSchema),
     mode: "onTouched",
     reValidateMode: "onChange",
     defaultValues: {
-      email: "",
       verificationCode: "",
-      password: "",
-      passwordConfirm: "",
       nickname: "",
     },
   });
 
-  const emailValue = watch("email");
-  const passwordValue = watch("password");
-  const passwordConfirmValue = watch("passwordConfirm");
   const nicknameValue = watch("nickname");
   const verificationCodeValue = watch("verificationCode");
-  const isInputFilled =
-    !!emailValue && !!passwordValue && !!passwordConfirmValue && !!nicknameValue && !!verificationCodeValue;
-  const isEmailInputValid = !!emailValue && !errors.email;
+  const isInputFilled = !!nicknameValue && !!verificationCodeValue;
 
-  /* ================= 약관 동의 확인 ================= */
+  /* ================= 소셜 데이터 및 약관 동의 확인 ================= */
   useEffect(() => {
+    if (!socialSignupData) {
+      toast.error("소셜 로그인 정보가 없습니다.");
+      router.replace("/signin");
+      return;
+    }
+
     const currentTerms = useAuthStore.getState().signupTerms;
     if (!currentTerms) {
       toast.error("약관 동의가 필요합니다.");
       router.replace("/signup/terms");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
-
-  /* ================= password 교차 검증 보완 ================= */
-  useEffect(() => {
-    if (passwordConfirmValue) {
-      trigger("passwordConfirm");
-    }
-  }, [passwordValue, passwordConfirmValue, trigger]);
 
   /* ================= 타이머 ================= */
   useEffect(() => {
@@ -86,46 +75,14 @@ export default function SignupForm() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  /* ================= 회원가입 ================= */
-  const onSubmit = async (data: SignupFormValues) => {
-    if (!signupTerms) {
-      toast.error("약관 동의가 필요합니다.");
-      router.push("/signup/terms");
-      return;
-    }
-
-    try {
-      const { email, password, nickname } = data;
-      await signup({
-        email,
-        password,
-        nickname,
-        serviceTermsAgreed: signupTerms.serviceTermsAgreed,
-        electronicFinanceTermsAgreed: signupTerms.electronicFinanceTermsAgreed,
-        privacyCollectionAgreed: signupTerms.privacyCollectionAgreed,
-        marketingInfoAgreed: signupTerms.marketingInfoAgreed,
-        over14Agreed: signupTerms.over14Agreed,
-      });
-      toast.success("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
-      setSignupTerms(null);
-      router.push("/signin");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "서버와의 통신 중 문제가 발생했습니다.");
-    }
-  };
-
   /* ================= 인증코드 발송 ================= */
   const handleSendVerification = async (e: React.MouseEvent) => {
     e.preventDefault();
-    const email = getValues("email");
-    const isEmailValid = await trigger("email");
-
-    if (!isEmailValid) return;
+    if (!socialSignupData?.email) return;
 
     try {
       setIsSendingVerification(true);
-      await authService.sendVerificationCode(email);
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
+      await authService.sendVerificationCode(socialSignupData.email);
       setIsVerificationSent(true);
       setIsVerified(false);
       setTimeLeft(180);
@@ -139,14 +96,13 @@ export default function SignupForm() {
 
   /* ================= 인증코드 확인 ================= */
   const handleVerify = async () => {
-    const email = getValues("email");
+    if (!socialSignupData?.email) return;
     const code = getValues("verificationCode");
     if (!code) return;
 
     setIsVerifying(true);
     try {
-      await authService.verifyEmail(email, code);
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
+      await authService.verifyEmail(socialSignupData.email, code);
       setIsVerified(true);
       toast.success("인증되었습니다.");
     } catch (error) {
@@ -155,6 +111,41 @@ export default function SignupForm() {
       setIsVerifying(false);
     }
   };
+
+  /* ================= 소셜 회원가입 완료 ================= */
+  const onSubmit = async (data: SocialSignupFormValues) => {
+    if (!socialSignupData) {
+      toast.error("소셜 로그인 정보가 없습니다.");
+      return;
+    }
+
+    if (!signupTerms) {
+      toast.error("약관 동의가 필요합니다.");
+      router.push("/signup/terms");
+      return;
+    }
+
+    try {
+      await socialSignupComplete({
+        registrationToken: socialSignupData.registrationToken,
+        email: socialSignupData.email,
+        nickname: data.nickname,
+        serviceTermsAgreed: signupTerms.serviceTermsAgreed,
+        electronicFinanceTermsAgreed: signupTerms.electronicFinanceTermsAgreed,
+        privacyCollectionAgreed: signupTerms.privacyCollectionAgreed,
+        marketingInfoAgreed: signupTerms.marketingInfoAgreed,
+        over14Agreed: signupTerms.over14Agreed,
+      });
+      toast.success("회원가입이 완료되었습니다.");
+      setSocialSignupData(null);
+      setSignupTerms(null);
+      router.replace("/");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "서버와의 통신 중 문제가 발생했습니다.");
+    }
+  };
+
+  if (!socialSignupData) return null;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto max-w-[400px] space-y-6">
@@ -165,14 +156,14 @@ export default function SignupForm() {
         <Label className="text-sm text-muted-foreground font-medium">이메일</Label>
         <div className="flex gap-2">
           <div className="relative w-full">
-            <Input {...register("email")} aria-invalid={!!errors.email} disabled={isVerified} />
+            <Input value={socialSignupData.email} disabled />
             {isVerified && <Check className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 w-4 h-4" />}
           </div>
           {!isVerified && (
             <Button
               type="button"
               variant="secondary"
-              className={`shrink-0 ${isEmailInputValid ? "bg-red-500 hover:bg-red-600 text-white" : ""}`}
+              className="shrink-0 bg-red-500 hover:bg-red-600 text-white"
               onClick={handleSendVerification}
               disabled={isSendingVerification}
             >
@@ -187,7 +178,6 @@ export default function SignupForm() {
             </Button>
           )}
         </div>
-        {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
 
         {/* ================= 인증코드 영역 ================= */}
         {isVerificationSent && (
@@ -227,49 +217,6 @@ export default function SignupForm() {
             )}
           </div>
         )}
-      </div>
-
-      {/* ================= 비밀번호 ================= */}
-      <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">비밀번호</Label>
-        <div className="relative">
-          <Input
-            type={showPassword ? "text" : "password"}
-            {...register("password")}
-            className="pr-10"
-            aria-invalid={!!errors.password}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          >
-            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        </div>
-        <p className="text-xs text-muted-foreground">영문, 숫자, 특수문자 포함 8~32자</p>
-        {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
-      </div>
-
-      {/* ================= 비밀번호 확인 ================= */}
-      <div className="space-y-2">
-        <Label className="text-sm text-muted-foreground font-medium">비밀번호 확인</Label>
-        <div className="relative">
-          <Input
-            type={showPasswordConfirm ? "text" : "password"}
-            {...register("passwordConfirm")}
-            className="pr-10"
-            aria-invalid={!!errors.passwordConfirm}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          >
-            {showPasswordConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        </div>
-        {errors.passwordConfirm && <p className="text-sm text-destructive">{errors.passwordConfirm.message}</p>}
       </div>
 
       {/* ================= 닉네임 ================= */}

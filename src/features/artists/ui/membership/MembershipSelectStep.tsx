@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { AxiosError } from "axios";
 import useArtistMembershipPayment from "../../hooks/useArtistMembershipPayment";
 import { Star, MessageCircle, RotateCcw, Loader2 } from "lucide-react";
+import { useArtistMembershipStore } from "@/features/artists/stores/useArtistMembershipStore";
 
 export default function MembershipSelectStep({ artistId, onNext }: { artistId: string; onNext?: () => void }) {
   const { mutate: preparePayment, isPending } = useArtistMembershipPayment();
+  const { setPaymentInfo } = useArtistMembershipStore();
 
   const handleJoinClick = () => {
     preparePayment(
@@ -20,14 +22,19 @@ export default function MembershipSelectStep({ artistId, onNext }: { artistId: s
         },
       },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          // 결제 준비 정보를 스토어에 저장 (특히 backend에서 생성된 orderId)
+          setPaymentInfo({
+            orderId: data.orderId,
+            amount: data.amount,
+          });
           onNext?.();
         },
         onError: (err: AxiosError<ApiResponse<unknown>>) => {
           console.error("멤버십 결제 준비 오류:", err);
           alert(err?.response?.data?.message || "멤버십 결제 준비 중 오류가 발생했습니다.");
         },
-      }
+      },
     );
   };
 

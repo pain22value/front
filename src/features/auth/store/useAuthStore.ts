@@ -9,13 +9,16 @@ type AuthState = {
   accessToken: string | null;
   user: User | null;
   signupTerms: SignupTerms | null;
+  socialSignupData: SocialSignupData | null;
   signup: (signupRequest: SignupRequest) => Promise<void>;
   signin: (signinRequest: SigninRequest) => Promise<void>;
   signout: () => Promise<void>;
   refresh: () => Promise<{ accessToken: string; user: User }>;
+  socialSignupComplete: (request: SocialSignupRequest) => Promise<void>;
   setAuth: (accessToken: string, user: User) => void;
   setUser: (user: User) => void;
   setSignupTerms: (terms: SignupTerms | null) => void;
+  setSocialSignupData: (data: SocialSignupData | null) => void;
 };
 
 export const useAuthStore = create(
@@ -25,6 +28,7 @@ export const useAuthStore = create(
       accessToken: null,
       user: null,
       signupTerms: null,
+      socialSignupData: null,
       signup: async (signupRequest) => {
         try {
           await authService.signup(signupRequest);
@@ -68,9 +72,24 @@ export const useAuthStore = create(
           throw error;
         }
       },
+      // 소셜 추가 회원가입 완료
+      socialSignupComplete: async (request) => {
+        try {
+          const { accessToken } = await authService.socialSignupComplete(request);
+          set({ accessToken, socialSignupData: null });
+          const user = await profileService.getMyInfo();
+          set({ user });
+        } catch (error: unknown) {
+          set({ accessToken: null, user: null });
+          throw new Error(
+            error instanceof Error ? error.message : "소셜 회원가입에 실패했습니다.",
+          );
+        }
+      },
       setAuth: (accessToken, user) => set({ accessToken, user }),
       setUser: (user) => set({ user }),
       setSignupTerms: (terms) => set({ signupTerms: terms }),
+      setSocialSignupData: (data) => set({ socialSignupData: data }),
     }),
     {
       name: "auth-storage",

@@ -1,3 +1,5 @@
+"use client";
+
 import { Heart, MessageCircle, ChevronLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -6,36 +8,42 @@ import { Input } from "@/components/ui/input";
 import { useArtistComments } from "../../hooks/useArtistPostQuery";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface Reply {
-  author: string;
-  date: string;
-  content: string;
-  likes: number;
-}
-
-interface CommentData {
-  totalCount: number;
-  mainComment: {
-    author: string;
-    date: string;
-    content: string;
-    likes: number;
-    comments: number;
-  };
-  replies: Reply[];
-}
-
-export default function ArtistCommentDetail({ onBack }: { onBack?: () => void }) {
-  // 실제로는 현재 선택된 postId를 전달해야 합니다.
-  const { data, isLoading } = useArtistComments(1);
+export default function ArtistCommentDetail({
+  artistId,
+  postId,
+  onBack,
+}: {
+  artistId: string | number;
+  postId: number | null;
+  onBack?: () => void;
+}) {
+  const { data, isLoading } = useArtistComments(artistId, postId, "ALL");
 
   if (isLoading) {
     return <ArtistCommentDetailSkeleton onBack={onBack} />;
   }
 
-  if (!data) return null;
+  if (!data || !data.comments || data.comments.length === 0) {
+    return (
+      <div className="w-full h-full bg-background pb-10">
+        <header className="flex items-center p-4 border-b border-border">
+          <ChevronLeft
+            onClick={onBack}
+            className="w-6 h-6 mr-2 cursor-pointer text-foreground"
+          />
+          <h1 className="text-lg font-bold">댓글 상세</h1>
+        </header>
+        <div className="p-8 text-center text-muted-foreground">
+          댓글 정보를 불러올 수 없습니다.
+        </div>
+      </div>
+    );
+  }
 
-  const { totalCount, mainComment, replies } = data as CommentData;
+  // 첫 번째 댓글을 메인으로 표시하고 나머지를 답글처럼 표시하는 UI 구성
+  const { comments } = data;
+  const mainComment = comments[0];
+  const replies = comments.slice(1);
 
   return (
     <div className="w-full h-full bg-background pb-10 transition-colors overflow-y-auto animate-in slide-in-from-right duration-300">
@@ -58,29 +66,33 @@ export default function ArtistCommentDetail({ onBack }: { onBack?: () => void })
         <Card className="border-border border-none shadow-sm mb-6 bg-card text-card-foreground">
           <CardHeader className="flex flex-row items-center space-x-3 p-4">
             <Avatar className="w-12 h-12">
-              <AvatarImage src={`https://placehold.co/48x48`} alt={mainComment.author} />
-              <AvatarFallback>{mainComment.author[0]}</AvatarFallback>
+              <AvatarImage src={mainComment.authorThumbnailUrl} alt={mainComment.authorName} />
+              <AvatarFallback>{mainComment.authorName[0]}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
-                <span className="font-bold">{mainComment.author}</span>
-                <div className="w-4 h-4 bg-cyan-400 rounded-full flex items-center justify-center">
-                  <span className="text-[10px] text-white">✓</span>
-                </div>
-                <span className="text-xs text-muted-foreground ml-2">{mainComment.date}</span>
+                <span className="font-bold">{mainComment.authorName}</span>
+                {mainComment.isArtist && (
+                  <div className="w-4 h-4 bg-cyan-400 rounded-full flex items-center justify-center">
+                    <span className="text-[10px] text-white">✓</span>
+                  </div>
+                )}
+                <span className="text-xs text-muted-foreground ml-2">
+                  {new Date(mainComment.createdAt).toLocaleDateString()}
+                </span>
               </div>
             </div>
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <p className="text-md mb-4">{mainComment.content}</p>
             <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1 text-red-500">
-                <Heart className="w-4 h-4 fill-red-500" />
-                <span>{mainComment.likes}</span>
+              <div className={`flex items-center gap-1 ${mainComment.likedByMe ? 'text-red-500' : ''}`}>
+                <Heart className={`w-4 h-4 ${mainComment.likedByMe ? 'fill-current' : ''}`} />
+                <span>{mainComment.likeCount}</span>
               </div>
               <div className="flex items-center gap-1">
                 <MessageCircle className="w-4 h-4" />
-                <span>{mainComment.comments}</span>
+                <span>{mainComment.replyCount}</span>
               </div>
             </div>
           </CardContent>
@@ -102,28 +114,31 @@ export default function ArtistCommentDetail({ onBack }: { onBack?: () => void })
         <div className="space-y-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="font-bold text-lg text-foreground">전체 답글</span>
-            <span className="text-muted-foreground text-lg">{totalCount}</span>
+            <span className="text-muted-foreground text-lg">{replies.length}</span>
           </div>
 
-          {replies.map((reply: Reply, index: number) => (
-            <div key={index} className="flex gap-3">
+          {replies.map((reply) => (
+            <div key={reply.commentId} className="flex gap-3">
               <Avatar className="w-10 h-10">
-                <AvatarImage src={`https://placehold.co/40x40`} />
-                <AvatarFallback>{reply.author[0]}</AvatarFallback>
+                <AvatarImage src={reply.authorThumbnailUrl} alt={reply.authorName} />
+                <AvatarFallback>{reply.authorName[0]}</AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-sm text-foreground">{reply.author}</span>
-                  <span className="text-xs text-muted-foreground">{reply.date}</span>
+                  <span className="font-semibold text-sm text-foreground">{reply.authorName}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(reply.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
                 <p className="text-sm py-1 text-foreground">{reply.content}</p>
                 <div className="flex items-center gap-4 pt-1">
-                  <button className="flex items-center gap-1 text-xs text-red-500">
-                    <Heart className="w-3.5 h-3.5 fill-red-500" />
-                    {reply.likes}
+                  <button className={`flex items-center gap-1 text-xs ${reply.likedByMe ? 'text-red-500' : 'text-muted-foreground'}`}>
+                    <Heart className={`w-3.5 h-3.5 ${reply.likedByMe ? 'fill-current' : ''}`} />
+                    {reply.likeCount}
                   </button>
                   <button className="text-xs text-muted-foreground">
                     <MessageCircle className="w-3.5 h-3.5" />
+                    {reply.replyCount > 0 && <span className="ml-1">{reply.replyCount}</span>}
                   </button>
                 </div>
               </div>

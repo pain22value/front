@@ -59,6 +59,7 @@ export const ENDPOINTS = {
     MEMBERSHIP_COMPLETE: (artistId: number | string) => `/musical/artists/${artistId}/membership/complete`,
     BOARD: (artistId: number | string) => `/musical/artists/${artistId}/board`,
     BOARD_COMMENTS: (artistId: number | string, postId: number | string) => `/musical/artists/${artistId}/board/${postId}/comments`,
+    BOARD_LIKES: (artistId: number | string, postId: number | string) => `/musical/artists/${artistId}/board/${postId}/likes`,
   },
 
   // 대기열

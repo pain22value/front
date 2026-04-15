@@ -12,7 +12,7 @@ const getReviews = async (showId: number, params: { page: number; size: number }
 
 // 공연 리뷰 작성
 const postReview = async (showId: number, body: ReviewPostRequest) => {
-  const { data } = await api.post<ApiResponse<ReviewPostRequest>>(ENDPOINTS.SHOWS.REVIEWS(showId), body);
+  const { data } = await api.post<ApiResponse<Review>>(ENDPOINTS.SHOWS.REVIEWS(showId), body);
   return data.data;
 };
 

@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CommentCard from "./CommentCard";
 import { useArtistComments } from "../../hooks/useArtistPostQuery";
-
+import { useCreateArtistComment } from "../../hooks/useArtistPostMutations";
 
 export default function CommentSection({
   artistId,
@@ -10,11 +11,27 @@ export default function CommentSection({
 }: {
   artistId: string | number;
   postId: number | null;
-  onCommentClick?: () => void;
+  onCommentClick?: (commentId: number) => void;
 }) {
+  const [content, setContent] = useState("");
   const { data: allData, isLoading: isLoadingAll } = useArtistComments(artistId, postId, "ALL");
   const { data: mineData } = useArtistComments(artistId, postId, "MINE");
   const { data: artistData } = useArtistComments(artistId, postId, "ARTIST");
+
+  const { mutate: createComment, isPending } = useCreateArtistComment(artistId, postId!);
+
+  const handleSubmit = () => {
+    if (!content.trim() || isPending) return;
+    createComment(content, {
+      onSuccess: () => {
+        setContent("");
+      },
+    });
+  };
+
+  const handleCancel = () => {
+    setContent("");
+  };
 
   if (!postId) {
     return (
@@ -35,18 +52,26 @@ export default function CommentSection({
         <h2 className="font-bold text-lg mb-4 text-foreground italic tracking-tight">댓글 작성</h2>
         <div className="space-y-4">
           <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             placeholder="댓글을 작성해주세요."
             className="w-full min-h-[80px] p-4 rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-ring resize-none placeholder:text-muted-foreground text-foreground transition-all text-sm"
           />
           <div className="flex justify-end gap-2">
             <Button
               variant="outline"
+              onClick={handleCancel}
+              disabled={!content.trim() || isPending}
               className="rounded-lg px-6 font-semibold h-10 text-sm hover:bg-accent transition-colors"
             >
               취소
             </Button>
-            <Button className="rounded-lg px-6 font-semibold h-10 text-sm shadow-sm transition-all active:scale-95">
-              등록
+            <Button 
+              onClick={handleSubmit}
+              disabled={!content.trim() || isPending}
+              className="rounded-lg px-6 font-semibold h-10 text-sm shadow-sm transition-all active:scale-95"
+            >
+              {isPending ? "등록 중..." : "등록"}
             </Button>
           </div>
         </div>
@@ -58,7 +83,7 @@ export default function CommentSection({
           <h3 className="font-bold mb-4 text-foreground text-[15px]">내 댓글</h3>
           <div className="space-y-3">
             {mineData.comments.map((comment) => (
-              <CommentCard key={comment.commentId} comment={comment} onClick={onCommentClick} />
+              <CommentCard key={comment.commentId} comment={comment} onClick={() => onCommentClick?.(comment.commentId)} />
             ))}
           </div>
         </section>
@@ -72,7 +97,7 @@ export default function CommentSection({
           </h3>
           <div className="space-y-3">
             {artistData.comments.map((comment) => (
-              <CommentCard key={comment.commentId} comment={comment} onClick={onCommentClick} />
+              <CommentCard key={comment.commentId} comment={comment} onClick={() => onCommentClick?.(comment.commentId)} />
             ))}
           </div>
         </section>
@@ -85,7 +110,7 @@ export default function CommentSection({
         </h3>
         <div className="space-y-3 pb-20">
           {allData?.comments.map((comment) => (
-            <CommentCard key={comment.commentId} comment={comment} onClick={onCommentClick} />
+            <CommentCard key={comment.commentId} comment={comment} onClick={() => onCommentClick?.(comment.commentId)} />
           ))}
           {allData?.comments.length === 0 && (
             <p className="text-center text-muted-foreground py-10 text-sm">첫 댓글을 남겨보세요!</p>

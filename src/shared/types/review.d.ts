@@ -1,5 +1,5 @@
-type EmotionPoint = "IMMERSION" | "TENSION" | "ENJOYMENT" | "CATHARSIS" | "TOUCHING";
-type CharmPoint = "STAGE_PRODUCTION" | "STORY" | "ACTING" | "DANCE" | "NUMBER";
+type EmotionPoint = "E01" | "E02" | "E03" | "E04" | "E05";
+type CharmPoint = "C01" | "C02" | "C03" | "C04" | "C05";
 
 type Review = {
   reviewId: number;
@@ -9,6 +9,8 @@ type Review = {
   content: string;
   createdAt: string;
   positive: boolean;
+  charmPoints: CharmPoint[];
+  emotionPoints: EmotionPoint[];
 };
 
 type ReviewListResponse = {

@@ -10,7 +10,7 @@ import { cn } from "@/shared/utils/cn";
 import { toast } from "sonner";
 import { usePostReview } from "../../hooks/useReviews";
 import { useReviewForm } from "../../hooks/useReviewForm";
-import { CHARM_POINTS, EMOTION_POINTS } from "../../../../shared/constants/review";
+import { CHARM_POINT_LIST, EMOTION_POINT_LIST, REVIEW_POINTS } from "@/shared/constants/review";
 
 const selectedStyle = "border-red-500 bg-red-50 text-red-500 hover:bg-red-50 hover:text-red-500";
 
@@ -50,26 +50,27 @@ export default function ShowReviewWriteCard({
       toast.warning("관람 후기를 작성해주세요.");
       return;
     }
-    createReview(
-      {
-        isPositive: sentiment === "good",
-        charmPoints,
-        emotionPoints,
-        title,
-        content,
+
+    // 백엔드 명세에 맞춰 요청 데이터 구성
+    const requestBody: ReviewPostRequest = {
+      isPositive: sentiment === "good",
+      charmPoints, // CharmPointCategory.CHARM 타입 배열
+      emotionPoints, // ReviewPointCategory.EMOTION 타입 배열
+      title,
+      content,
+    };
+
+    createReview(requestBody, {
+      onSuccess: () => {
+        toast.success("리뷰가 성공적으로 등록되었습니다.");
+        setMode("done");
+        onWriteSuccess?.();
       },
-      {
-        onSuccess: () => {
-          toast.success("리뷰가 성공적으로 등록되었습니다.");
-          setMode("done");
-          onWriteSuccess?.();
-        },
-        onError: (error) => {
-          console.error("리뷰 작성 실패:", error);
-          toast.error(error.message || "리뷰 작성에 실패했습니다.");
-        },
+      onError: (error) => {
+        console.error("리뷰 작성 실패:", error);
+        toast.error(error.message || "리뷰 작성에 실패했습니다.");
       },
-    );
+    });
   };
 
   return (
@@ -104,7 +105,7 @@ export default function ShowReviewWriteCard({
             <div className="space-y-3">
               <p className="font-medium">매력 포인트 (복수선택 가능)</p>
               <div className="flex flex-wrap gap-3">
-                {CHARM_POINTS.map((point) => (
+                {CHARM_POINT_LIST.map((point) => (
                   <Button
                     key={point.value}
                     variant="outline"
@@ -122,19 +123,17 @@ export default function ShowReviewWriteCard({
             <div className="space-y-3">
               <p className="font-medium">감정 포인트 (복수선택 가능)</p>
               <div className="flex flex-wrap gap-3">
-                {EMOTION_POINTS.map((point) => {
-                  return (
-                    <Button
-                      key={point.value}
-                      variant="outline"
-                      size="sm"
-                      className={cn("rounded-md", emotionPoints.includes(point.value) && selectedStyle)}
-                      onClick={() => toggleEmotionPoint(point.value)}
-                    >
-                      {point.label}
-                    </Button>
-                  );
-                })}
+                {EMOTION_POINT_LIST.map((point) => (
+                  <Button
+                    key={point.value}
+                    variant="outline"
+                    size="sm"
+                    className={cn("rounded-md", emotionPoints.includes(point.value) && selectedStyle)}
+                    onClick={() => toggleEmotionPoint(point.value)}
+                  >
+                    {point.label}
+                  </Button>
+                ))}
               </div>
             </div>
 
@@ -181,12 +180,12 @@ export default function ShowReviewWriteCard({
             <div className="flex flex-wrap gap-2">
               {charmPoints.map((point) => (
                 <Badge key={`charm-${point}`} variant="secondary">
-                  {CHARM_POINTS.find((p) => p.value === point)?.label || point}
+                  {REVIEW_POINTS[point]?.label || point}
                 </Badge>
               ))}
               {emotionPoints.map((point) => (
                 <Badge key={`emotion-${point}`} variant="secondary">
-                  {EMOTION_POINTS.find((p) => p.value === point)?.label || point}
+                  {REVIEW_POINTS[point]?.label || point}
                 </Badge>
               ))}
             </div>

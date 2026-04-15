@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { REVIEW_POINTS } from "@/shared/constants/review";
 
 export default function ShowReviewItem({ review }: { review: Review }) {
   const { user } = useAuthStore();
@@ -51,6 +52,22 @@ export default function ShowReviewItem({ review }: { review: Review }) {
       </div>
 
       <p className="mt-4 text-sm">{review.content}</p>
+
+      {/* 포인트 배지 표시 */}
+      {(review.charmPoints?.length > 0 || review.emotionPoints?.length > 0) && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {review.charmPoints?.map((point) => (
+            <Badge key={`charm-${point}`} variant="secondary" className="rounded-md font-normal">
+              #{REVIEW_POINTS[point]?.label || point}
+            </Badge>
+          ))}
+          {review.emotionPoints?.map((point) => (
+            <Badge key={`emotion-${point}`} variant="secondary" className="rounded-md font-normal">
+              #{REVIEW_POINTS[point]?.label || point}
+            </Badge>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

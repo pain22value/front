@@ -13,6 +13,7 @@ type ArtistComment = {
   replyCount: number;
   isMine: boolean;
   isArtist: boolean;
+  replies?: ArtistComment[];
 };
 
 type ArtistCommentData = {

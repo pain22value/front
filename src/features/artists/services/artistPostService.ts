@@ -1,5 +1,6 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
+import { MOCK_ARTIST_POSTS, MOCK_ARTIST_COMMENTS } from "@/shared/data/artistBoard";
 
 export const artistPostService = {
   // 아티스트 포스트 목록 가져오기
@@ -8,63 +9,127 @@ export const artistPostService = {
     // if (!data.data) throw new Error("게시글을 불러오는데 실패했습니다.");
     // return data.data.posts;
 
-    // API 지연 시뮬레이션
+    // API 지연 시뮬레이션 (스켈레톤 확인용)
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    return [
-      {
-        postId: 1,
-        artistName: "고은성",
-        artistThumbnailUrl: "https://picsum.photos/seed/artist/100/100",
-        createdAt: "2026-03-24T13:32:00Z",
-        content: "데스노트 무대 인사: 3/10(화) 공연 종료 후 참여해주신 모든 분들 감사합니다!",
-        imageUrls: [
-          "https://picsum.photos/seed/post1_1/600/600",
-          "https://picsum.photos/seed/post1_2/600/600",
-          "https://picsum.photos/seed/post1_3/600/600",
-          "https://picsum.photos/seed/post1_4/600/600",
-        ],
-        likeCount: 1200,
-        commentCount: 450,
-        likedByMe: true,
-      },
-      {
-        postId: 2,
-        artistName: "고은성",
-        artistThumbnailUrl: "https://picsum.photos/seed/artist/100/100",
-        createdAt: "2026-03-23T18:15:00Z",
-        content: "오늘 공연도 즐거웠습니다! 모두 조심해서 들어가세요. 내일 또 만나요!",
-        imageUrls: ["https://picsum.photos/seed/post2_1/600/600", "https://picsum.photos/seed/post2_2/600/600"],
-        likeCount: 980,
-        commentCount: 210,
-        likedByMe: false,
-      },
-      {
-        postId: 3,
-        artistName: "고은성",
-        artistThumbnailUrl: "https://picsum.photos/seed/artist/100/100",
-        createdAt: "2026-03-20T10:00:00Z",
-        content: "열심히 연습 중입니다. 기대해 주세요!",
-        imageUrls: ["https://picsum.photos/seed/post3_1/600/600"],
-        likeCount: 1500,
-        commentCount: 320,
-        likedByMe: true,
-      },
-    ];
+    return MOCK_ARTIST_POSTS;
   },
 
   // 포스트 상세 정보 가져오기
   getPostDetail: async (postId: number) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return null;
+    // API 지연 시뮬레이션
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    return MOCK_ARTIST_POSTS.find((p) => p.postId === postId) || null;
   },
 
   // 댓글 목록 가져오기
   getComments: async (artistId: string | number, postId: number, filter: CommentFilter = "ALL") => {
-    const { data } = await api.get<ApiResponse<ArtistCommentData>>(ENDPOINTS.ARTISTS.BOARD_COMMENTS(artistId, postId), {
-      params: { filter },
-    });
-    if (!data.data) throw new Error("댓글을 불러오는데 실패했습니다.");
-    return data.data;
+    // const { data } = await api.get<ApiResponse<ArtistCommentData>>(ENDPOINTS.ARTISTS.BOARD_COMMENTS(artistId, postId), {
+    //   params: { filter },
+    // });
+    // if (!data.data) throw new Error("댓글을 불러오는데 실패했습니다.");
+    // return data.data;
+
+    // API 지연 시뮬레이션 (스켈레톤 확인용)
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    let filteredComments = MOCK_ARTIST_COMMENTS.comments;
+    if (filter === "MINE") {
+      filteredComments = filteredComments.filter((c) => c.isMine);
+    } else if (filter === "ARTIST") {
+      filteredComments = filteredComments.filter((c) => c.isArtist);
+    }
+
+    return {
+      summary: MOCK_ARTIST_COMMENTS.summary,
+      comments: filteredComments,
+    } as ArtistCommentData;
+  },
+
+  // 게시글 좋아요
+  likePost: async (artistId: string | number, postId: number) => {
+    // const { data } = await api.post(ENDPOINTS.ARTISTS.BOARD_LIKES(artistId, postId));
+    // return data;
+
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const target = MOCK_ARTIST_POSTS.find((p) => p.postId === postId);
+    if (target && !target.likedByMe) {
+      target.likedByMe = true;
+      target.likeCount += 1;
+    }
+    return { success: true };
+  },
+
+  // 게시글 좋아요 취소
+  unlikePost: async (artistId: string | number, postId: number) => {
+    // const { data } = await api.delete(ENDPOINTS.ARTISTS.BOARD_LIKES(artistId, postId));
+    // return data;
+
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const target = MOCK_ARTIST_POSTS.find((p) => p.postId === postId);
+    if (target && target.likedByMe) {
+      target.likedByMe = false;
+      target.likeCount -= 1;
+    }
+    return { success: true };
+  },
+
+  // 댓글 작성
+  createComment: async (artistId: string | number, postId: number, content: string) => {
+    // const { data } = await api.post(ENDPOINTS.ARTISTS.BOARD_COMMENTS(artistId, postId), { content });
+    // return data;
+
+    // API 지연 시뮬레이션
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const newComment = {
+      commentId: Date.now(),
+      createdAt: new Date().toISOString(),
+      authorName: "현재 사용자",
+      authorThumbnailUrl: "https://picsum.photos/seed/me/100/100",
+      content,
+      likeCount: 0,
+      likedByMe: false,
+      replyCount: 0,
+      isMine: true,
+      isArtist: false,
+    };
+
+    MOCK_ARTIST_COMMENTS.comments.push(newComment);
+    MOCK_ARTIST_COMMENTS.summary.totalCount += 1;
+    MOCK_ARTIST_COMMENTS.summary.myCount += 1;
+
+    return { success: true };
+  },
+
+  // 댓글 답글 목록 가져오기
+  getCommentReplies: async (commentId: number) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    const comment = MOCK_ARTIST_COMMENTS.comments.find((c) => c.commentId === commentId);
+    return comment?.replies ?? [];
+  },
+
+  // 답글 작성
+  createReply: async (commentId: number, content: string) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    const comment = MOCK_ARTIST_COMMENTS.comments.find((c) => c.commentId === commentId);
+    if (comment) {
+      const newReply: ArtistComment = {
+        commentId: Date.now(),
+        createdAt: new Date().toISOString(),
+        authorName: "현재 사용자",
+        authorThumbnailUrl: "https://picsum.photos/seed/me/100/100",
+        content,
+        likeCount: 0,
+        likedByMe: false,
+        replyCount: 0,
+        isMine: true,
+        isArtist: false,
+      };
+      if (!comment.replies) comment.replies = [];
+      comment.replies.push(newReply);
+      comment.replyCount += 1;
+    }
+    return { success: true };
   },
 };

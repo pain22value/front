@@ -1,9 +1,15 @@
+"use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ShowScheduleTap from "./ShowScheduleTap";
 import ShowReviewTab from "./ShowReviewTab";
 import ShowInfoTab from "./ShowInfoTab";
+import { useReviews } from "../../hooks/useReviews";
 
 export function ShowDetailTabs({ show }: { show: ShowDetail }) {
+  const { data } = useReviews(show.showId, 1);
+  const reviewCount = data?.totalCount ?? 0;
+
   const tabs = [
     {
       value: "info",
@@ -17,7 +23,7 @@ export function ShowDetailTabs({ show }: { show: ShowDetail }) {
     },
     {
       value: "review",
-      label: `관람후기 (999+)`,
+      label: `관람후기 (${reviewCount})`,
       content: <ShowReviewTab />,
     },
   ];

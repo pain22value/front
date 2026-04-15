@@ -29,3 +29,12 @@ export function useArtistComments(artistId: string | number, postId: number | nu
     enabled: !!artistId && !!postId,
   });
 }
+
+// 댓글 답글 목록 페칭 훅
+export function useArtistCommentReplies(commentId: number | null) {
+  return useQuery({
+    queryKey: ["artistCommentReplies", commentId],
+    queryFn: () => artistPostService.getCommentReplies(commentId!),
+    enabled: !!commentId,
+  });
+}

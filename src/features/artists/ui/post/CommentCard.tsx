@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, MessageCircle } from "lucide-react";
@@ -5,21 +6,22 @@ import { AVATAR_URL } from "@/shared/constants/avatar";
 import ArtistCheckIcon from "./ArtistCheckIcon";
 
 export default function CommentCard({ comment, onClick }: { comment: ArtistComment; onClick?: () => void }) {
-  const { 
-    authorName, 
-    authorThumbnailUrl, 
-    createdAt, 
-    content, 
-    likeCount, 
-    replyCount, 
-    isArtist, 
-    likedByMe 
-  } = comment;
+  const { authorName, authorThumbnailUrl, createdAt, content, likeCount, replyCount, isArtist, likedByMe } = comment;
+
+  const [localLiked, setLocalLiked] = useState(likedByMe);
+  const [localLikeCount, setLocalLikeCount] = useState(likeCount);
+
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newLiked = !localLiked;
+    setLocalLiked(newLiked);
+    setLocalLikeCount((prev) => (newLiked ? prev + 1 : prev - 1));
+  };
 
   return (
     <Card
       onClick={onClick}
-      className="border-border shadow-none rounded-lg bg-background hover:bg-muted/50 overflow-hidden cursor-pointer active:scale-[0.98] transition-all"
+      className={`border-border shadow-none rounded-lg bg-background hover:bg-muted/50 overflow-hidden ${onClick ? "cursor-pointer active:scale-[0.98]" : ""} transition-all`}
     >
       <CardContent className="p-5">
         <div className="flex gap-3">
@@ -36,21 +38,20 @@ export default function CommentCard({ comment, onClick }: { comment: ArtistComme
                   <ArtistCheckIcon />
                 </div>
               )}
-              <span className="text-muted-foreground text-sm ml-1">
-                {new Date(createdAt).toLocaleDateString()}
-              </span>
+              <span className="text-muted-foreground text-sm ml-1">{new Date(createdAt).toLocaleDateString()}</span>
             </div>
 
             <p className="text-[15px] leading-relaxed text-foreground/90">{content}</p>
 
             <div className="flex items-center gap-4 pt-1">
               <div
+                onClick={handleLikeClick}
                 className={`flex items-center gap-1.5 cursor-pointer transition-colors ${
-                  likedByMe ? "text-red-500" : "text-muted-foreground hover:text-red-500"
+                  localLiked ? "text-red-500" : "text-muted-foreground hover:text-red-500"
                 }`}
               >
-                <Heart className={`w-5 h-5 ${likedByMe ? "fill-current" : ""}`} strokeWidth={1.5} />
-                <span className="text-sm font-medium">{likeCount.toLocaleString()}</span>
+                <Heart className={`w-5 h-5 ${localLiked ? "fill-current" : ""}`} strokeWidth={1.5} />
+                <span className="text-sm font-medium">{localLikeCount.toLocaleString()}</span>
               </div>
               <div className="flex items-center gap-1.5 text-muted-foreground cursor-pointer hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">
                 <MessageCircle className="w-5 h-5" strokeWidth={1.5} />

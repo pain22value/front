@@ -1,11 +1,38 @@
+import { useState } from "react";
 import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useLikeArtistPost, useUnlikeArtistPost } from "../../hooks/useArtistPostMutations";
+
 export default function ArtistPostCard({ post, onClick }: { post: ArtistPost; onClick?: (postId: number) => void }) {
   const { postId, artistName, artistThumbnailUrl, createdAt, imageUrls, likeCount, commentCount, likedByMe } = post;
+  const params = useParams();
+  const artistId = params.artistId as string;
+
+  const { mutate: likePost } = useLikeArtistPost(artistId);
+  const { mutate: unlikePost } = useUnlikeArtistPost(artistId);
+
+  const [localLiked, setLocalLiked] = useState(likedByMe);
+  const [localLikeCount, setLocalLikeCount] = useState(likeCount);
+
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    // Optimistic local update
+    const newLiked = !localLiked;
+    setLocalLiked(newLiked);
+    setLocalLikeCount((prev) => (newLiked ? prev + 1 : prev - 1));
+
+    if (localLiked) {
+      unlikePost(postId);
+    } else {
+      likePost(postId);
+    }
+  };
 
   return (
     <Card
@@ -25,7 +52,7 @@ export default function ArtistPostCard({ post, onClick }: { post: ArtistPost; on
             <span className="text-xs text-zinc-500">{new Date(createdAt).toLocaleDateString()}</span>
           </div>
         </div>
-        <Button variant="ghost" size="icon" className="text-zinc-500">
+        <Button variant="ghost" size="icon" className="text-zinc-500" onClick={(e) => e.stopPropagation()}>
           <MoreHorizontal className="h-5 w-5" />
         </Button>
       </CardHeader>
@@ -40,12 +67,7 @@ export default function ArtistPostCard({ post, onClick }: { post: ArtistPost; on
         <div className="grid grid-cols-2 gap-[2px] bg-zinc-100 overflow-hidden">
           {imageUrls.slice(0, 4).map((src, idx) => (
             <div key={idx} className="aspect-square overflow-hidden bg-zinc-200 relative">
-              <Image
-                src={src}
-                alt={`포스트 이미지 ${idx + 1}`}
-                fill
-                className="object-cover transition-transform group-hover:scale-105 duration-500"
-              />
+              <Image src={src} alt={`포스트 이미지 ${idx + 1}`} fill className="object-cover" />
             </div>
           ))}
         </div>
@@ -54,15 +76,18 @@ export default function ArtistPostCard({ post, onClick }: { post: ArtistPost; on
       {/* Footer Actions */}
       <CardFooter className="p-3 flex flex-col items-start gap-3">
         <div className="flex items-center space-x-4 w-full">
-          <div className={`flex items-center space-x-1 cursor-pointer transition-colors ${likedByMe ? 'text-red-500' : 'text-zinc-600 hover:text-red-500'}`}>
-            <Heart className={`h-5 w-5 ${likedByMe ? 'fill-current' : ''}`} />
-            <span className="text-sm font-medium">{likeCount.toLocaleString()}</span>
+          <div
+            className={`flex items-center space-x-1 cursor-pointer transition-colors ${localLiked ? "text-red-500" : "text-zinc-600 hover:text-red-500"}`}
+            onClick={handleLikeClick}
+          >
+            <Heart className={`h-5 w-5 ${localLiked ? "fill-current" : ""}`} />
+            <span className="text-sm font-medium">{localLikeCount.toLocaleString()}</span>
           </div>
           <div className="flex items-center space-x-1 cursor-pointer text-zinc-600 hover:text-blue-500 transition-colors">
             <MessageCircle className="h-5 w-5" />
             <span className="text-sm font-medium">{commentCount.toLocaleString()}</span>
           </div>
-          <div className="ml-auto">
+          <div className="ml-auto" onClick={(e) => e.stopPropagation()}>
             <Share2 className="h-5 w-5 text-zinc-600 cursor-pointer hover:text-zinc-900" />
           </div>
         </div>

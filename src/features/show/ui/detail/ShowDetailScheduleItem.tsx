@@ -44,7 +44,7 @@ export default function ShowDetailScheduleItem({
     <Card
       onClick={handleSelect}
       className={cn(
-        "flex flex-row items-start gap-3 p-4 rounded-xl border transition",
+        "flex flex-row items-start gap-3 p-4 rounded-xl border transition mb-0",
         isDisabled ? "opacity-50 cursor-not-allowed bg-muted/30" : "cursor-pointer",
         isSelected && !isDisabled ? "border-red-500 bg-red-50/50 dark:bg-red-900/10" : "border-muted",
         !isDisabled && !isSelected && "hover:border-accent-foreground/20",
@@ -56,7 +56,9 @@ export default function ShowDetailScheduleItem({
         disabled={isDisabled}
         className={cn(
           "mt-1",
-          isSelected && !isDisabled && "border-red-500 text-red-500 [&_[data-slot=radio-group-indicator]_svg]:fill-red-500",
+          isSelected &&
+            !isDisabled &&
+            "border-red-500 text-red-500 [&_[data-slot=radio-group-indicator]_svg]:fill-red-500",
         )}
         onClick={(e) => {
           if (isDisabled) return;

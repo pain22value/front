@@ -1,29 +1,42 @@
 "use client";
 
 import { useMemo } from "react";
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useReviewMeta } from "../../hooks/useReviews";
 
+const EMPTY_LEFT = [
+  { subject: "무대연출", value: 0 },
+  { subject: "넘버", value: 0 },
+  { subject: "안무", value: 0 },
+  { subject: "배우연기", value: 0 },
+  { subject: "스토리", value: 0 },
+];
+
+const EMPTY_RIGHT = [
+  { subject: "몰입감", value: 0 },
+  { subject: "텐션", value: 0 },
+  { subject: "카타르시스", value: 0 },
+  { subject: "즐거움", value: 0 },
+  { subject: "감동", value: 0 },
+];
+
 export default function ShowReviewChart({ showId }: { showId: number }) {
   const { data, isLoading } = useReviewMeta(showId);
 
-  const dataLeft = useMemo(
-    () => data?.charmPointScores?.map((score) => ({ subject: score.label, value: score.score })) || [],
-    [data],
-  );
 
-  const dataRight = useMemo(
-    () => data?.emotionPointScores?.map((score) => ({ subject: score.label, value: score.score })) || [],
-    [data],
-  );
+  const dataLeft = useMemo(() => {
+    if (!data?.charmPointScores || data.charmPointScores.length === 0) return EMPTY_LEFT;
+    return data.charmPointScores.map((score) => ({ subject: score.label, value: score.score }));
+  }, [data]);
 
-  if (isLoading || !data) return null;
+  const dataRight = useMemo(() => {
+    if (!data?.emotionPointScores || data.emotionPointScores.length === 0) return EMPTY_RIGHT;
+    return data.emotionPointScores.map((score) => ({ subject: score.label, value: score.score }));
+  }, [data]);
 
-  // 데이터가 모두 0이거나 비어있으면 표시하지 않음
-  const hasData = (data.charmPointScores?.length ?? 0) > 0 || (data.emotionPointScores?.length ?? 0) > 0;
-  if (!hasData) return null;
+  if (isLoading) return null;
 
   return (
     <section className="space-y-6">
@@ -38,6 +51,7 @@ export default function ShowReviewChart({ showId }: { showId: number }) {
                 <RadarChart data={dataLeft} className="outline-none! focus:outline-none!">
                   <PolarGrid />
                   <PolarAngleAxis dataKey="subject" />
+                  <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                   <Radar dataKey="value" stroke="#ef4444" fill="#ef4444" fillOpacity={0.4} />
                 </RadarChart>
               </ResponsiveContainer>
@@ -49,6 +63,7 @@ export default function ShowReviewChart({ showId }: { showId: number }) {
                 <RadarChart data={dataRight}>
                   <PolarGrid />
                   <PolarAngleAxis dataKey="subject" />
+                  <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                   <Radar dataKey="value" stroke="#06b6d4" fill="#06b6d4" fillOpacity={0.4} />
                 </RadarChart>
               </ResponsiveContainer>

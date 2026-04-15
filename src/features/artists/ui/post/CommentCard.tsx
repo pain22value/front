@@ -1,21 +1,35 @@
-import { useState } from "react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart, MessageCircle } from "lucide-react";
 import { AVATAR_URL } from "@/shared/constants/avatar";
 import ArtistCheckIcon from "./ArtistCheckIcon";
+import { useLikeArtistComment, useUnlikeArtistComment } from "../../hooks/useArtistPostMutations";
 
-export default function CommentCard({ comment, onClick }: { comment: ArtistComment; onClick?: () => void }) {
-  const { authorName, authorThumbnailUrl, createdAt, content, likeCount, replyCount, isArtist, likedByMe } = comment;
+export default function CommentCard({
+  comment,
+  artistId,
+  postId,
+  onClick,
+}: {
+  comment: ArtistComment;
+  artistId: string | number;
+  postId: number | string;
+  onClick?: () => void;
+}) {
+  const { authorName, authorThumbnailUrl, createdAt, content, likeCount, replyCount, isArtist, likedByMe, commentId } =
+    comment;
 
-  const [localLiked, setLocalLiked] = useState(likedByMe);
-  const [localLikeCount, setLocalLikeCount] = useState(likeCount);
+  const { mutate: likeComment } = useLikeArtistComment(artistId, postId);
+  const { mutate: unlikeComment } = useUnlikeArtistComment(artistId, postId);
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newLiked = !localLiked;
-    setLocalLiked(newLiked);
-    setLocalLikeCount((prev) => (newLiked ? prev + 1 : prev - 1));
+    if (likedByMe) {
+      unlikeComment(commentId);
+    } else {
+      likeComment(commentId);
+    }
   };
 
   return (
@@ -47,11 +61,11 @@ export default function CommentCard({ comment, onClick }: { comment: ArtistComme
               <div
                 onClick={handleLikeClick}
                 className={`flex items-center gap-1.5 cursor-pointer transition-colors ${
-                  localLiked ? "text-red-500" : "text-muted-foreground hover:text-red-500"
+                  likedByMe ? "text-red-500" : "text-muted-foreground hover:text-red-500"
                 }`}
               >
-                <Heart className={`w-5 h-5 ${localLiked ? "fill-current" : ""}`} strokeWidth={1.5} />
-                <span className="text-sm font-medium">{localLikeCount.toLocaleString()}</span>
+                <Heart className={`w-5 h-5 ${likedByMe ? "fill-current" : ""}`} strokeWidth={1.5} />
+                <span className="text-sm font-medium">{likeCount.toLocaleString()}</span>
               </div>
               <div className="flex items-center gap-1.5 text-muted-foreground cursor-pointer hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">
                 <MessageCircle className="w-5 h-5" strokeWidth={1.5} />

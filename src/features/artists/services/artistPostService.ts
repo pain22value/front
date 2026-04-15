@@ -102,15 +102,49 @@ export const artistPostService = {
     return { success: true };
   },
 
+  // 댓글 좋아요
+  likeComment: async (artistId: string | number, postId: number | string, commentId: number) => {
+    // const { data } = await api.post(ENDPOINTS.ARTISTS.BOARD_COMMENT_LIKES(artistId, postId, commentId));
+    // return data;
+
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const comment = MOCK_ARTIST_COMMENTS.comments.find((c) => c.commentId === commentId);
+    if (comment && !comment.likedByMe) {
+      comment.likedByMe = true;
+      comment.likeCount += 1;
+    }
+    return { success: true };
+  },
+
+  // 댓글 좋아요 취소
+  unlikeComment: async (artistId: string | number, postId: number | string, commentId: number) => {
+    // const { data } = await api.delete(ENDPOINTS.ARTISTS.BOARD_COMMENT_LIKES(artistId, postId, commentId));
+    // return data;
+
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const comment = MOCK_ARTIST_COMMENTS.comments.find((c) => c.commentId === commentId);
+    if (comment && comment.likedByMe) {
+      comment.likedByMe = false;
+      comment.likeCount -= 1;
+    }
+    return { success: true };
+  },
+
   // 댓글 답글 목록 가져오기
-  getCommentReplies: async (commentId: number) => {
+  getCommentReplies: async (artistId: string | number, postId: number | string, commentId: number) => {
+    // const { data } = await api.get<{ code: string, message: string, data: { replies: ArtistComment[] } }>(ENDPOINTS.ARTISTS.BOARD_COMMENT_REPLIES(artistId, postId, commentId));
+    // return data.data.replies;
+
     await new Promise((resolve) => setTimeout(resolve, 500));
     const comment = MOCK_ARTIST_COMMENTS.comments.find((c) => c.commentId === commentId);
     return comment?.replies ?? [];
   },
 
   // 답글 작성
-  createReply: async (commentId: number, content: string) => {
+  createReply: async (artistId: string | number, postId: number | string, commentId: number, content: string) => {
+    // const { data } = await api.post(ENDPOINTS.ARTISTS.BOARD_COMMENT_REPLIES(artistId, postId, commentId), { content });
+    // return data;
+
     await new Promise((resolve) => setTimeout(resolve, 500));
     const comment = MOCK_ARTIST_COMMENTS.comments.find((c) => c.commentId === commentId);
     if (comment) {

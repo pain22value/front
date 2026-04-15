@@ -60,6 +60,8 @@ export const ENDPOINTS = {
     BOARD: (artistId: number | string) => `/musical/artists/${artistId}/board`,
     BOARD_COMMENTS: (artistId: number | string, postId: number | string) => `/musical/artists/${artistId}/board/${postId}/comments`,
     BOARD_LIKES: (artistId: number | string, postId: number | string) => `/musical/artists/${artistId}/board/${postId}/likes`,
+    BOARD_COMMENT_REPLIES: (artistId: number | string, postId: number | string, commentId: number | string) => `/musical/artists/${artistId}/board/${postId}/comments/${commentId}/replies`,
+    BOARD_COMMENT_LIKES: (artistId: number | string, postId: number | string, commentId: number | string) => `/musical/artists/${artistId}/board/${postId}/comments/${commentId}/likes`,
   },
 
   // 대기열

@@ -39,13 +39,106 @@ export function useCreateArtistComment(artistId: string | number, postId: number
 }
 
 // 아티스트 게시판 답글 작성 훅
-export function useCreateArtistReply(commentId: number) {
+export function useCreateArtistReply(artistId: string | number, postId: number | string, commentId: number) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (content: string) => artistPostService.createReply(commentId, content),
+    mutationFn: (content: string) => artistPostService.createReply(artistId, postId, commentId, content),
     onSuccess: () => {
       // 답글 작성 완료 시 해당 댓글의 답글 목록 무효화
-      queryClient.invalidateQueries({ queryKey: ["artistCommentReplies", commentId] });
+      queryClient.invalidateQueries({ queryKey: ["artistCommentReplies", artistId, postId, commentId] });
+      queryClient.invalidateQueries({ queryKey: ["artistComments", artistId, postId] });
+    },
+  });
+}
+
+// 아티스트 게시판 댓글 좋아요 훅
+export function useLikeArtistComment(artistId: string | number, postId: number | string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (commentId: number) => artistPostService.likeComment(artistId, postId, commentId),
+    onMutate: async (commentId) => {
+      await queryClient.cancelQueries({ queryKey: ["artistComments", artistId, postId] });
+      const previousData = queryClient.getQueriesData({ queryKey: ["artistComments", artistId, postId] });
+
+      type OptComment = { commentId: number; likedByMe: boolean; likeCount: number; replies?: OptComment[] };
+      type OptData = { summary: unknown; comments: OptComment[] };
+
+      queryClient.setQueriesData({ queryKey: ["artistComments", artistId, postId] }, (oldData: unknown) => {
+        const data = oldData as OptData | undefined;
+        if (!data || !data.comments) return data;
+        
+        const updateCommentRecursively = (comments: OptComment[]): OptComment[] => {
+          return comments.map((comment) => {
+            if (comment.commentId === commentId) {
+              return { ...comment, likedByMe: true, likeCount: comment.likeCount + 1 };
+            }
+            if (comment.replies) {
+              return { ...comment, replies: updateCommentRecursively(comment.replies) };
+            }
+            return comment;
+          });
+        };
+
+        return { ...data, comments: updateCommentRecursively(data.comments) };
+      });
+
+      return { previousData };
+    },
+    onError: (err, commentId, context) => {
+      if (context?.previousData) {
+        context.previousData.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["artistComments", artistId, postId] });
+    },
+  });
+}
+
+// 아티스트 게시판 댓글 좋아요 취소 훅
+export function useUnlikeArtistComment(artistId: string | number, postId: number | string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (commentId: number) => artistPostService.unlikeComment(artistId, postId, commentId),
+    onMutate: async (commentId) => {
+      await queryClient.cancelQueries({ queryKey: ["artistComments", artistId, postId] });
+      const previousData = queryClient.getQueriesData({ queryKey: ["artistComments", artistId, postId] });
+
+      type OptComment = { commentId: number; likedByMe: boolean; likeCount: number; replies?: OptComment[] };
+      type OptData = { summary: unknown; comments: OptComment[] };
+
+      queryClient.setQueriesData({ queryKey: ["artistComments", artistId, postId] }, (oldData: unknown) => {
+        const data = oldData as OptData | undefined;
+        if (!data || !data.comments) return data;
+        
+        const updateCommentRecursively = (comments: OptComment[]): OptComment[] => {
+          return comments.map((comment) => {
+            if (comment.commentId === commentId) {
+              return { ...comment, likedByMe: false, likeCount: Math.max(0, comment.likeCount - 1) };
+            }
+            if (comment.replies) {
+              return { ...comment, replies: updateCommentRecursively(comment.replies) };
+            }
+            return comment;
+          });
+        };
+
+        return { ...data, comments: updateCommentRecursively(data.comments) };
+      });
+
+      return { previousData };
+    },
+    onError: (err, commentId, context) => {
+      if (context?.previousData) {
+        context.previousData.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["artistComments", artistId, postId] });
     },
   });
 }

@@ -83,7 +83,13 @@ export default function CommentSection({
           <h3 className="font-bold mb-4 text-foreground text-[15px]">내 댓글</h3>
           <div className="space-y-3">
             {mineData.comments.map((comment) => (
-              <CommentCard key={comment.commentId} comment={comment} onClick={() => onCommentClick?.(comment.commentId)} />
+              <CommentCard
+                key={comment.commentId}
+                comment={comment}
+                artistId={artistId}
+                postId={postId!}
+                onClick={() => onCommentClick?.(comment.commentId)}
+              />
             ))}
           </div>
         </section>
@@ -97,7 +103,13 @@ export default function CommentSection({
           </h3>
           <div className="space-y-3">
             {artistData.comments.map((comment) => (
-              <CommentCard key={comment.commentId} comment={comment} onClick={() => onCommentClick?.(comment.commentId)} />
+              <CommentCard
+                key={comment.commentId}
+                comment={comment}
+                artistId={artistId}
+                postId={postId!}
+                onClick={() => onCommentClick?.(comment.commentId)}
+              />
             ))}
           </div>
         </section>
@@ -110,7 +122,13 @@ export default function CommentSection({
         </h3>
         <div className="space-y-3 pb-20">
           {allData?.comments.map((comment) => (
-            <CommentCard key={comment.commentId} comment={comment} onClick={() => onCommentClick?.(comment.commentId)} />
+            <CommentCard
+              key={comment.commentId}
+              comment={comment}
+              artistId={artistId}
+              postId={postId!}
+              onClick={() => onCommentClick?.(comment.commentId)}
+            />
           ))}
           {allData?.comments.length === 0 && (
             <p className="text-center text-muted-foreground py-10 text-sm">첫 댓글을 남겨보세요!</p>

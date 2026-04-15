@@ -31,10 +31,10 @@ export function useArtistComments(artistId: string | number, postId: number | nu
 }
 
 // 댓글 답글 목록 페칭 훅
-export function useArtistCommentReplies(commentId: number | null) {
+export function useArtistCommentReplies(artistId: string | number, postId: number | string, commentId: number | null) {
   return useQuery({
-    queryKey: ["artistCommentReplies", commentId],
-    queryFn: () => artistPostService.getCommentReplies(commentId!),
-    enabled: !!commentId,
+    queryKey: ["artistCommentReplies", artistId, postId, commentId],
+    queryFn: () => artistPostService.getCommentReplies(artistId, postId, commentId!),
+    enabled: !!artistId && !!postId && !!commentId,
   });
 }

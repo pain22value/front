@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { Heart, MessageCircle, ChevronLeft } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useArtistComments } from "../../hooks/useArtistPostQuery";
-import { useCreateArtistReply } from "../../hooks/useArtistPostMutations";
+import { useCreateArtistReply, useLikeArtistComment, useUnlikeArtistComment } from "../../hooks/useArtistPostMutations";
 import { Skeleton } from "@/components/ui/skeleton";
 import ArtistCheckIcon from "./ArtistCheckIcon";
 
@@ -24,7 +24,7 @@ export default function ArtistCommentDetail({
 }) {
   const [replyContent, setReplyContent] = useState("");
   const { data, isLoading } = useArtistComments(artistId, postId, "ALL");
-  const { mutate: createReply, isPending } = useCreateArtistReply(commentId!);
+  const { mutate: createReply, isPending } = useCreateArtistReply(artistId, postId!, commentId!);
 
   // commentId에 해당하는 댓글을 메인으로 찾기
   const mainComment = data?.comments.find((c) => c.commentId === commentId) ?? data?.comments[0] ?? null;
@@ -95,7 +95,13 @@ export default function ArtistCommentDetail({
           <CardContent className="p-4 pt-0">
             <p className="text-md mb-4">{mainComment.content}</p>
             <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              <ToggleLike initialLiked={mainComment.likedByMe} initialCount={mainComment.likeCount} />
+              <ToggleLike
+                artistId={artistId}
+                postId={postId!}
+                commentId={mainComment.commentId}
+                initialLiked={mainComment.likedByMe}
+                initialCount={mainComment.likeCount}
+              />
               <div className="flex items-center gap-1">
                 <MessageCircle className="w-4 h-4" />
                 <span>{mainComment.replyCount}</span>
@@ -155,6 +161,9 @@ export default function ArtistCommentDetail({
                 <p className="text-sm py-1 text-foreground">{reply.content}</p>
                 <div className="flex items-center gap-4 pt-1">
                   <ToggleLike
+                    artistId={artistId}
+                    postId={postId!}
+                    commentId={reply.commentId}
                     initialLiked={reply.likedByMe}
                     initialCount={reply.likeCount}
                     size="w-3.5 h-3.5"
@@ -196,31 +205,39 @@ const ArtistCommentDetailSkeleton = ({ onBack }: { onBack?: () => void }) => (
 );
 
 function ToggleLike({
+  artistId,
+  postId,
+  commentId,
   initialLiked,
   initialCount,
   size = "w-4 h-4",
   textClass = "text-sm",
 }: {
+  artistId: string | number;
+  postId: number | string;
+  commentId: number;
   initialLiked: boolean;
   initialCount: number;
   size?: string;
   textClass?: string;
 }) {
-  const [liked, setLiked] = useState(initialLiked);
-  const [count, setCount] = useState(initialCount);
+  const { mutate: likeComment } = useLikeArtistComment(artistId, postId);
+  const { mutate: unlikeComment } = useUnlikeArtistComment(artistId, postId);
 
   return (
     <button
       onClick={(e) => {
         e.stopPropagation();
-        const newLiked = !liked;
-        setLiked(newLiked);
-        setCount((prev) => (newLiked ? prev + 1 : prev - 1));
+        if (initialLiked) {
+          unlikeComment(commentId);
+        } else {
+          likeComment(commentId);
+        }
       }}
-      className={`flex items-center gap-1 ${textClass} hover:text-red-500 transition-colors ${liked ? "text-red-500" : "text-muted-foreground"}`}
+      className={`flex items-center gap-1 ${textClass} hover:text-red-500 transition-colors ${initialLiked ? "text-red-500" : "text-muted-foreground"}`}
     >
-      <Heart className={`${size} ${liked ? "fill-current" : ""}`} />
-      <span>{count}</span>
+      <Heart className={`${size} ${initialLiked ? "fill-current" : ""}`} />
+      <span>{initialCount}</span>
     </button>
   );
 }

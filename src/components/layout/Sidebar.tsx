@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Heart, LayoutGrid } from "lucide-react";
+import { Heart, LayoutGrid, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
@@ -237,7 +237,7 @@ export default function Sidebar() {
           </span>
         </Link>
 
-        {/* <div className="flex items-center gap-4 w-full cursor-pointer group">
+        <div className="flex items-center gap-4 w-full cursor-pointer group">
           <Button
             variant="secondary"
             size="icon"
@@ -259,7 +259,7 @@ export default function Sidebar() {
           >
             라이브 채팅
           </span>
-        </div> */}
+        </div>
       </div>
     </aside>
   );

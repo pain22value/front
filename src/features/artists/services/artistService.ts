@@ -9,7 +9,7 @@ const getArtistDetail = async (artistId: number | string) => {
 };
 
 // 아티스트 지난 공연 조회
-const getPastShows = async (artistId: number | string, page = 0, size = 10) => {
+const getPastShows = async (artistId: number | string, page = 1, size = 10) => {
   const { data } = await api.get<ApiResponse<ArtistPastShowsResponse>>(ENDPOINTS.ARTISTS.PAST_SHOWS(artistId), {
     params: { page, size },
   });

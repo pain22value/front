@@ -81,7 +81,6 @@ export default function ArtistCommentDetail({
           <CardHeader className="flex flex-row items-center space-x-3 p-4">
             <Avatar className="w-12 h-12">
               <AvatarFallback>{mainComment.authorName[0]}</AvatarFallback>
-              <AvatarFallback>{mainComment.authorName[0]}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <div className="flex items-center gap-1">

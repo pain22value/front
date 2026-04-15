@@ -10,7 +10,7 @@ export const useArtistDetail = (artistId: number | string) => {
   });
 };
 
-export const useArtistPastShows = (artistId: number | string, page = 0, size = 10) => {
+export const useArtistPastShows = (artistId: number | string, page = 1, size = 10) => {
   return useQuery({
     queryKey: ["artist", artistId, "past-shows", page, size],
     queryFn: () => artistService.getPastShows(artistId, page, size),

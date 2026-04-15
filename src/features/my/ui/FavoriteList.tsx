@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useFavoriteStore } from "@/features/artists/stores/useFavoriteStore";
 import { useArtistLike } from "@/features/show/hooks/useArtistLike";
+import { useArtistDetail } from "@/features/artists/hooks/useArtist";
 import { Heart } from "lucide-react";
 import Link from "next/link";
 
@@ -22,6 +23,10 @@ function FavoriteArtistItem({
   const isLiked = useFavoriteStore((state) => state.favorites.some((a) => a.artistId === artistId));
   const { toggle, isPending } = useArtistLike(artistId, isLiked, artistName, profileImageUrl);
 
+  // 아티스트 상세 정보에서 멤버십 가입 여부 확인
+  const { data: artistDetail } = useArtistDetail(artistId);
+  const isMembershipJoined = artistDetail?.membership?.joined ?? false;
+
   return (
     <div className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
       <Link href={`/artists/${artistId}`} className="flex items-center space-x-4 flex-1">
@@ -33,12 +38,14 @@ function FavoriteArtistItem({
       </Link>
 
       <div className="flex items-center space-x-3">
-        <Badge
-          variant="outline"
-          className="px-4 py-1.5 text-teal-500 border-teal-500 font-medium rounded-lg hover:bg-teal-50 cursor-default"
-        >
-          멤버십 가입중
-        </Badge>
+        {isMembershipJoined && (
+          <Badge
+            variant="outline"
+            className="px-4 py-1.5 text-teal-500 border-teal-500 font-medium rounded-lg hover:bg-teal-50 cursor-default"
+          >
+            멤버십 가입중
+          </Badge>
+        )}
 
         <Button variant="ghost" size="icon" className="hover:bg-transparent" onClick={toggle} disabled={isPending}>
           <Heart

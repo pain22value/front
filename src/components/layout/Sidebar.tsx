@@ -147,7 +147,11 @@ export default function Sidebar() {
         </Link>
 
         {/* 메뉴 */}
-        <Link href="/shows/now" className="flex items-center gap-4 w-full cursor-pointer group" onClick={handleMenuClick}>
+        <Link
+          href="/shows/now"
+          className="flex items-center gap-4 w-full cursor-pointer group"
+          onClick={handleMenuClick}
+        >
           <Button
             variant="secondary"
             size="icon"
@@ -209,7 +213,11 @@ export default function Sidebar() {
 
       {/* Bottom Icons */}
       <div className="flex flex-col gap-4 pb-6 w-full px-5">
-        <Link href="/my/favorite" className="flex items-center gap-4 w-full cursor-pointer group" onClick={handleMenuClick}>
+        <Link
+          href="/my/favorite"
+          className="flex items-center gap-4 w-full cursor-pointer group"
+          onClick={handleMenuClick}
+        >
           <Button
             variant="secondary"
             size="icon"

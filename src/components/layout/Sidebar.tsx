@@ -237,7 +237,7 @@ export default function Sidebar() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-4 w-full cursor-pointer group">
+        <Link href="/chat" className="flex items-center gap-4 w-full cursor-pointer group" onClick={handleMenuClick}>
           <Button
             variant="secondary"
             size="icon"
@@ -259,7 +259,7 @@ export default function Sidebar() {
           >
             라이브 채팅
           </span>
-        </div>
+        </Link>
       </div>
     </aside>
   );

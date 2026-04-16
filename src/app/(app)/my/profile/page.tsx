@@ -37,7 +37,7 @@ export default function ProfilePage() {
         <h1 className="text-2xl font-bold mb-6">계정정보</h1>
 
         {/* 사용자 정보 */}
-        <div className="flex items-center w-full max-w-4xl p-4 bg-[#f1f3f5] rounded-xl shadow-sm">
+        <div className="flex items-center w-full max-w-4xl p-4 bg-muted rounded-xl shadow-sm">
           {/* 아바타 영역 */}
           <div className="flex items-center justify-center w-12 h-12 bg-[#84849a] rounded-full mr-4">
             <span className="text-white text-lg font-bold">{user?.nickname?.[0] || user?.email?.[0] || "?"}</span>
@@ -45,8 +45,8 @@ export default function ProfilePage() {
 
           {/* 이름 영역 */}
           <div className="flex items-baseline">
-            <h2 className="text-2xl font-bold text-[#1a1a1b] tracking-tight">{user?.nickname}</h2>
-            <span className="ml-1 text-2xl font-bold text-[#1a1a1b]">님</span>
+            <h2 className="text-2xl font-bold text-foreground tracking-tight">{user?.nickname}</h2>
+            <span className="ml-1 text-2xl font-bold text-foreground">님</span>
           </div>
         </div>
 

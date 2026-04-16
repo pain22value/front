@@ -10,9 +10,20 @@ import {
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { useState } from "react";
 
 export function UserMenu() {
   const { user, signout } = useAuthStore();
+  const [open, setOpen] = useState(false);
+
+  // 메뉴 닫기 핸들러
+  const handleClose = () => setOpen(false);
+
+  // 로그아웃 핸들러
+  const handleLogout = () => {
+    signout();
+    handleClose();
+  };
 
   if (!user) {
     return (
@@ -23,7 +34,7 @@ export function UserMenu() {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full overflow-hidden">
           <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
@@ -36,6 +47,7 @@ export function UserMenu() {
         <DropdownMenuItem className="p-0 focus:bg-transparent">
           <Link
             href="/my/profile"
+            onClick={handleClose}
             className="w-full flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
           >
             <span className="text-xl font-bold text-foreground">{user.nickname}님</span>
@@ -48,6 +60,7 @@ export function UserMenu() {
           <DropdownMenuItem className="p-0 focus:bg-transparent">
             <Link
               href="/mypage/bookings"
+              onClick={handleClose}
               className="w-full h-12 text-lg font-medium flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
             >
               마이 티켓
@@ -56,6 +69,7 @@ export function UserMenu() {
           <DropdownMenuItem className="p-0 focus:bg-transparent">
             <Link
               href="/my/membership"
+              onClick={handleClose}
               className="w-full h-12 text-lg font-medium flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
             >
               마이 멤버십
@@ -68,7 +82,7 @@ export function UserMenu() {
           <DropdownMenuItem className="p-0 focus:bg-transparent">
             <Button
               variant="ghost"
-              onClick={signout}
+              onClick={handleLogout}
               className="w-full h-12 text-lg font-medium flex items-center justify-between px-2 py-3 hover:bg-accent rounded-lg transition-colors"
             >
               로그아웃

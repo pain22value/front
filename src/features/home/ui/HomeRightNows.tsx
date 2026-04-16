@@ -36,8 +36,10 @@ export default function HomeRightNows() {
             <SelectValue placeholder="정렬 순서" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="DAILY_BOOKING">인기순</SelectItem>
-            <SelectItem value="RECENTLY_ADDED">최신순</SelectItem>
+            <SelectItem value="DAILY_BOOKING">일간 예매순</SelectItem>
+            <SelectItem value="WEEKLY_BOOKING">주간 예매순</SelectItem>
+            <SelectItem value="ENDING_SOON">종료 임박 순</SelectItem>
+            <SelectItem value="MOST_REVIEWED">리뷰 많은 순</SelectItem>
           </SelectContent>
         </Select>
         <Select
@@ -50,16 +52,14 @@ export default function HomeRightNows() {
             <SelectValue placeholder="지역 선택" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">전국</SelectItem>
+            <SelectItem value="ALL">전체</SelectItem>
             <SelectItem value="SEOUL">서울</SelectItem>
-            <SelectItem value="BUSAN">부산</SelectItem>
-            <SelectItem value="DAEGU">대구</SelectItem>
-            <SelectItem value="INCHEON">인천</SelectItem>
-            <SelectItem value="GWANGJU">광주</SelectItem>
-            <SelectItem value="DAEJEON">대전</SelectItem>
-            <SelectItem value="ULSAN">울산</SelectItem>
             <SelectItem value="GYEONGGI">경기</SelectItem>
             <SelectItem value="GANGWON">강원</SelectItem>
+            <SelectItem value="CHUNGCHEONG">충청</SelectItem>
+            <SelectItem value="JEOLLA">전라</SelectItem>
+            <SelectItem value="GYEONGSANG">경상</SelectItem>
+            <SelectItem value="JEJU">제주</SelectItem>
           </SelectContent>
         </Select>
       </div>

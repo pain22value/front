@@ -4,6 +4,7 @@ import { useHomePromotions } from "@/features/home/hooks/useHomePromotions";
 import { BaseCarousel } from "@/components/common/BaseCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HomePromotions() {
   const { data: promotions, isLoading } = useHomePromotions();
@@ -28,16 +29,18 @@ export default function HomePromotions() {
         autoplay
         stopOnInteraction={false}
         stopOnMouseEnter
-        renderItem={(item) => (
-          <div className={`h-[254] group relative overflow-hidden rounded-3xl transition-all duration-300 ease-in-out`}>
-            <Image
-              src={item.posterUrl}
-              alt="Promotion Banner"
-              width={1200}
-              height={400}
-              className="w-full h-full object-cover rounded-xl"
-            />
-          </div>
+        renderItem={(item: Promotion) => (
+          <Link href={`/shows/${item.showId}`} className="block">
+            <div className={`h-[254] group relative overflow-hidden rounded-3xl transition-all duration-300 ease-in-out`}>
+              <Image
+                src={item.posterUrl}
+                alt="Promotion Banner"
+                width={1200}
+                height={400}
+                className="w-full h-full object-cover rounded-xl"
+              />
+            </div>
+          </Link>
         )}
       />
     </section>

@@ -2,11 +2,15 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ARTIST_LIST } from "@/shared/data/artists";
+import useShowDetail from "../../show/hooks/useShowDetail";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 export default function HomeArtists() {
+  const { data, isLoading } = useShowDetail(1);
+  const artists = data?.castings || [];
+
   return (
     <section className="space-y-8 rounded-2xl border bg-background p-6">
       {/* 아티스트와 라이브 채팅 안내 */}
@@ -19,19 +23,23 @@ export default function HomeArtists() {
 
       {/* 배우 목록 */}
       <div className="flex gap-3 flex-wrap pb-2">
-        {ARTIST_LIST.slice(0, 50).map((artist) => (
-          <Link
-            key={artist.artistId}
-            href={`/artists/${artist.artistId}`}
-            className="flex shrink-0 items-center gap-3 rounded-full border px-4 py-2 transition hover:bg-accent no-underline text-foreground"
-          >
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={artist.profileImageUrl} alt={artist.artistName} />
-              <AvatarFallback>{artist.artistName.slice(0, 1)}</AvatarFallback>
-            </Avatar>
-            <span className="whitespace-nowrap text-sm font-medium">{artist.artistName}</span>
-          </Link>
-        ))}
+        {isLoading
+          ? Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="flex h-14 w-32 animate-pulse items-center gap-3 rounded-full border bg-muted px-4 py-2" />
+            ))
+          : artists.map((artist) => (
+              <Link
+                key={artist.artistId}
+                href={`/artists/${artist.artistId}`}
+                className="flex shrink-0 items-center gap-3 rounded-full border px-4 py-2 transition hover:bg-accent no-underline text-foreground"
+              >
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={artist.profileImageUrl} alt={artist.artistName} />
+                  <AvatarFallback>{artist.artistName.slice(0, 1)}</AvatarFallback>
+                </Avatar>
+                <span className="whitespace-nowrap text-sm font-medium">{artist.artistName}</span>
+              </Link>
+            ))}
       </div>
     </section>
   );

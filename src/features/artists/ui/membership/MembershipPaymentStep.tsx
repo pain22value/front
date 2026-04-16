@@ -64,13 +64,13 @@ export default function MembershipPaymentStep({
   };
 
   return (
-    <div className="p-8 font-sans antialiased text-slate-900">
+    <div className="p-8 font-sans antialiased text-slate-900 dark:text-zinc-100">
       <ArtistProfile artist={artist} />
-      <Card className="shadow-none">
+      <Card className="shadow-none bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800">
         <CardContent>
-          <div className="flex items-center gap-2 mb-6 border-b pb-4">
+          <div className="flex items-center gap-2 mb-6 border-b border-slate-100 dark:border-zinc-800 pb-4 pt-6">
             <span className="text-xl">💳</span>
-            <h3 className="text-lg font-bold">결제 정보 입력</h3>
+            <h3 className="text-lg font-bold dark:text-white">결제 정보 입력</h3>
           </div>
           <PaymentAmountCard amount={5000} />
           <PaymentMethodSelector selectedMethod={method as PayMethod} onChange={setMethod} />
@@ -86,18 +86,18 @@ export default function MembershipPaymentStep({
   );
 }
 
-// 서브 컴포넌트들 (변화 없음)
+// 서브 컴포넌트들
 function PaymentAmountCard({ amount }: { amount: number }) {
   return (
-    <div className="bg-rose-50 rounded-xl p-6 mb-8 flex justify-between items-center border border-rose-100">
+    <div className="bg-rose-50 dark:bg-rose-950/20 rounded-xl p-6 mb-8 flex justify-between items-center border border-rose-100 dark:border-rose-900/50">
       <div>
-        <h4 className="font-bold text-slate-800 text-lg">월간 멤버십</h4>
-        <p className="text-rose-400 text-sm font-medium mt-1">매월 자동 결제됩니다</p>
+        <h4 className="font-bold text-slate-800 dark:text-rose-100 text-lg">월간 멤버십</h4>
+        <p className="text-rose-400 dark:text-rose-400 text-sm font-medium mt-1">매월 자동 결제됩니다</p>
       </div>
       <div className="flex items-baseline">
-        <span className="text-3xl font-black text-rose-500">{amount.toLocaleString()}</span>
-        <span className="text-rose-500 font-bold ml-1">원</span>
-        <span className="text-slate-400 text-sm ml-1">/월</span>
+        <span className="text-3xl font-black text-rose-500 dark:text-rose-400">{amount.toLocaleString()}</span>
+        <span className="text-rose-500 dark:text-rose-400 font-bold ml-1">원</span>
+        <span className="text-slate-400 dark:text-zinc-500 text-sm ml-1">/월</span>
       </div>
     </div>
   );
@@ -106,13 +106,15 @@ function PaymentAmountCard({ amount }: { amount: number }) {
 function PaymentMethodSelector({ selectedMethod, onChange }: { selectedMethod: PayMethod; onChange: (method: PayMethod) => void }) {
   return (
     <div className="mb-8 text-left">
-      <h4 className="font-bold text-slate-800 mb-4">결제 수단</h4>
+      <h4 className="font-bold text-slate-800 dark:text-slate-100 mb-4">결제 수단</h4>
       <div className="space-y-3">
         {(["CARD", "VIRTUAL_ACCOUNT"] as const).map((m) => (
           <label
             key={m}
             className={`flex items-start gap-4 p-5 border-2 rounded-xl cursor-pointer transition-all ${
-              selectedMethod === m ? "border-rose-500 bg-rose-50/50" : "border-slate-100 bg-slate-50/30 hover:border-slate-200"
+              selectedMethod === m 
+                ? "border-rose-500 bg-rose-50/50 dark:bg-rose-950/30" 
+                : "border-slate-100 dark:border-zinc-800 bg-slate-50/30 dark:bg-zinc-800/20 hover:border-slate-200 dark:hover:border-zinc-700"
             }`}
           >
             <input
@@ -123,8 +125,8 @@ function PaymentMethodSelector({ selectedMethod, onChange }: { selectedMethod: P
               className="mt-1 w-5 h-5 accent-rose-500"
             />
             <div className="flex-1">
-              <p className="font-bold text-slate-800">{m === "CARD" ? "간편 결제 · 카드 결제" : "가상계좌"}</p>
-              <p className="text-slate-400 text-sm mt-0.5 font-medium">
+              <p className="font-bold text-slate-800 dark:text-slate-100">{m === "CARD" ? "간편 결제 · 카드 결제" : "가상계좌"}</p>
+              <p className="text-slate-400 dark:text-zinc-500 text-sm mt-0.5 font-medium">
                 {m === "CARD" ? "신용/체크카드 및 간편결제(토스, 카카오 등)" : "무통장 입금"}
               </p>
             </div>
@@ -137,11 +139,11 @@ function PaymentMethodSelector({ selectedMethod, onChange }: { selectedMethod: P
 
 function PaymentNotice() {
   return (
-    <div className="bg-slate-50 border border-slate-100 rounded-xl p-6 mb-10">
-      <ul className="text-slate-500 text-sm space-y-2.5 list-none">
-        <li className="flex gap-2"><span className="text-slate-300">•</span>첫 결제 후 매월 같은 날짜에 자동 결제됩니다.</li>
-        <li className="flex gap-2"><span className="text-slate-300">•</span>멤버십은 마이페이지에서 언제든 해지할 수 있습니다.</li>
-        <li className="flex gap-2"><span className="text-slate-300">•</span>결제 정보는 암호화되어 안전하게 저장됩니다.</li>
+    <div className="bg-slate-50 dark:bg-zinc-800/40 border border-slate-100 dark:border-zinc-800 rounded-xl p-6 mb-10">
+      <ul className="text-slate-500 dark:text-zinc-400 text-sm space-y-2.5 list-none">
+        <li className="flex gap-2"><span className="text-slate-300 dark:text-zinc-600">•</span>첫 결제 후 매월 같은 날짜에 자동 결제됩니다.</li>
+        <li className="flex gap-2"><span className="text-slate-300 dark:text-zinc-600">•</span>멤버십은 마이페이지에서 언제든 해지할 수 있습니다.</li>
+        <li className="flex gap-2"><span className="text-slate-300 dark:text-zinc-600">•</span>결제 정보는 암호화되어 안전하게 저장됩니다.</li>
       </ul>
     </div>
   );
@@ -150,8 +152,8 @@ function PaymentNotice() {
 function PaymentActionButtons({ onPrev, onNext, isReady }: { onPrev?: () => void; onNext?: () => void; isReady?: boolean }) {
   return (
     <div className="flex gap-4">
-      <Button onClick={onPrev} className="flex-1 h-full py-4 font-bold text-slate-600 hover:bg-slate-100 transition-colors" variant="outline">이전</Button>
-      <Button onClick={onNext} disabled={!isReady} className="flex-2 w-full h-full py-4 font-bold bg-rose-500 text-white hover:bg-rose-600 transition-all">멤버십 결제하기</Button>
+      <Button onClick={onPrev} className="flex-1 h-full py-4 font-bold text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors" variant="outline">이전</Button>
+      <Button onClick={onNext} disabled={!isReady} className="flex-2 w-full h-full py-4 font-bold bg-rose-500 text-white hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-700 transition-all">멤버십 결제하기</Button>
     </div>
   );
 }

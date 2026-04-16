@@ -16,25 +16,15 @@ type ShowPage = {
 };
 
 type ShowCategory = "all" | "now" | "tobe" | "closed";
-type ShowsOrder = "DAILY_BOOKING" | "WEEKLY_BOOKING" | "MONTHLY_BOOKING" | "RECENTLY_ADDED";
+type ShowsOrder = "DAILY_BOOKING" | "WEEKLY_BOOKING" | "ENDING_SOON" | "MOST_REVIEWED";
 type ShowsRegion =
   | "ALL"
   | "SEOUL"
   | "GYEONGGI"
-  | "INCHEON"
-  | "DAEJEON"
-  | "GWANGJU"
-  | "BUSAN"
-  | "DAEGU"
-  | "ULSAN"
-  | "SEJONG"
   | "GANGWON"
-  | "CHUNGBUK"
-  | "CHUNGNAM"
-  | "GYEONGBUK"
-  | "JEOLLABUK"
-  | "JEOLLANAM"
-  | "GYEONGSANGNAM"
+  | "CHUNGCHEONG"
+  | "JEOLLA"
+  | "GYEONGSANG"
   | "JEJU";
 
 // 배너

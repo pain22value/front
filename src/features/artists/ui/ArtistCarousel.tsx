@@ -2,15 +2,19 @@
 
 import AutoScroll from "embla-carousel-auto-scroll";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { ARTIST_LIST } from "@/shared/data/artists";
+import useShowDetail from "../../show/hooks/useShowDetail";
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-const allArtists = [...ARTIST_LIST, ...ARTIST_LIST]; // 무한 루프를 위해 데이터 복제
-
 export default function ArtistCarousel() {
+  const { data, isLoading } = useShowDetail(1);
+  const castings = data?.castings || [];
+  const allArtists = [...castings, ...castings]; // 무한 루프를 위해 데이터 복제
+
   const plugin = useRef(AutoScroll({ speed: 0.8, stopOnInteraction: false, stopOnMouseEnter: true }));
+
+  if (isLoading) return <div className="h-64 flex items-center justify-center">로딩 중...</div>;
 
   return (
     <div className="w-full py-16 mt-20 space-y-6">

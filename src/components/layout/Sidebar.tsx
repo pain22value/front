@@ -9,32 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Link from "next/link";
 
-const RECOMMEND_ARTIST_LIST: Artist[] = [
-  {
-    artistId: 1,
-    artistName: "이재환",
-    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/leejaehwan.png",
-    isLiked: false,
-  },
-  {
-    artistId: 5,
-    artistName: "신재범",
-    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/shinjaebeom.png",
-    isLiked: false,
-  },
-  {
-    artistId: 9,
-    artistName: "김호영",
-    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/kimhoyoung.png",
-    isLiked: false,
-  },
-  {
-    artistId: 2,
-    artistName: "서경수",
-    profileImageUrl: "https://truve-dev-bucket.s3.ap-northeast-2.amazonaws.com/seokyungsu.png",
-    isLiked: false,
-  },
-];
+import useShowDetail from "@/features/show/hooks/useShowDetail";
+import useMyMembershipQuery from "@/features/my/hooks/useMyMembershipQuery";
 
 export default function Sidebar() {
   const { isExpanded, setExpanded } = useSidebarStore();
@@ -42,6 +18,32 @@ export default function Sidebar() {
   const sidebarRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const borderRef = useRef<HTMLDivElement>(null);
+
+  // 데이터 패칭
+  const { data: showData } = useShowDetail(1);
+  const { data: membershipData } = useMyMembershipQuery();
+
+  // 기본 아티스트 (킹키부츠 출연진 중 상위 4명)
+  const baseArtists = showData?.castings.slice(0, 4).map(c => ({
+    artistId: c.artistId,
+    artistName: c.artistName,
+    profileImageUrl: c.profileImageUrl,
+  })) || [];
+  
+  // 멤버십 아티스트
+  const membershipArtists = membershipData?.memberships.map(m => ({
+    artistId: m.artistId,
+    artistName: m.artistName,
+    profileImageUrl: m.profileImageUrl,
+  })) || [];
+
+  // 중복 제거 및 리스트 합치기
+  const allSidebarArtists = [...baseArtists];
+  membershipArtists.forEach(ma => {
+    if (!allSidebarArtists.find(ba => ba.artistId === ma.artistId)) {
+      allSidebarArtists.push(ma);
+    }
+  });
 
   const isSidebarVisible = isExpanded || isHovered;
 
@@ -183,7 +185,7 @@ export default function Sidebar() {
       {/* 추천 아티스트 */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
         <div className="flex flex-col gap-4 w-full">
-          {RECOMMEND_ARTIST_LIST.map((artist) => (
+          {allSidebarArtists.map((artist) => (
             <Link
               key={artist.artistId}
               href={`/artists/${artist.artistId}`}

@@ -39,11 +39,11 @@ export default function MembershipSelectStep({ artistId, onNext }: { artistId: s
   };
 
   return (
-    <Card className="w-full mx-auto shadow-none">
+    <Card className="w-full mx-auto shadow-none bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800">
       <CardHeader className="space-y-6">
-        <h3 className="text-red-500 text-2xl font-bold">월간 멤버십</h3>
-        <div className="text-3xl font-bold">
-          5,000원 <span className="text-lg font-normal text-gray-500">/월</span>
+        <h3 className="text-red-500 dark:text-red-400 text-2xl font-bold">월간 멤버십</h3>
+        <div className="text-3xl font-bold text-slate-900 dark:text-white">
+          5,000원 <span className="text-lg font-normal text-gray-500 dark:text-zinc-500">/월</span>
         </div>
 
         <div className="space-y-4 py-4">
@@ -65,21 +65,21 @@ export default function MembershipSelectStep({ artistId, onNext }: { artistId: s
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-2 border-t pt-6">
+      <CardContent className="space-y-2 border-t border-slate-100 dark:border-zinc-800 pt-6">
         <AgreementItem label="(필수) 멤버십 이용약관 동의" />
         <AgreementItem label="(필수) 개인정보 수집 및 이용 동의" />
         <AgreementItem label="(필수) 월 5,000원 자동결제 동의" />
-        <p className="text-xs text-gray-400 cursor-pointer hover:underline mt-2">개인정보 제 3자 제공 안내 &gt;</p>
+        <p className="text-xs text-gray-400 dark:text-zinc-500 cursor-pointer hover:underline mt-2">개인정보 제 3자 제공 안내 &gt;</p>
       </CardContent>
 
       <CardFooter className="flex gap-4 justify-between pt-6">
-        <Button variant="ghost" className="flex-1 text-gray-500 py-6">
+        <Button variant="ghost" className="flex-1 text-gray-500 dark:text-zinc-400 py-6 hover:bg-slate-50 dark:hover:bg-zinc-800">
           취소
         </Button>
         <Button
           onClick={handleJoinClick}
           disabled={isPending}
-          className="flex-1 bg-red-500 hover:bg-red-600 text-white py-6 text-lg"
+          className="flex-1 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white py-6 text-lg"
         >
           {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "멤버십 가입하기"}
         </Button>
@@ -92,10 +92,10 @@ export default function MembershipSelectStep({ artistId, onNext }: { artistId: s
 function FeatureItem({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="flex gap-4 items-start">
-      <div className="mt-1 text-gray-400">{icon}</div>
+      <div className="mt-1 text-gray-400 dark:text-zinc-500">{icon}</div>
       <div>
-        <div className="font-bold text-sm">{title}</div>
-        <div className="text-xs text-gray-500">{desc}</div>
+        <div className="font-bold text-sm text-slate-900 dark:text-slate-100">{title}</div>
+        <div className="text-xs text-gray-500 dark:text-zinc-400">{desc}</div>
       </div>
     </div>
   );
@@ -103,17 +103,17 @@ function FeatureItem({ icon, title, desc }: { icon: React.ReactNode; title: stri
 
 function AgreementItem({ label }: { label: string }) {
   return (
-    <div className="flex items-center justify-between p-2 rounded-md">
+    <div className="flex items-center justify-between p-2 rounded-md hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors">
       <div className="flex items-center space-x-3">
         <Checkbox id={label} />
         <label
           htmlFor={label}
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          className="text-sm font-medium leading-none text-slate-700 dark:text-slate-200 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
           {label}
         </label>
       </div>
-      <span className="text-gray-400 text-sm">&gt;</span>
+      <span className="text-gray-400 dark:text-zinc-600 text-sm">&gt;</span>
     </div>
   );
 }

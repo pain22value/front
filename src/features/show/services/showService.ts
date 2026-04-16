@@ -25,12 +25,7 @@ const getSchedules = async (date: Date): Promise<ShowSchedule[]> => {
   return data.data;
 };
 
-// // 공연 상세 조회
-// const getShowDetail = async (showId: string): Promise<ShowDetail> => {
-//   const { data } = await api.get<ApiResponse<ShowDetail>>(ENDPOINTS.SHOWS.DETAIL(showId));
-//   if (!data.data) throw new Error("공연 상세 정보를 불러올 수 없습니다.");
-//   return data.data;
-// };
+// 공연 상세 조회 (Server-side용 fetch 사용)
 async function getShowDetail(showId: string): Promise<ShowDetail> {
   try {
     const res = await fetch(`${process.env.API_URL}${ENDPOINTS.SHOWS.DETAIL(showId)}`);
@@ -43,6 +38,13 @@ async function getShowDetail(showId: string): Promise<ShowDetail> {
     throw error;
   }
 }
+
+// 공연 상세 조회 (Client-side용 axios 사용)
+const getShowDetailClient = async (showId: string): Promise<ShowDetail> => {
+  const { data } = await api.get<ApiResponse<ShowDetail>>(ENDPOINTS.SHOWS.DETAIL(showId));
+  if (!data.data) throw new Error("공연 상세 정보를 불러올 수 없습니다.");
+  return data.data;
+};
 
 // 공연 캐스팅 일정 조회
 const getCastingSchedules = async (
@@ -72,5 +74,6 @@ export const showService = {
   getShows,
   getSchedules,
   getShowDetail,
+  getShowDetailClient,
   getCastingSchedules,
 };

@@ -12,27 +12,30 @@ export const ENDPOINTS = {
     LOGIN: "/auth/login",
     LOGOUT: "/auth/logout",
     REFRESH: "/auth/reissue",
-  },
-  OAUTH: {
-    KAKAO: "/auth/kakao/login",
-    NAVER: "/auth/naver/login",
-    GOOGLE: "/auth/google/login",
-    SOCIAL_SIGNUP_COMPLETE: "/auth/social/sign-up/complete",
-  },
-  EMAIL: {
-    SEND_CODE: "/auth/email/send-code",
-    VERIFY: "/auth/email/verify",
-  },
-  PROFILE: {
-    ME: "/auth/me",
-    NICKNAME: "/auth/me/nickname",
-    MARKETING_CONSENT: "/auth/me/marketing-consent",
-    EMAIL_NOTIFICATION: "/auth/me/email-notification",
+    OAUTH: {
+      KAKAO: "/auth/kakao/login",
+      NAVER: "/auth/naver/login",
+      GOOGLE: "/auth/google/login",
+      SOCIAL_SIGNUP_COMPLETE: "/auth/social/sign-up/complete",
+    },
+    EMAIL: {
+      SEND_CODE: "/auth/email/send-code",
+      VERIFY: "/auth/email/verify",
+    },
+    PROFILE: {
+      ME: "/auth/me",
+      NICKNAME: "/auth/me/nickname",
+      MARKETING_CONSENT: "/auth/me/marketing-consent",
+      EMAIL_NOTIFICATION: "/auth/me/email-notification",
+    },
   },
 
   // 마이페이지 (뮤지컬 관련)
   MY: {
-    MEMBERSHIP: "/musical/my/membership",
+    MEMBERSHIP_LIST: "/musical/my/membership",
+    MEMBERSHIPS: {
+      CANCEL: (membershipId: number | string) => `/musical/memberships/${membershipId}/cancel`,
+    },
   },
 
   // 검색

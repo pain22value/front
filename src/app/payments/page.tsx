@@ -2,6 +2,9 @@
 
 import { useTossPayment, type PayMethod } from "@/features/payments/hooks/useTossPayment";
 import { paymentService } from "@/features/payments/services/paymentService";
+import { useTicketingStore } from "@/features/ticketing/stores/useTicketingStore";
+import { getApiErrorMessage, isApiErrorCode } from "@/shared/api/error";
+import { useModalStore } from "@/shared/stores/modalStore";
 import Link from "next/link";
 import Modal from "@/components/ui/modal";
 import { useState, useEffect } from "react";
@@ -11,6 +14,8 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 export default function CheckoutPage() {
   const { user } = useAuthStore();
+  const { openAlert } = useModalStore();
+  const { clearTicketing } = useTicketingStore();
   // 데모용 가격 계산
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
 
@@ -114,6 +119,22 @@ export default function CheckoutPage() {
       });
     } catch (e) {
       console.error(e);
+      if (isApiErrorCode(e, "B06")) {
+        openAlert({
+          title: "비정상 결제 시도가 감지되었습니다.",
+          description: getApiErrorMessage(e) ?? "잠시 후 다시 시도해 주세요.",
+          confirmText: "확인",
+          onConfirm: () => {
+            sessionStorage.removeItem("pendingBooking");
+            sessionStorage.removeItem("selectedSeats");
+            clearTicketing();
+            router.push("/");
+          },
+        });
+        return;
+      }
+
+      setModal("결제 준비 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
       setPaying(false);
     }

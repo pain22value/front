@@ -69,7 +69,7 @@ export default function HomeRightNows() {
       ) : (
         <BaseCarousel
           items={displayShows || []}
-          itemsPerView={6}
+          itemClassName="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
           loop
           align="start"
           showButtonsOnHover
@@ -91,8 +91,8 @@ export default function HomeRightNows() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-semibold">{show.showTitle}</p>
-                    <p className="text-xs text-muted-foreground">{show.venueName}</p>
+                    <p className="text-sm font-semibold truncate">{show.showTitle}</p>
+                    <p className="text-xs text-muted-foreground truncate">{show.venueName}</p>
                     <p className="text-xs text-muted-foreground">{show.date}</p>
                   </div>
                 </CardContent>
@@ -107,9 +107,9 @@ export default function HomeRightNows() {
 
 function CarouselSkeleton() {
   return (
-    <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="space-y-3">
+    <div className="flex gap-6 overflow-hidden">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <div key={i} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 shrink-0 space-y-3">
           <Skeleton className="aspect-3/4 w-full rounded-xl" />
           <div className="space-y-1">
             <Skeleton className="h-4 w-3/4" />
@@ -118,6 +118,6 @@ function CarouselSkeleton() {
           </div>
         </div>
       ))}
-    </section>
+    </div>
   );
 }

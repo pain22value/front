@@ -204,7 +204,8 @@
     .service-term-page,
     .finance-term-page,
     .artist-membership-page,
-    .show-detail-page {
+    .show-detail-page,
+    .artists-page {
       @apply pl-20;
       > section {
         @apply px-2 sm:px-4 md:px-8 py-10;

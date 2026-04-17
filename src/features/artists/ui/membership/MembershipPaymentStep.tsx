@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTossPayment, PayMethod } from "@/features/payments/hooks/useTossPayment";
+import { CreditCard } from "lucide-react";
 import ArtistProfile from "../ArtistProfile";
 import { useArtistMembershipStore } from "@/features/artists/stores/useArtistMembershipStore";
 
@@ -69,7 +70,7 @@ export default function MembershipPaymentStep({
       <Card className="shadow-none bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800">
         <CardContent>
           <div className="flex items-center gap-2 mb-6 border-b border-slate-100 dark:border-zinc-800 pb-4 pt-6">
-            <span className="text-xl">💳</span>
+            <CreditCard className="w-5 h-5 text-slate-800 dark:text-white" />
             <h3 className="text-lg font-bold dark:text-white">결제 정보 입력</h3>
           </div>
           <PaymentAmountCard amount={5000} />

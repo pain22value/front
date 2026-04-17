@@ -72,7 +72,7 @@ export default function TermsAgreement() {
       <Card className="w-full border-none shadow-none bg-transparent">
         <CardContent className="px-0">
           <div className="text-center my-8">
-            <h1 className="text-2xl font-bold leading-snug">
+            <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-zinc-100">
               약관에 동의하고 <br /> 본인 인증을 진행해 주세요
             </h1>
           </div>
@@ -84,14 +84,14 @@ export default function TermsAgreement() {
                 id="all"
                 checked={isAllChecked}
                 onCheckedChange={(checked) => handleAllAgree(Boolean(checked))}
-                className="w-6 h-6 border-gray-300 data-[state=checked]:bg-blue-500"
+                className="w-6 h-6 border-gray-300 dark:border-zinc-700 data-[state=checked]:bg-blue-500"
               />
-              <label htmlFor="all" className="text-lg font-bold cursor-pointer">
+              <label htmlFor="all" className="text-lg font-bold cursor-pointer text-gray-900 dark:text-zinc-100">
                 전체 동의
               </label>
             </div>
 
-            <Separator className="bg-gray-100" />
+            <Separator className="bg-gray-100 dark:bg-zinc-800" />
 
             <div className="space-y-5">
               <TermItem
@@ -110,7 +110,7 @@ export default function TermsAgreement() {
                 onChange={(checked) => handleSingleAgree("privacy", Boolean(checked))}
               />
 
-              <Separator className="bg-gray-50" />
+              <Separator className="bg-gray-50 dark:bg-zinc-800/50" />
 
               <TermItem
                 label="마케팅 정보 수신 동의 (선택)"
@@ -130,7 +130,7 @@ export default function TermsAgreement() {
           <div className="mt-10">
             <Button
               onClick={handleSubmit}
-              className="w-full h-12 text-lg font-bold bg-[#ff4d55] hover:bg-[#e6454d] rounded-md"
+              className="w-full h-12 text-lg font-bold bg-[#ff4d55] hover:bg-[#e6454d] text-white rounded-md border-none"
             >
               가입하기
             </Button>
@@ -159,11 +159,11 @@ function TermItem({
         <Checkbox
           checked={checked}
           onCheckedChange={(checked) => onChange(Boolean(checked))}
-          className="w-6 h-6 border-gray-300"
+          className="w-6 h-6 border-gray-300 dark:border-zinc-700"
         />
-        <span className="text-base text-gray-800 font-medium cursor-pointer">{label}</span>
+        <span className="text-base text-gray-800 dark:text-zinc-300 font-medium cursor-pointer">{label}</span>
       </div>
-      {showArrow && <ChevronRight className="w-5 h-5 text-gray-400 cursor-pointer" />}
+      {showArrow && <ChevronRight className="w-5 h-5 text-gray-400 dark:text-zinc-600 cursor-pointer" />}
     </div>
   );
 }

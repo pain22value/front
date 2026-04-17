@@ -58,11 +58,14 @@ export default function HomeRecommendations() {
 
 function HomeRecommendSectionSkeleton() {
   return (
-    <section className="max-w-[1200px] mx-auto space-y-8">
+    <section className="space-y-8 overflow-hidden">
       <Skeleton className="h-8 w-48 bg-accent/50" />
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="aspect-2/3 w-full relative rounded-xl overflow-hidden bg-accent/20">
+      <div className="flex gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="basis-full sm:basis-1/3 md:basis-1/4 lg:basis-1/5 shrink-0 aspect-2/3 relative rounded-xl overflow-hidden bg-accent/20"
+          >
             <div className="absolute bottom-0 w-full p-4 space-y-2">
               <Skeleton className="h-5 w-3/4" />
               <Skeleton className="h-4 w-1/2" />

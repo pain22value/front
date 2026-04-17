@@ -2,10 +2,13 @@
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useState, useCallback } from "react";
-import CaptchaStep from "./CaptchaStep";
+import { useRouter } from "next/navigation";
+import QueueEntryStep from "./QueueEntryStep";
 import QueueStep from "./QueueStep";
+import ChallengeStep from "./ChallengeStep";
 import { useModalStore } from "@/shared/stores/modalStore";
 import { useCancelQueue } from "../hooks/useQueue";
+import { useTicketingStore } from "../stores/useTicketingStore";
 import { toast } from "sonner";
 
 export default function ShowWaitingModal({
@@ -19,27 +22,28 @@ export default function ShowWaitingModal({
   showId: string | number;
   scheduleId: string | number;
 }) {
-
-
-  const [step, setStep] = useState<"captcha" | "queue">("captcha");
+  const router = useRouter();
+  const [step, setStep] = useState<"entry" | "queue" | "challenge">("entry");
   const { confirm, openConfirm, closeConfirm } = useModalStore();
   const { mutate: cancelQueue } = useCancelQueue();
+  const { hasValidAdmissionToken, challengeComplete, challengeType, resetChallenge, clearTicketing } =
+    useTicketingStore();
+  const currentStep =
+    open && step === "entry" && hasValidAdmissionToken(showId, scheduleId) && !challengeComplete
+      ? "challenge"
+      : step;
+  const isIllusionChallenge = currentStep === "challenge" && challengeType === "vqa-illusion";
 
   const handleOpenChange = useCallback(
     (isOpen: boolean) => {
-      // 여는 동작(isOpen === true)은 부모 컴포넌트에서 제어하므로 무시합니다.
-      // 또는 이미 컨펌 모달이 떠있는 경우 처리를 방지하여 무한 루프를 막습니다.
       if (isOpen || confirm) return;
 
-      // 닫으려는 동작(isOpen === false)이 발생했을 때
-      // 캡차 단계인 경우 바로 닫기
-      if (step === "captcha") {
+      if (currentStep !== "queue") {
         onOpenChange(false);
-        setTimeout(() => setStep("captcha"), 300);
+        setTimeout(() => setStep("entry"), 300);
         return;
       }
 
-      // 대기열 단계인 경우 확인 모달 표시
       openConfirm({
         title: "대기열 이탈 확인",
         description: "대기열에서 이탈하시겠습니까? 다시 입장하려면 대기 순서가 밀릴 수 있습니다.",
@@ -47,40 +51,59 @@ export default function ShowWaitingModal({
         onConfirm: () => {
           cancelQueue(scheduleId, {
             onSuccess: () => {
+              resetChallenge();
               onOpenChange(false);
-              setTimeout(() => setStep("captcha"), 300);
+              setTimeout(() => setStep("entry"), 300);
             },
             onError: () => {
               toast.error("대기열 취소 중 오류가 발생했습니다.");
               onOpenChange(false);
-              setTimeout(() => setStep("captcha"), 300);
+              setTimeout(() => setStep("entry"), 300);
             },
           });
         },
       });
     },
-    [confirm, step, openConfirm, onOpenChange, cancelQueue, scheduleId],
+    [cancelQueue, confirm, currentStep, onOpenChange, openConfirm, resetChallenge, scheduleId],
   );
 
-  // 내부에서 강제로 닫아야 할 때 (입장 성공 등)를 위한 전용 핸들러
-  const handleForceClose = useCallback(() => {
+  const handleChallengeComplete = useCallback(() => {
     onOpenChange(false);
-    if (confirm) closeConfirm(); // 컨펌 모달이 떠있다면 닫아줌
-    setTimeout(() => setStep("captcha"), 300);
-  }, [onOpenChange, confirm, closeConfirm]);
+    if (confirm) closeConfirm();
+    setTimeout(() => setStep("entry"), 300);
+    router.push(`/shows/${scheduleId}/seat`);
+  }, [closeConfirm, confirm, onOpenChange, router, scheduleId]);
+
+  const handleChallengeBlocked = useCallback(() => {
+    clearTicketing();
+    onOpenChange(false);
+    if (confirm) closeConfirm();
+    setTimeout(() => setStep("entry"), 300);
+  }, [clearTicketing, closeConfirm, confirm, onOpenChange]);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTitle />
-      <DialogContent className="max-w-md p-0 overflow-hidden sm:max-w-[520px]">
-        {step === "captcha" ? (
-          <CaptchaStep onNext={() => setStep("queue")} scheduleId={scheduleId} />
+      <DialogContent
+        className={
+          isIllusionChallenge
+            ? "max-w-md overflow-hidden p-0 sm:max-w-[520px]"
+            : "max-w-md overflow-hidden p-0 sm:max-w-[760px]"
+        }
+      >
+        {currentStep === "entry" ? (
+          <QueueEntryStep onNext={() => setStep("queue")} scheduleId={scheduleId} />
+        ) : currentStep === "queue" ? (
+          <QueueStep onReady={() => setStep("challenge")} scheduleId={scheduleId} />
         ) : (
-          <QueueStep onOpenChange={handleForceClose} showId={showId} scheduleId={scheduleId} />
+          <ChallengeStep
+            showId={showId}
+            scheduleId={scheduleId}
+            onComplete={handleChallengeComplete}
+            onBlocked={handleChallengeBlocked}
+          />
         )}
-
       </DialogContent>
     </Dialog>
-
   );
 }

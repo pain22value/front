@@ -7,7 +7,7 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 export default function useTicketing(showId: string | number) {
   const router = useRouter();
   const { user } = useAuthStore();
-  const { clearTicketing, getIsValid, setScheduleId } = useTicketingStore();
+  const { clearTicketing, getIsValid, hasValidAdmissionToken, setScheduleId } = useTicketingStore();
   const [isWaitingModalOpen, setIsWaitingModalOpen] = useState(false);
 
   const handleTicketing = (scheduleId: number) => {
@@ -19,14 +19,16 @@ export default function useTicketing(showId: string | number) {
     }
 
     // 1. 이미 유효한 토큰이 있는지 확인
-    if (getIsValid(showId)) {
+    if (getIsValid(showId, scheduleId)) {
       toast.success("이미 유효한 입장 토큰이 있습니다.");
       router.push(`/shows/${scheduleId}/seat`);
       return;
     }
 
-    // 2. 무효한 토큰이 있거나 처음인 경우, 초기화 후 대기열 모달 오픈
-    clearTicketing();
+    // 2. 유효한 admission token은 있지만 AI challenge가 아직 완료되지 않은 경우
+    if (!hasValidAdmissionToken(showId, scheduleId)) {
+      clearTicketing();
+    }
     setScheduleId(scheduleId);
     setIsWaitingModalOpen(true);
   };

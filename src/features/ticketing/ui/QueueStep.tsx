@@ -4,20 +4,16 @@ import { Card } from "@/components/ui/card";
 import { useEffect, useRef, useLayoutEffect } from "react";
 import { Users, Bell, CheckLine, UsersRound } from "lucide-react";
 import { useQueueStatus } from "../hooks/useQueue";
-import { useRouter } from "next/navigation";
 import { useTicketingStore } from "../stores/useTicketingStore";
 import gsap from "gsap";
 
 export default function QueueStep({
-  onOpenChange,
-  showId,
+  onReady,
   scheduleId,
 }: {
-  onOpenChange: (open: boolean) => void;
-  showId: string | number;
+  onReady: () => void;
   scheduleId: string | number;
 }) {
-  const router = useRouter();
   const { data: queueData } = useQueueStatus(scheduleId);
 
   const progressRef = useRef<HTMLDivElement>(null);
@@ -34,10 +30,9 @@ export default function QueueStep({
 
     if (pollingStatus !== "WAITING" && queueData.admissionToken) {
       setAdmissionToken(queueData.admissionToken);
-      onOpenChange(false);
-      router.push(`/shows/${scheduleId}/seat`); // 좌석 선택 화면으로 이동
+      onReady();
     }
-  }, [queueData, pollingStatus, onOpenChange, setAdmissionToken, showId, router]);
+  }, [queueData, pollingStatus, onReady, setAdmissionToken]);
 
   useLayoutEffect(() => {
     if (!progressRef.current) return;
@@ -123,7 +118,7 @@ export default function QueueStep({
         <ul className="space-y-1 text-sm text-muted-foreground list-disc pl-5">
           <li>이 창을 새로고침하거나 닫으면 대기열이 리셋됩니다.</li>
           <li>대기 순서는 실시간으로 업데이트됩니다.</li>
-          <li>순서가 되면 자동으로 좌석 선택 화면으로 이동합니다.</li>
+          <li>순서가 되면 AI 확인 단계로 자동 이동합니다.</li>
           <li>공정한 예매를 위해 가상 대기열 시스템을 운영하고 있습니다.</li>
         </ul>
       </Card>

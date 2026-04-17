@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { seatService, type ApiSection } from "../services/seatService";
+import { useTicketingStore } from "@/features/ticketing/stores/useTicketingStore";
 
 const toSeatGradeBySection = (sectionId: string, col: number, rowName: string, rowMaxCol: number): SeatGrade => {
   const row = Number(rowName);
@@ -294,6 +295,9 @@ const MOCK_SECTIONS: SeatSection[] = [
 ];
 
 export const useGetSeats = (showScheduleId: number) => {
+  const admissionToken = useTicketingStore((state) => state.admissionToken);
+  const challengeComplete = useTicketingStore((state) => state.challengeComplete);
+
   return useQuery({
     queryKey: ["seats", showScheduleId],
     queryFn: async () => {
@@ -303,7 +307,6 @@ export const useGetSeats = (showScheduleId: number) => {
     },
     retry: false,
     initialData: undefined, // 초기 렌더링은 mock으로
-    //enabled: false, 목업 데이터로 테스트 할 때는 false
-    enabled: true,
+    enabled: Boolean(showScheduleId && admissionToken && challengeComplete),
   });
 };

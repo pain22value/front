@@ -42,12 +42,15 @@ export interface ApiSection {
 const enter = async (
   showScheduleId: number,
 ): Promise<{ sessionToken: string; expireIn: number } | null> => {
-  const admissionToken = useTicketingStore.getState().admissionToken; // store에서 가져오기
+  const { admissionToken, challengeComplete } = useTicketingStore.getState();
+  if (!admissionToken || !challengeComplete) {
+    throw new Error("AI 확인이 완료되지 않았습니다.");
+  }
   
   const { data } = await api.post<ApiResponse<{ sessionToken: string; expireIn: number }>>(
     withScheduleId(ENDPOINTS.SEATS.ENTER, showScheduleId),
     {},
-    { headers: { "X-Admission-Token": admissionToken ?? "" } } // 하드코딩 빼기
+    { headers: { "X-Admission-Token": admissionToken } }
   );
   return data.data;
 };

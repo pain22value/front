@@ -1,0 +1,148 @@
+.shell {
+  background: #ffffff;
+  border: 1px solid #dbe2e8;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 22px rgba(22, 34, 51, 0.06);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5f6971;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #111111;
+}
+
+.subtitle {
+  font-size: 0.92rem;
+  color: #55626f;
+}
+
+.hint {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-left: 4px solid #03c75a;
+  border-radius: 10px;
+  background: #effbf4;
+  color: #2f5f45;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.puzzleContainer {
+  border: 2px solid #d0dae2;
+  border-radius: 12px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px;
+  background: #f8fafc;
+}
+
+.sliderWrapper {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.sliderBgImg {
+  display: block;
+  pointer-events: none;
+  border-radius: 10px 10px 0 0;
+}
+
+.sliderPieceOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: grab;
+  border: 2px solid #03c75a;
+  box-shadow: 0 0 10px rgba(3, 199, 90, 0.4);
+  transition: box-shadow 0.1s ease;
+  touch-action: none;
+}
+
+.sliderPieceOverlay:active {
+  cursor: grabbing;
+}
+
+.sliderTrackBar {
+  position: relative;
+  height: 38px;
+  border-top: 1px solid #d5dde4;
+  background: #e0e4ea;
+  overflow: hidden;
+}
+
+.sliderKnob {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 38px;
+  height: 38px;
+  padding-right: 8px;
+  border-radius: 0 6px 6px 0;
+  background: #03c75a;
+  color: #ffffff;
+  font-size: 1.1rem;
+  box-shadow: 2px 0 8px rgba(3, 199, 90, 0.35);
+  cursor: grab;
+  touch-action: none;
+}
+
+.sliderKnob:active {
+  cursor: grabbing;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.caption {
+  font-size: 0.82rem;
+  color: #5f6a73;
+}
+
+.meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  background: #f3f6f8;
+  color: #3d4852;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #03c75a;
+}

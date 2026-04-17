@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useJudgeChallenge, useStartChallenge } from "../hooks/useChallenge";
 import { useTicketingStore } from "../stores/useTicketingStore";
+import { DEMO_CHALLENGE_RISK_LEVEL } from "../config";
 import MouseSliderChallenge from "./challenges/MouseSliderChallenge";
 import MouseClickSequenceChallenge from "./challenges/MouseClickSequenceChallenge";
 import MousePathTraceChallenge from "./challenges/MousePathTraceChallenge";
@@ -24,11 +25,6 @@ type ChallengeStepProps = {
   onComplete: () => void;
   onBlocked: () => void;
 };
-
-const levels: ChallengeRiskLevel[] = ["LOW", "MEDIUM", "HIGH"];
-
-const CHALLENGE_RISK_LEVEL: ChallengeRiskLevel =
-  levels[Math.floor(Math.random() * levels.length)];
 
 const toImageSrc = (value: unknown) => {
   if (typeof value !== "string" || !value) return "";
@@ -194,7 +190,7 @@ export default function ChallengeStep({
     startChallenge({
       performance_id: String(showId),
       user_key: userKey,
-      risk_level: CHALLENGE_RISK_LEVEL,
+      risk_level: DEMO_CHALLENGE_RISK_LEVEL,
     })
       .then((data) => {
         resetLocalInputs();

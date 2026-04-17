@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { jwtDecode } from "jwt-decode";
+import { ENABLE_AI_CHALLENGE } from "../config";
 
 type AdmissionTokenPayload = {
   sub: string;
@@ -172,7 +173,10 @@ export const useTicketingStore = create<TicketingState>()(
 
       getIsValid: (currentShowId: string | number, currentScheduleId?: string | number | null) => {
         const { challengeComplete, hasValidAdmissionToken } = get();
-        return hasValidAdmissionToken(currentShowId, currentScheduleId) && challengeComplete;
+        return (
+          hasValidAdmissionToken(currentShowId, currentScheduleId) &&
+          (!ENABLE_AI_CHALLENGE || challengeComplete)
+        );
       },
     }),
     {

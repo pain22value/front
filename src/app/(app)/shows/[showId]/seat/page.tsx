@@ -1,6 +1,7 @@
 "use client";
 
 import { SeatMap } from "@/features/show/ui/seat/SeatMap";
+import { ENABLE_AI_CHALLENGE } from "@/features/ticketing/config";
 import { useTicketingStore } from "@/features/ticketing/stores/useTicketingStore";
 import { useRouter } from "next/navigation";
 import { use, useEffect } from "react";
@@ -14,7 +15,10 @@ export default function SeatPage({ params }: SeatPageProps) {
   const router = useRouter();
   const { scheduleId, challengeComplete, hasValidAdmissionToken } = useTicketingStore();
 
-  const canEnterSeatPage = hasValidAdmissionToken(showId, scheduleId) && challengeComplete && scheduleId != null;
+  const canEnterSeatPage =
+    hasValidAdmissionToken(showId, scheduleId) &&
+    (!ENABLE_AI_CHALLENGE || challengeComplete) &&
+    scheduleId != null;
 
   useEffect(() => {
     if (canEnterSeatPage) return;

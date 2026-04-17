@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Heart, LayoutGrid, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useSidebarStore } from "@/shared/hooks/useSidebarStore";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Link from "next/link";
-
 import useShowDetail from "@/features/show/hooks/useShowDetail";
 import useMyMembershipQuery from "@/features/my/hooks/useMyMembershipQuery";
 
@@ -24,23 +24,25 @@ export default function Sidebar() {
   const { data: membershipData } = useMyMembershipQuery();
 
   // 기본 아티스트 (킹키부츠 출연진 중 상위 4명)
-  const baseArtists = showData?.castings.slice(0, 4).map(c => ({
-    artistId: c.artistId,
-    artistName: c.artistName,
-    profileImageUrl: c.profileImageUrl,
-  })) || [];
-  
+  const baseArtists =
+    showData?.castings.slice(0, 4).map((c) => ({
+      artistId: c.artistId,
+      artistName: c.artistName,
+      profileImageUrl: c.profileImageUrl,
+    })) || [];
+
   // 멤버십 아티스트
-  const membershipArtists = membershipData?.memberships.map(m => ({
-    artistId: m.artistId,
-    artistName: m.artistName,
-    profileImageUrl: m.profileImageUrl,
-  })) || [];
+  const membershipArtists =
+    membershipData?.memberships.map((m) => ({
+      artistId: m.artistId,
+      artistName: m.artistName,
+      profileImageUrl: m.profileImageUrl,
+    })) || [];
 
   // 중복 제거 및 리스트 합치기
   const allSidebarArtists = [...baseArtists];
-  membershipArtists.forEach(ma => {
-    if (!allSidebarArtists.find(ba => ba.artistId === ma.artistId)) {
+  membershipArtists.forEach((ma) => {
+    if (!allSidebarArtists.find((ba) => ba.artistId === ma.artistId)) {
       allSidebarArtists.push(ma);
     }
   });
@@ -149,11 +151,7 @@ export default function Sidebar() {
         </Link>
 
         {/* 메뉴 */}
-        <Link
-          href="/shows/now"
-          className="flex items-center gap-4 w-full cursor-pointer group"
-          onClick={handleMenuClick}
-        >
+        <Link href="/shows" className="flex items-center gap-4 w-full cursor-pointer group" onClick={handleMenuClick}>
           <Button
             variant="secondary"
             size="icon"
@@ -185,27 +183,34 @@ export default function Sidebar() {
       {/* 추천 아티스트 */}
       <div className="flex flex-col items-start gap-4 w-full px-5">
         <div className="flex flex-col gap-4 w-full">
-          {allSidebarArtists.map((artist) => (
-            <Link
-              key={artist.artistId}
-              href={`/artists/${artist.artistId}`}
-              className="flex items-center gap-4 w-full cursor-pointer group no-underline text-foreground"
-              onClick={handleMenuClick}
-            >
-              <Avatar className="size-9 rounded-lg shrink-0 transition-all group-hover:ring-2 group-hover:ring-white group-hover:opacity-80">
-                <AvatarImage src={artist.profileImageUrl} className="object-cover" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-              <span
-                className="sidebar-label hidden font-medium whitespace-nowrap relative
-                after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 
-                after:bg-black dark:after:bg-white
-                after:transition-all after:duration-300 group-hover:after:w-full"
-              >
-                {artist.artistName}
-              </span>
-            </Link>
-          ))}
+          {(!showData && !membershipData) || allSidebarArtists.length === 0
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-4 w-full">
+                  <Skeleton className="size-9 rounded-lg shrink-0" />
+                  <Skeleton className="sidebar-label hidden h-4 w-20" />
+                </div>
+              ))
+            : allSidebarArtists.slice(0, 4).map((artist) => (
+                <Link
+                  key={artist.artistId}
+                  href={`/artists/${artist.artistId}`}
+                  className="flex items-center gap-4 w-full cursor-pointer group no-underline text-foreground"
+                  onClick={handleMenuClick}
+                >
+                  <Avatar className="size-9 rounded-lg shrink-0 transition-all group-hover:ring-2 group-hover:ring-white group-hover:opacity-80">
+                    <AvatarImage src={artist.profileImageUrl} className="object-cover" />
+                    <AvatarFallback>{artist.artistName.slice(0, 1)}</AvatarFallback>
+                  </Avatar>
+                  <span
+                    className="sidebar-label hidden font-medium whitespace-nowrap relative
+                  after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 
+                  after:bg-black dark:after:bg-white
+                  after:transition-all after:duration-300 group-hover:after:w-full"
+                  >
+                    {artist.artistName}
+                  </span>
+                </Link>
+              ))}
         </div>
       </div>
 

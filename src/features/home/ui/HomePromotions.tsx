@@ -49,11 +49,11 @@ export default function HomePromotions() {
 
 function HomeRecommendSectionSkeleton() {
   return (
-    <section className="space-y-8">
+    <section className="space-y-8 overflow-hidden">
       <Skeleton className="h-8 w-48 bg-accent/50" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="h-[254] w-full relative rounded-3xl overflow-hidden bg-accent/20">
+      <div className="flex gap-6">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="basis-full sm:basis-1/2 shrink-0 h-[254] relative rounded-3xl overflow-hidden bg-accent/20">
             <Skeleton className="h-full w-full" />
           </div>
         ))}

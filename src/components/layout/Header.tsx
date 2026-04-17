@@ -3,6 +3,7 @@
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "../common/UserMenu";
+import ModeToggle from "../common/ModeToggle";
 import { usePathname } from "next/navigation";
 import { cn } from "@/shared/utils/cn";
 import Link from "next/link";
@@ -50,6 +51,7 @@ export default function Header() {
 
         {/* 우측 버튼들 */}
         <div className="flex items-center gap-2">
+          <ModeToggle />
           <UserMenu />
         </div>
       </div>

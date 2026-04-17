@@ -32,7 +32,7 @@ export default function ArtistHero({ artistId }: { artistId: string }) {
         absolute bottom-0 left-20 right-0 
         px-4 sm:px-6 lg:px-8"
       >
-        <ArtistMembershipJoinSection artist={artist} />
+        <ArtistMembershipJoinSection artist={artist} isMembershipJoined={data.membership.joined} />
       </section>
     </section>
   );

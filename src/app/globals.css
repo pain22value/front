@@ -199,11 +199,11 @@
     .search-page,
     .profile-page,
     .favorite-page,
-    .membership-page,
     .privacy-policy-page,
     .service-term-page,
     .finance-term-page,
     .artist-membership-page,
+    .my-membership-page,
     .show-detail-page,
     .artists-page {
       @apply pl-20;
@@ -217,14 +217,13 @@
     .show-list-page,
     .show-now-page,
     .search-page,
-    .membership-page,
     .show-detail-page {
       > section {
         @apply max-w-[1200px] mx-auto;
       }
     }
 
-    .membership-page {
+    .my-membership-page {
       > section {
         @apply max-w-[850px] mx-auto;
       }

@@ -9,6 +9,7 @@ import { useModalStore } from "@/shared/stores/modalStore";
 
 import { useRouter } from "next/navigation";
 import useCancelMembershipMutation from "@/features/my/hooks/useCancelMembershipMutation";
+import { AxiosError } from "axios";
 
 export default function MembershipCard({
   membershipId,
@@ -55,6 +56,14 @@ export default function MembershipCard({
               icon: <CheckCircle2 className="w-16 h-16 text-teal-500" />,
               title: "멤버십 해지가 완료되었습니다.",
               description: "남은 구독 기간 동안 멤버십 혜택을 이용할 수 있어요.",
+              confirmText: "확인",
+            });
+          },
+          onError: (error: AxiosError<ApiResponse<string>>) => {
+            const errorMessage = error.response?.data?.message || "멤버십 해지에 실패했습니다. 다시 시도해 주세요.";
+            openAlert({
+              title: "해지 실패",
+              description: errorMessage,
               confirmText: "확인",
             });
           },

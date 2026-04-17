@@ -72,7 +72,7 @@ export default function ShowWaitingModal({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTitle />
-      <DialogContent className="max-w-md p-0 overflow-hidden sm:max-w-[520px]">
+      <DialogContent className="max-w-md p-0 overflow-hidden sm:max-w-[520px] bg-white dark:bg-zinc-900 border-none shadow-2xl">
         {step === "captcha" ? (
           <CaptchaStep onNext={() => setStep("queue")} scheduleId={scheduleId} />
         ) : (

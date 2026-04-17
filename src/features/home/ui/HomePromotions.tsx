@@ -21,7 +21,7 @@ export default function HomePromotions() {
       <h1 className="font-semibold text-2xl">이 뮤지컬 어떠세요?</h1>
       <BaseCarousel
         items={items}
-        itemsPerView={2}
+        itemClassName="basis-full sm:basis-1/2"
         loop
         align="start"
         showButtonsOnHover

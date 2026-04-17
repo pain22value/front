@@ -2,11 +2,18 @@
 
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { useArtistLike } from "../../show/hooks/useArtistLike";
 import { useFavoriteStore } from "@/features/artists/stores/useFavoriteStore";
 
-export default function ArtistMembershipJoinSection({ artist }: { artist: Artist }) {
+export default function ArtistMembershipJoinSection({
+  artist,
+  isMembershipJoined = false,
+}: {
+  artist: Artist;
+  isMembershipJoined?: boolean;
+}) {
   // 전역 상태에서 좋아요 여부 가져오기 (없으면 서버 상태 사용)
   // favorites 배열에서 현재 아티스트 존재 여부 확인 (Array 구조 대응)
   const isLiked = useFavoriteStore((state) => state.favorites.some((a) => a.artistId === artist.artistId));
@@ -17,17 +24,26 @@ export default function ArtistMembershipJoinSection({ artist }: { artist: Artist
   };
 
   return (
-    <div className="space-y-6 py-6 font-geist">
+    <div className="space-y-6 py-6 font-geist text-white">
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-medium">{artist.artistName}</h1>
       <div className="flex items-center gap-4">
-        <Link href={`/artists/${artist.artistId}/membership`}>
-          <Button
-            size="lg"
-            className="relative px-8 py-6 text-xl font-bold bg-white text-black hover:bg-white/90 border-none transition-colors"
+        {isMembershipJoined ? (
+          <Badge
+            variant="outline"
+            className="px-6 py-3 text-lg text-teal-400 border-teal-500/50 font-bold rounded-xl bg-zinc-900 dark:bg-black/80 backdrop-blur-sm cursor-default"
           >
-            멤버십 가입하기
-          </Button>
-        </Link>
+            멤버십 가입중
+          </Badge>
+        ) : (
+          <Link href={`/artists/${artist.artistId}/membership`}>
+            <Button
+              size="lg"
+              className="relative px-8 py-6 text-xl font-bold bg-white text-black hover:bg-white/90 border-none transition-colors"
+            >
+              멤버십 가입하기
+            </Button>
+          </Link>
+        )}
         <button
           onClick={handleLike}
           disabled={isPending}

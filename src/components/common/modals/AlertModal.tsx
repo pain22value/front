@@ -28,26 +28,28 @@ export default function AlertModal({
 }) {
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent className="max-w-sm gap-0 p-2">
+      <AlertDialogContent className="max-w-sm gap-0 p-2 border-none shadow-2xl bg-white dark:bg-zinc-900">
         <AlertDialogHeader className="flex flex-col items-center justify-center p-8 space-y-4 mx-auto">
           {/* 아이콘이 있을 때만 렌더링 */}
           {icon && <div className="flex items-center justify-center mx-auto">{icon}</div>}
 
           <div className="text-center space-y-2">
-            <AlertDialogTitle className="text-xl font-bold">{title}</AlertDialogTitle>
+            <AlertDialogTitle className="text-xl font-bold text-zinc-950 dark:text-zinc-50">{title}</AlertDialogTitle>
             {description && (
-              <AlertDialogDescription className="text-sm text-gray-600">{description}</AlertDialogDescription>
+              <AlertDialogDescription className="text-sm text-zinc-600 dark:text-zinc-400">
+                {description}
+              </AlertDialogDescription>
             )}
           </div>
         </AlertDialogHeader>
 
-        <Separator />
+        <Separator className="bg-zinc-100 dark:bg-zinc-800" />
 
-        <AlertDialogFooter className="flex justify-center pt-2">
+        <AlertDialogFooter className="flex justify-center pt-2 bg-white dark:bg-zinc-900">
           <AlertDialogAction
             onClick={onConfirm}
             variant={"ghost"}
-            className="h-16 flex-1 text-black hover:text-black font-semibold"
+            className="h-16 flex-1 text-zinc-950 dark:text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-800 font-semibold border-none"
           >
             {confirmText}
           </AlertDialogAction>

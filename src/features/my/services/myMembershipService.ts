@@ -14,7 +14,7 @@ const getMyMemberships = async () => {
  * 멤버십 해지
  */
 const cancelMembership = async (membershipId: number) => {
-  const { data } = await api.post<ApiResponse<null>>(ENDPOINTS.MY.MEMBERSHIPS.CANCEL(membershipId));
+  const { data } = await api.post<ApiResponse<string>>(ENDPOINTS.MY.MEMBERSHIPS.CANCEL(membershipId));
   return data;
 };
 

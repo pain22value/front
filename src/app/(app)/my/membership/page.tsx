@@ -1,8 +1,8 @@
 import MembershipDashboard from "@/features/my/ui/MembershipDashboard";
 
-export default function MembershipPage() {
+export default function MyMembershipPage() {
   return (
-    <main className="membership-page">
+    <main className="my-membership-page">
       <section>
         <MembershipDashboard />
       </section>

@@ -3,6 +3,7 @@
 import { useModalStore } from "@/shared/stores/modalStore";
 import ConfirmModal from "./ConfirmModal";
 import AlertModal from "./AlertModal";
+import { useEffect, useState } from "react";
 
 /**
  * 전역 모달 렌더러
@@ -10,7 +11,15 @@ import AlertModal from "./AlertModal";
  * 앱 어디서든 useModalStore()로 모달을 열 수 있습니다.
  */
 export default function ModalRoot() {
+  const [mounted, setMounted] = useState(false);
   const { confirm, alert, closeConfirm, closeAlert } = useModalStore();
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <>

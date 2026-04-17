@@ -53,17 +53,13 @@ export const useSeatSelection = (showScheduleId: number) => {
   };
 
   // 결제하기 버튼 누를 때 사용할 함수
-  const holdAll = async (): Promise<boolean> => {
+const holdAll = async (): Promise<boolean> => {
   if (selectedSeats.length === 0) return false;
-  try {
-    await seatService.holdSeats(
-      showScheduleId,
-      selectedSeats.map((s) => Number(s.seatId))
-    );
-    return true;
-  } catch {
-    return false;
-  }
+  await seatService.holdSeats(
+    showScheduleId,
+    selectedSeats.map((s) => Number(s.seatId))
+  );
+  return true;
 };
 
   return { selectedSeats, expiredAt, selectSeat, cancelSeat, cancelAll, holdAll };

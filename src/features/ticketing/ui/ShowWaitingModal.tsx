@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import QueueEntryStep from "./QueueEntryStep";
+import CaptchaStep from "./CaptchaStep";
 import QueueStep from "./QueueStep";
 import ChallengeStep from "./ChallengeStep";
 import { useModalStore } from "@/shared/stores/modalStore";
@@ -92,7 +92,7 @@ export default function ShowWaitingModal({
         }
       >
         {currentStep === "entry" ? (
-          <QueueEntryStep onNext={() => setStep("queue")} scheduleId={scheduleId} />
+          <CaptchaStep onNext={() => setStep("queue")} scheduleId={scheduleId} />
         ) : currentStep === "queue" ? (
           <QueueStep onReady={() => setStep("challenge")} scheduleId={scheduleId} />
         ) : (

@@ -6,6 +6,7 @@ import { ShieldCheck } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { useState } from "react";
 import { useEnterQueue } from "../hooks/useQueue";
+import { toast } from "sonner";
 
 export default function CaptchaStep({ onNext, scheduleId }: { onNext: () => void; scheduleId: string | number }) {
   const [selectedTile, setSelectedTile] = useState<number | null>(null);
@@ -22,8 +23,7 @@ export default function CaptchaStep({ onNext, scheduleId }: { onNext: () => void
       },
       onError: (error) => {
         console.error("대기열 진입 실패:", error);
-        // 에러가 발생해도 일단 큐 화면으로 넘어가게 설계됨
-        onNext();
+        toast.error("대기열 진입에 실패했습니다. 잠시 후 다시 시도해주세요.");
       },
     });
   };

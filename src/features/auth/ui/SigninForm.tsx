@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { formatBeRiskMockRemaining, getBeRiskMockStatus } from "@/shared/lib/beRiskMock";
+import { useModalStore } from "@/shared/stores/modalStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
@@ -16,6 +17,7 @@ import { SigninFormValues, signinSchema } from "@/shared/schemas/authSchema";
 export default function SigninForm() {
   const router = useRouter();
   const { signin } = useAuthStore();
+  const { openAlert } = useModalStore();
   const [error, setError] = useState("");
 
   const {
@@ -35,7 +37,11 @@ export default function SigninForm() {
   const onSubmit = async (data: SigninFormValues) => {
     const mockStatus = getBeRiskMockStatus(data.email);
     if (mockStatus.isBlocked) {
-      setError(`매크로 의심 유저입니다. 현재 계정은 ${formatBeRiskMockRemaining(mockStatus.blockedUntil)} 동안 로그인할 수 없습니다.`);
+      openAlert({
+        title: "매크로 의심 유저입니다.",
+        description: `현재 계정은 ${formatBeRiskMockRemaining(mockStatus.blockedUntil)} 동안 로그인할 수 없습니다.`,
+        confirmText: "확인",
+      });
       return;
     }
 

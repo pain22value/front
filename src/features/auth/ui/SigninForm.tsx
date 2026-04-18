@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { formatBeRiskMockRemaining, getBeRiskMockStatus } from "@/shared/lib/beRiskMock";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
@@ -32,6 +33,12 @@ export default function SigninForm() {
   const isInputFilled = !!emailValue && !!passwordValue;
 
   const onSubmit = async (data: SigninFormValues) => {
+    const mockStatus = getBeRiskMockStatus(data.email);
+    if (mockStatus.isBlocked) {
+      setError(`매크로 의심 유저입니다. 현재 계정은 ${formatBeRiskMockRemaining(mockStatus.blockedUntil)} 동안 로그인할 수 없습니다.`);
+      return;
+    }
+
     try {
       await signin(data);
       router.push("/");

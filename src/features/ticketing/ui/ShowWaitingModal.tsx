@@ -86,6 +86,16 @@ export default function ShowWaitingModal({
     setTimeout(() => setStep("entry"), 300);
   }, [clearTicketing, closeConfirm, confirm, onOpenChange]);
 
+  const handleQueueReady = useCallback(() => {
+    if (ENABLE_AI_CHALLENGE) {
+      setStep("challenge");
+      return;
+    }
+
+    setStep("entry");
+    handleChallengeComplete();
+  }, [handleChallengeComplete]);
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTitle />
@@ -99,16 +109,7 @@ export default function ShowWaitingModal({
         {currentStep === "entry" ? (
           <CaptchaStep onNext={() => setStep("queue")} scheduleId={scheduleId} />
         ) : currentStep === "queue" ? (
-          <QueueStep
-            onReady={() => {
-              if (ENABLE_AI_CHALLENGE) {
-                setStep("challenge");
-                return;
-              }
-              handleChallengeComplete();
-            }}
-            scheduleId={scheduleId}
-          />
+          <QueueStep onReady={handleQueueReady} scheduleId={scheduleId} />
         ) : (
           <ChallengeStep
             showId={showId}

@@ -41,15 +41,19 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
     return scheduleData?.rows || [];
   }, [scheduleData]);
 
-  // 필터링된 스케줄이 변경될 때 선택된 회차를 검증 및 업데이트 (렌더링 도중 상태 조정)
-  if (filteredSchedules.length > 0) {
-    const isValidRound = filteredSchedules.some((s) => s.scheduleId.toString() === round);
-    if (!isValidRound) {
-      setRound(filteredSchedules[0].scheduleId.toString());
+  useEffect(() => {
+    if (filteredSchedules.length > 0) {
+      const isValidRound = filteredSchedules.some((s) => s.scheduleId.toString() === round);
+      if (!isValidRound) {
+        setRound(filteredSchedules[0].scheduleId.toString());
+      }
+      return;
     }
-  } else if (round !== "") {
-    setRound("");
-  }
+
+    if (round !== "") {
+      setRound("");
+    }
+  }, [filteredSchedules, round]);
 
   return (
     <div className="space-y-4 min-w-[260px] max-w-[300px]">

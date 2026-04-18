@@ -9,6 +9,7 @@ import ChallengeStep from "./ChallengeStep";
 import { useModalStore } from "@/shared/stores/modalStore";
 import { useCancelQueue } from "../hooks/useQueue";
 import { useTicketingStore } from "../stores/useTicketingStore";
+import { ENABLE_AI_CHALLENGE } from "../config";
 import { toast } from "sonner";
 
 export default function ShowWaitingModal({
@@ -29,7 +30,11 @@ export default function ShowWaitingModal({
   const { hasValidAdmissionToken, challengeComplete, challengeType, resetChallenge, clearTicketing } =
     useTicketingStore();
   const currentStep =
-    open && step === "entry" && hasValidAdmissionToken(showId, scheduleId) && !challengeComplete
+    ENABLE_AI_CHALLENGE &&
+    open &&
+    step === "entry" &&
+    hasValidAdmissionToken(showId, scheduleId) &&
+    !challengeComplete
       ? "challenge"
       : step;
   const isIllusionChallenge = currentStep === "challenge" && challengeType === "vqa-illusion";
@@ -94,7 +99,16 @@ export default function ShowWaitingModal({
         {currentStep === "entry" ? (
           <CaptchaStep onNext={() => setStep("queue")} scheduleId={scheduleId} />
         ) : currentStep === "queue" ? (
-          <QueueStep onReady={() => setStep("challenge")} scheduleId={scheduleId} />
+          <QueueStep
+            onReady={() => {
+              if (ENABLE_AI_CHALLENGE) {
+                setStep("challenge");
+                return;
+              }
+              handleChallengeComplete();
+            }}
+            scheduleId={scheduleId}
+          />
         ) : (
           <ChallengeStep
             showId={showId}

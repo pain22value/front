@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { seatService, type ApiSection } from "../services/seatService";
+import { ENABLE_AI_CHALLENGE } from "@/features/ticketing/config";
 import { useTicketingStore } from "@/features/ticketing/stores/useTicketingStore";
 
 const toSeatGradeBySection = (sectionId: string, col: number, rowName: string, rowMaxCol: number): SeatGrade => {
@@ -307,6 +308,6 @@ export const useGetSeats = (showScheduleId: number) => {
     },
     retry: false,
     initialData: undefined, // 초기 렌더링은 mock으로
-    enabled: Boolean(showScheduleId && admissionToken && challengeComplete),
+    enabled: Boolean(showScheduleId && admissionToken && (!ENABLE_AI_CHALLENGE || challengeComplete)),
   });
 };

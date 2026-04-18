@@ -1,5 +1,6 @@
 import api from "@/shared/api/axios";
 import { ENDPOINTS } from "@/shared/api/endpoints";
+import { ENABLE_AI_CHALLENGE } from "@/features/ticketing/config";
 import { useTicketingStore } from "@/features/ticketing/stores/useTicketingStore";
 
 const withScheduleId = (path: string, id: number) =>
@@ -43,7 +44,7 @@ const enter = async (
   showScheduleId: number,
 ): Promise<{ sessionToken: string; expireIn: number } | null> => {
   const { admissionToken, challengeComplete } = useTicketingStore.getState();
-  if (!admissionToken || !challengeComplete) {
+  if (!admissionToken || (ENABLE_AI_CHALLENGE && !challengeComplete)) {
     throw new Error("AI 확인이 완료되지 않았습니다.");
   }
   

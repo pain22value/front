@@ -1,7 +1,7 @@
 const STORAGE_KEY = "be-risk-mock-state";
 const POST_PAYMENT_WARNING_KEY = "be-risk-mock-post-payment-warning";
 const TARGET_EMAIL = "eogus4717@gmail.com";
-const INITIAL_RISK_COUNT = 3;
+const INITIAL_RISK_COUNT = 4;
 const BLOCK_24H_MS = 24 * 60 * 60 * 1000;
 
 type BeRiskMockState = {

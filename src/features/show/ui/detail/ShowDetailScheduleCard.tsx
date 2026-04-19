@@ -41,18 +41,13 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
     return scheduleData?.rows || [];
   }, [scheduleData]);
 
-  useEffect(() => {
-    if (filteredSchedules.length > 0) {
-      const isValidRound = filteredSchedules.some((s) => s.scheduleId.toString() === round);
-      if (!isValidRound) {
-        setRound(filteredSchedules[0].scheduleId.toString());
-      }
-      return;
-    }
+  const selectedRound = useMemo(() => {
+    if (filteredSchedules.length === 0) return "";
 
-    if (round !== "") {
-      setRound("");
-    }
+    const isValidRound = filteredSchedules.some((s) => s.scheduleId.toString() === round);
+    if (isValidRound) return round;
+
+    return filteredSchedules[0].scheduleId.toString();
   }, [filteredSchedules, round]);
 
   return (
@@ -75,13 +70,14 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
         <ShowDetailScheduleList
           schedules={filteredSchedules}
           isLoading={isLoading}
-          value={round}
+          value={selectedRound}
           onValueChange={setRound}
         />
       </div>
 
       <Button
-        onClick={() => handleTicketing(Number(round))}
+        onClick={() => handleTicketing(Number(selectedRound))}
+        disabled={!selectedRound}
         className="w-full h-12 bg-red-500 hover:bg-red-600 text-white mb-0"
       >
         예매하기
@@ -101,7 +97,7 @@ export default function ShowDetailScheduleCard({ show }: { show?: ShowDetail }) 
         open={isWaitingModalOpen}
         onOpenChange={setIsWaitingModalOpen}
         showId={showId}
-        scheduleId={Number(round)}
+        scheduleId={Number(selectedRound)}
       />
 
     </div>

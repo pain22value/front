@@ -12,7 +12,7 @@ type ConfirmModalState = {
 type AlertModalState = {
   open: boolean;
   title: string;
-  description?: string;
+  description?: React.ReactNode;
   icon?: React.ReactNode;
   confirmText?: string;
   onConfirm?: () => void;

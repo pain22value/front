@@ -22,7 +22,7 @@ export default function AlertModal({
   open: boolean;
   icon?: React.ReactNode;
   title: string;
-  description?: string;
+  description?: React.ReactNode;
   confirmText?: string;
   onConfirm?: () => void;
 }) {

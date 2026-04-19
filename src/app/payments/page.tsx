@@ -60,57 +60,14 @@ export default function CheckoutPage() {
     customerMobilePhone: customerInfo.phone,
   });
 
-  const handlePay = async () => {
-    if (total <= 0) {
-      setModal("결제 금액이 올바르지 않습니다.");
-      return;
-    }
-
-    const newErrors = {
-      name: !customerInfo.name || customerInfo.name === "미기입" ? "이름을 입력해주세요" : "",
-      birth: !customerInfo.birth || customerInfo.birth === "미기입" ? "8자리의 생년월일을 입력해주세요" : "",
-      email: !customerInfo.email || customerInfo.email === "미기입" ? "올바르지 않은 이메일 형식입니다" : "",
-      phone: !customerInfo.phone || customerInfo.phone === "미기입" ? "-를 제외한 11자리의 전화번호를 입력해주세요" : "",
-    };
-    setErrors(newErrors);
-
-    const hasInfoError = Object.values(newErrors).some(Boolean);
-    const hasReceiptError = receipt === null;
-    const hasPayMethodError = payMethod === undefined;
-    const hasAgreeError = !agrees[0] || !agrees[1];
-
-    if (hasInfoError || hasReceiptError || hasPayMethodError || hasAgreeError) {
-      setModal("필수 입력 항목을 입력해주세요.");
-      return;
-    }
-
-    const mockAction = consumeBeRiskMockAttempt(user?.email);
-    if (mockAction === "block24h") {
-      openAlert({
-        title: "24시간 차단된 계정입니다.",
-        description: "매크로 의심 유저로 판정되어 24시간 동안 로그인 및 예매가 제한됩니다.",
-        confirmText: "확인",
-        onConfirm: () => {
-          void signout();
-          sessionStorage.removeItem("pendingBooking");
-          sessionStorage.removeItem("selectedSeats");
-          clearTicketing();
-          router.push("/signin");
-        },
-      });
-      return;
-    }
-
+  const proceedPayment = async () => {
     if (!isReady || paying) return;
     setPaying(true);
 
     try {
-      // 1. 예매 내역 생성 → reservationNumber 발급
       const seatIds = selectedSeats.map((s) => Number(s.seatId));
       const reservationNumber = await paymentService.createBooking({ seatIds });
 
-
-      // 2. 결제 준비 (임시 주석 처리)
       await paymentService.save(reservationNumber, {
         name: customerInfo.name,
         birthDate: customerInfo.birth,
@@ -118,19 +75,17 @@ export default function CheckoutPage() {
         phone: customerInfo.phone,
       });
 
-      // 3. sessionStorage 저장
       sessionStorage.setItem("pendingBooking", JSON.stringify({
         showTitle: "뮤지컬 <킹키부츠>",
         datetime: "2026.01.26(월) 오후 7:00",
         seats: selectedSeats.map((s) => `${s.section} ${s.row}행 ${s.col}열`),
         method: payMethod,
-        orderId: reservationNumber, // crypto.randomUUID() 대신 reservationNumber 사용
+        orderId: reservationNumber,
         amount: total,
       }));
 
-      // 4. Toss 결제 요청
       await requestPayment({
-        orderId: reservationNumber, // 여기도
+        orderId: reservationNumber,
         orderName,
         amountValue: total,
         method: payMethod,
@@ -156,6 +111,66 @@ export default function CheckoutPage() {
     } finally {
       setPaying(false);
     }
+  };
+
+  const handlePay = async () => {
+    if (total <= 0) {
+      setModal("결제 금액이 올바르지 않습니다.");
+      return;
+    }
+
+    const newErrors = {
+      name: !customerInfo.name || customerInfo.name === "미기입" ? "이름을 입력해주세요" : "",
+      birth: !customerInfo.birth || customerInfo.birth === "미기입" ? "8자리의 생년월일을 입력해주세요" : "",
+      email: !customerInfo.email || customerInfo.email === "미기입" ? "올바르지 않은 이메일 형식입니다" : "",
+      phone: !customerInfo.phone || customerInfo.phone === "미기입" ? "-를 제외한 11자리의 전화번호를 입력해주세요" : "",
+    };
+    setErrors(newErrors);
+
+    const hasInfoError = Object.values(newErrors).some(Boolean);
+    const hasReceiptError = receipt === null;
+    const hasPayMethodError = payMethod === undefined;
+    const hasAgreeError = !agrees[0] || !agrees[1];
+
+    if (hasInfoError || hasReceiptError || hasPayMethodError || hasAgreeError) {
+      setModal("필수 입력 항목을 입력해주세요.");
+      return;
+    }
+
+    const mockResult = consumeBeRiskMockAttempt(user?.email);
+    if (mockResult.action === "warn") {
+      openAlert({
+        title: "매크로 의심 유저입니다.",
+        description: (
+          <span className="whitespace-pre-line">
+            {`현재 ${mockResult.riskCount}회 봇으로 감지됐습니다.\n4회 : 24시간 / 5회 : 1주 / 6회 이상 : 영구 차단됩니다.`}
+          </span>
+        ),
+        confirmText: "계속 결제하기",
+        onConfirm: () => {
+          void proceedPayment();
+        },
+      });
+      return;
+    }
+
+    if (mockResult.action === "block24h") {
+      openAlert({
+        title: "24시간 차단된 계정입니다.",
+        description: "매크로 의심 유저로 판정되어 24시간 동안 로그인 및 예매가 제한됩니다.",
+        confirmText: "확인",
+        onConfirm: () => {
+          void signout();
+          sessionStorage.removeItem("pendingBooking");
+          sessionStorage.removeItem("selectedSeats");
+          clearTicketing();
+          router.push("/signin");
+        },
+      });
+      return;
+    }
+
+    await proceedPayment();
   };
 
   const [payMethod, setPayMethod] = useState<PayMethod | undefined>(undefined);

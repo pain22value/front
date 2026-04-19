@@ -57,30 +57,55 @@ export const getBeRiskMockStatus = (email?: string | null) => {
   };
 };
 
-export const consumeBeRiskMockAttempt = (email?: string | null): "none" | "warn" | "block24h" => {
-  if (!isBeRiskMockTarget(email)) return "none";
+export const consumeBeRiskMockAttempt = (
+  email?: string | null,
+): {
+  action: "none" | "warn" | "block24h";
+  riskCount: number;
+  blockedUntil: number | null;
+} => {
+  if (!isBeRiskMockTarget(email)) {
+    return {
+      action: "none",
+      riskCount: 0,
+      blockedUntil: null,
+    };
+  }
 
   const state = readState();
 
   if (state.blockedUntil != null && state.blockedUntil > Date.now()) {
-    return "block24h";
+    return {
+      action: "block24h",
+      riskCount: state.riskCount,
+      blockedUntil: state.blockedUntil,
+    };
   }
 
   const nextRiskCount = Math.max(state.riskCount, INITIAL_RISK_COUNT) + 1;
 
   if (nextRiskCount >= 4) {
+    const blockedUntil = Date.now() + BLOCK_24H_MS;
     writeState({
       riskCount: nextRiskCount,
-      blockedUntil: Date.now() + BLOCK_24H_MS,
+      blockedUntil,
     });
-    return "block24h";
+    return {
+      action: "block24h",
+      riskCount: nextRiskCount,
+      blockedUntil,
+    };
   }
 
   writeState({
     riskCount: nextRiskCount,
     blockedUntil: null,
   });
-  return "warn";
+  return {
+    action: "warn",
+    riskCount: nextRiskCount,
+    blockedUntil: null,
+  };
 };
 
 export const formatBeRiskMockRemaining = (blockedUntil?: number | null) => {

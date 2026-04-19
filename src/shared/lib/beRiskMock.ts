@@ -11,7 +11,7 @@ type BeRiskMockState = {
 
 const defaultState = (): BeRiskMockState => ({
   riskCount: INITIAL_RISK_COUNT,
-  blockedUntil: null,
+  blockedUntil: Date.now() + BLOCK_24H_MS,
 });
 
 const normalizeEmail = (email?: string | null) =>
@@ -25,15 +25,22 @@ const readState = (): BeRiskMockState => {
 
   try {
     const parsed = JSON.parse(raw) as Partial<BeRiskMockState>;
+    const riskCount = Math.max(
+      typeof parsed.riskCount === "number"
+        ? parsed.riskCount
+        : INITIAL_RISK_COUNT,
+      INITIAL_RISK_COUNT,
+    );
+    const blockedUntil =
+      typeof parsed.blockedUntil === "number"
+        ? parsed.blockedUntil
+        : riskCount >= 4
+          ? Date.now() + BLOCK_24H_MS
+          : null;
+
     return {
-      riskCount: Math.max(
-        typeof parsed.riskCount === "number"
-          ? parsed.riskCount
-          : INITIAL_RISK_COUNT,
-        INITIAL_RISK_COUNT,
-      ),
-      blockedUntil:
-        typeof parsed.blockedUntil === "number" ? parsed.blockedUntil : null,
+      riskCount,
+      blockedUntil,
     };
   } catch {
     return defaultState();

@@ -4,7 +4,7 @@ import { useTossPayment, type PayMethod } from "@/features/payments/hooks/useTos
 import { paymentService } from "@/features/payments/services/paymentService";
 import { useTicketingStore } from "@/features/ticketing/stores/useTicketingStore";
 import { getApiErrorMessage, isApiErrorCode } from "@/shared/api/error";
-import { consumeBeRiskMockAttempt } from "@/shared/lib/beRiskMock";
+import { markBeRiskMockPendingSuccessWarning, prepareBeRiskMockPayment } from "@/shared/lib/beRiskMock";
 import { useModalStore } from "@/shared/stores/modalStore";
 import Link from "next/link";
 import Modal from "@/components/ui/modal";
@@ -60,7 +60,7 @@ export default function CheckoutPage() {
     customerMobilePhone: customerInfo.phone,
   });
 
-  const proceedPayment = async () => {
+  const proceedPayment = async (beRiskCountForSuccessWarning: number | null = null) => {
     if (!isReady || paying) return;
     setPaying(true);
 
@@ -83,6 +83,10 @@ export default function CheckoutPage() {
         orderId: reservationNumber,
         amount: total,
       }));
+
+      if (beRiskCountForSuccessWarning) {
+        markBeRiskMockPendingSuccessWarning(user?.email, beRiskCountForSuccessWarning);
+      }
 
       await requestPayment({
         orderId: reservationNumber,
@@ -137,8 +141,9 @@ export default function CheckoutPage() {
       return;
     }
 
-    const mockResult = consumeBeRiskMockAttempt(user?.email);
-    if (mockResult.action === "warn") {
+    const mockResult = prepareBeRiskMockPayment(user?.email);
+
+    if (mockResult.action === "block24h") {
       openAlert({
         title: "매크로 의심 유저입니다.",
         description: (
@@ -146,31 +151,20 @@ export default function CheckoutPage() {
             {`현재 ${mockResult.riskCount}회 봇으로 감지됐습니다.\n4회 : 24시간 / 5회 : 1주 / 6회 이상 : 영구 차단됩니다.`}
           </span>
         ),
-        confirmText: "계속 결제하기",
-        onConfirm: () => {
-          void proceedPayment();
-        },
-      });
-      return;
-    }
-
-    if (mockResult.action === "block24h") {
-      openAlert({
-        title: "24시간 차단된 계정입니다.",
-        description: "매크로 의심 유저로 판정되어 24시간 동안 로그인 및 예매가 제한됩니다.",
         confirmText: "확인",
         onConfirm: () => {
           void signout();
           sessionStorage.removeItem("pendingBooking");
           sessionStorage.removeItem("selectedSeats");
           clearTicketing();
-          router.push("/signin");
+          router.push("/");
         },
       });
       return;
     }
 
-    await proceedPayment();
+    const successWarningRiskCount = mockResult.action === "allow" ? mockResult.riskCount : null;
+    await proceedPayment(successWarningRiskCount);
   };
 
   const [payMethod, setPayMethod] = useState<PayMethod | undefined>(undefined);

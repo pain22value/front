@@ -2,7 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { paymentService, type ConfirmPaymentResponse } from "@/features/payments/services/paymentService";
+import { consumeBeRiskMockSuccessWarning } from "@/shared/lib/beRiskMock";
+import { useModalStore } from "@/shared/stores/modalStore";
 import ResultCard from "@/components/common/ResultCard";
 
 type Props = {
@@ -10,6 +13,8 @@ type Props = {
 };
 
 export default function SuccessClient({ searchParams }: Props) {
+  const { user } = useAuthStore();
+  const { openAlert } = useModalStore();
   const paymentKey = searchParams.paymentKey ?? "";
   const orderId = searchParams.orderId ?? "";
   const amountStr = searchParams.amount ?? "";
@@ -25,6 +30,7 @@ export default function SuccessClient({ searchParams }: Props) {
   const [confirmed, setConfirmed] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [paymentResult, setPaymentResult] = useState<ConfirmPaymentResponse | null>(null);
+  const [warningShown, setWarningShown] = useState(false);
   const [bookingInfo, setBookingInfo] = useState<{
     showTitle: string;
     datetime: string;
@@ -63,6 +69,24 @@ export default function SuccessClient({ searchParams }: Props) {
       sessionStorage.removeItem("pendingBooking");
     }
   }, []);
+
+  useEffect(() => {
+    if (!confirmed || errorMsg || warningShown) return;
+
+    const riskCount = consumeBeRiskMockSuccessWarning(user?.email);
+    if (!riskCount) return;
+
+    setWarningShown(true);
+    openAlert({
+      title: "매크로 의심 유저입니다.",
+      description: (
+        <span className="whitespace-pre-line">
+          {`현재 ${riskCount}회 봇으로 감지됐습니다.\n4회 : 24시간 / 5회 : 1주 / 6회 이상 : 영구 차단됩니다.`}
+        </span>
+      ),
+      confirmText: "확인",
+    });
+  }, [confirmed, errorMsg, openAlert, user?.email, warningShown]);
 
   if (confirming) {
     return (

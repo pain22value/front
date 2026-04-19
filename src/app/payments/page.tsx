@@ -4,6 +4,7 @@ import { useTossPayment, type PayMethod } from "@/features/payments/hooks/useTos
 import { paymentService } from "@/features/payments/services/paymentService";
 import { useTicketingStore } from "@/features/ticketing/stores/useTicketingStore";
 import { getApiErrorMessage, isApiErrorCode } from "@/shared/api/error";
+import { consumeBeRiskMockAttempt } from "@/shared/lib/beRiskMock";
 import { useModalStore } from "@/shared/stores/modalStore";
 import Link from "next/link";
 import Modal from "@/components/ui/modal";
@@ -13,7 +14,7 @@ import type { Seat } from "@/shared/types/seat";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 export default function CheckoutPage() {
-  const { user } = useAuthStore();
+  const { user, signout } = useAuthStore();
   const { openAlert } = useModalStore();
   const { clearTicketing } = useTicketingStore();
   // 데모용 가격 계산
@@ -80,6 +81,38 @@ export default function CheckoutPage() {
 
     if (hasInfoError || hasReceiptError || hasPayMethodError || hasAgreeError) {
       setModal("필수 입력 항목을 입력해주세요.");
+      return;
+    }
+
+    const mockAction = consumeBeRiskMockAttempt(user?.email);
+    if (mockAction === "warn") {
+      openAlert({
+        title: "매크로 의심 유저입니다.",
+        description: "비정상 결제 시도가 감지되었습니다. 현재 계정은 모니터링 중입니다.",
+        confirmText: "확인",
+        onConfirm: () => {
+          sessionStorage.removeItem("pendingBooking");
+          sessionStorage.removeItem("selectedSeats");
+          clearTicketing();
+          router.push("/");
+        },
+      });
+      return;
+    }
+
+    if (mockAction === "block24h") {
+      openAlert({
+        title: "24시간 차단된 계정입니다.",
+        description: "매크로 의심 유저로 판정되어 24시간 동안 로그인 및 예매가 제한됩니다.",
+        confirmText: "확인",
+        onConfirm: () => {
+          void signout();
+          sessionStorage.removeItem("pendingBooking");
+          sessionStorage.removeItem("selectedSeats");
+          clearTicketing();
+          router.push("/signin");
+        },
+      });
       return;
     }
 

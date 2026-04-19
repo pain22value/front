@@ -2,17 +2,16 @@
 
 import { useTicketingStore } from "@/features/ticketing/stores/useTicketingStore";
 import { getApiErrorMessage, isApiErrorCode } from "@/shared/api/error";
+import { usePageTelemetry } from "@/shared/hooks/usePageTelemetry";
+import { useModalStore } from "@/shared/stores/modalStore";
+import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { useGetSeats } from "../../hooks/useGetSeats";
 import { useSeatSelection } from "../../hooks/useSeatSelection";
-import { seatService } from "../../services/seatService";
 import { SeatCanvas } from "./SeatCanvas";
 import { SeatGradeLegend } from "./SeatGradeLegend";
 import { SeatPanel } from "./SeatPanel";
-import { usePageTelemetry } from "@/shared/hooks/usePageTelemetry";
-import { useModalStore } from "@/shared/stores/modalStore";
-import { useTelemetryStore } from "@/shared/stores/useTelemetryStore";
 
 interface SeatMapProps {
   showScheduleId: number;
@@ -38,26 +37,8 @@ export const SeatMap = ({ showScheduleId }: SeatMapProps) => {
       const success = await holdAll();
       if (!success) return;
 
-      try {
-        await seatService.releaseSeats(
-          showScheduleId,
-          selectedSeats.map((seat) => Number(seat.seatId)),
-        );
-      } catch {
-        // 시연용 강제 차단 플로우이므로 release 실패는 무시한다.
-      }
-
-      stopTracking();
-      openAlert({
-        title: "매크로 의심 유저입니다.",
-        description: "비정상적인 접근이 감지되어 예매가 제한되었습니다. 다시 시도해 주세요.",
-        confirmText: "확인",
-        onConfirm: () => {
-          sessionStorage.removeItem("selectedSeats");
-          clearTicketing();
-          router.push("/");
-        },
-      });
+      sessionStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
+      router.push("/payments");
     } catch (error) {
       if (isApiErrorCode(error, "T12")) {
         stopTracking();

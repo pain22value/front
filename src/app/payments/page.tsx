@@ -85,21 +85,6 @@ export default function CheckoutPage() {
     }
 
     const mockAction = consumeBeRiskMockAttempt(user?.email);
-    if (mockAction === "warn") {
-      openAlert({
-        title: "매크로 의심 유저입니다.",
-        description: "비정상 결제 시도가 감지되었습니다. 현재 계정은 모니터링 중입니다.",
-        confirmText: "확인",
-        onConfirm: () => {
-          sessionStorage.removeItem("pendingBooking");
-          sessionStorage.removeItem("selectedSeats");
-          clearTicketing();
-          router.push("/");
-        },
-      });
-      return;
-    }
-
     if (mockAction === "block24h") {
       openAlert({
         title: "24시간 차단된 계정입니다.",

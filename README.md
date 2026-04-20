@@ -173,4 +173,4 @@ feat/#n-*   # 기능 개발 브랜치
 ## 관련 링크
 
 - 서비스: [https://www.truve.site](https://www.truve.site)
-- API 문서: [https://api.truve.site:8080/swagger-ui/index.html](http://api.truve.site:8080/swagger-ui/index.html?urls.primaryName=02-Payment+Service)]([https://api.truve.site:8080/swagger-ui/index.html](http://api.truve.site:8080/swagger-ui/index.html?urls.primaryName=02-Payment+Service))
+- API 문서: [https://api.truve.site:8080/swagger-ui/index.html](http://api.truve.site:8080/swagger-ui/index.html?urls.primaryName=02-Payment+Service)

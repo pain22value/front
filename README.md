@@ -92,13 +92,21 @@ src/
 │   │   ├── terms               # 전자금융거래, 서비스 이용 약관
 │   │   └── shows/[showId]/     # 공연 상세 / 좌석 선택
 │   ├── payments/               # 결제 / 성공 / 실패
-│   ├── signin/                 # 로그인
-│   └── signup/                 # 회원가입
-│
+│   ├── (auth)/                 # 인증
+│   │   ├── (auth)/Oauth        # Oauth 2.0 소셜 로그인
+│   │   ├── (auth)/signin/      # 로그인
+│   │   └── (auth)/signup/      # 회원가입
+│   ├── (chat)/                 # 실시간 채팅
 ├── features/                   # FSD 기반 기능별 모듈
 │   ├── auth/                   # 인증 (로그인/회원가입)
 │   ├── mypage/                 # 예매 내역 서비스
 │   ├── payments/               # 결제 서비스
+│   ├── artist/                 # 아티스트
+│   ├── chat/                   # 실시간 채팅
+│   ├── home/                   # 메인 화면
+│   ├── my/                     # 마이 페이지
+│   ├── mypage/                 # 마이 페이지 / 예매 내역
+│   ├── search/                 # 검색바
 │   ├── show/                   # 공연 / 좌석 관련
 │   │   ├── hooks/              # useGetSeats, useSeatSelection 등
 │   │   ├── services/           # seatService, showService 등
@@ -108,6 +116,57 @@ src/
 ├── shared/                     # 공통 모듈
 │   ├── api/                    # axios 인스턴스 / endpoints
 │   ├── stores/                 # 전역 스토어
+│   ├── constants/              # 고정 상수 및 텍스트 정의
+│   ├── data/                   # 아티스트 리스트, 목업 데이터
+│   ├── hooks/                  # 캐러셀 페이지네이션, 사이드바, 모바일 여부 판단 취소 수수료 실시간 조회
+- 예매 취소 완료 후 환불 정보 표시
+
+---
+
+## 📁 폴더 구조
+
+```
+src/
+├── app/                        # Next.js App Router 페이지
+│   ├── (app)/                  # 레이아웃 적용 페이지
+│   │   ├── mypage/bookings/    # 예매 내역 / 상세 / 취소
+│   │   ├── my/profile/         # 마이페이지 / 프로필
+│   │   ├── my/membership/      # 마이페이지 / 멤버십
+│   │   ├── my/favorite/        # 마이페이지 / 좋아요 목록
+│   │   ├── artists             # 아티스트 페이지
+│   │   ├── privacy-policy      # 개인정보 수집 및 이용 약관 동의
+│   │   ├── search              # 검색
+│   │   ├── terms               # 전자금융거래, 서비스 이용 약관
+│   │   └── shows/[showId]/     # 공연 상세 / 좌석 선택
+│   ├── payments/               # 결제 / 성공 / 실패
+│   ├── (auth)/                 # 인증
+│   │   ├── (auth)/Oauth        # Oauth 2.0 소셜 로그인
+│   │   ├── (auth)/signin/      # 로그인
+│   │   └── (auth)/signup/      # 회원가입
+│   ├── (chat)/                 # 실시간 채팅
+├── features/                   # FSD 기반 기능별 모듈
+│   ├── auth/                   # 인증 (로그인/회원가입)
+│   ├── mypage/                 # 예매 내역 서비스
+│   ├── payments/               # 결제 서비스
+│   ├── artist/                 # 아티스트
+│   ├── chat/                   # 실시간 채팅
+│   ├── home/                   # 메인 화면
+│   ├── my/                     # 마이 페이지
+│   ├── mypage/                 # 마이 페이지 / 예매 내역
+│   ├── search/                 # 검색바
+│   ├── show/                   # 공연 / 좌석 관련
+│   │   ├── hooks/              # useGetSeats, useSeatSelection 등
+│   │   ├── services/           # seatService, showService 등
+│   │   └── ui/                 # SeatCanvas, SeatMap, SeatPanel 등
+│   └── ticketing/              # 대기열 / 티켓팅 스토어
+│
+├── shared/                     # 공통 모듈
+│   ├── api/                    # axios 인스턴스 / endpoints
+│   ├── stores/                 # 전역 스토어
+│   ├── constants/              # 고정 상수 및 텍스트 정의
+│   ├── data/                   # 아티스트 리스트, 목업 데이터
+│   ├── hooks/                  # 캐러셀 페이지네이션, 사이드바, 모바일 여부 판단, 텔레멘트리
+│   ├── schemas/                # 회원가입, 로그인 스키마
 │   └── types/                  # 공통 타입 정의
 │
 └── components/                 # 공통 UI 컴포넌트

@@ -3,7 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { paymentService, type ConfirmPaymentResponse } from "@/features/payments/services/paymentService";
+import {
+  paymentService,
+  type ConfirmPaymentResponse,
+} from "@/features/payments/services/paymentService";
 import { consumeBeRiskMockSuccessWarning } from "@/shared/lib/beRiskMock";
 import { useModalStore } from "@/shared/stores/modalStore";
 import ResultCard from "@/components/common/ResultCard";
@@ -29,7 +32,8 @@ export default function SuccessClient({ searchParams }: Props) {
   const [confirming, setConfirming] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [paymentResult, setPaymentResult] = useState<ConfirmPaymentResponse | null>(null);
+  const [paymentResult, setPaymentResult] =
+    useState<ConfirmPaymentResponse | null>(null);
   const [warningShown, setWarningShown] = useState(false);
   const [bookingInfo, setBookingInfo] = useState<{
     showTitle: string;
@@ -46,14 +50,20 @@ export default function SuccessClient({ searchParams }: Props) {
       try {
         setConfirming(true);
         setErrorMsg(null);
-        const result = await paymentService.confirm({ paymentKey, orderId, amount });
+        const result = await paymentService.confirm({
+          paymentKey,
+          orderId,
+          amount,
+        });
         console.log("confirm 성공:", result); // ← 추가
         setPaymentResult(result);
         setConfirmed(true);
       } catch (e: unknown) {
         console.log("confirm 에러:", e); // ← 추가
         const err = e as { response?: { data?: { message?: string } } };
-        setErrorMsg(err?.response?.data?.message ?? "결제 승인 중 오류가 발생했습니다.");
+        setErrorMsg(
+          err?.response?.data?.message ?? "결제 승인 중 오류가 발생했습니다.",
+        );
         setConfirmed(true);
       } finally {
         console.log("finally 실행"); // ← 추가
@@ -81,7 +91,7 @@ export default function SuccessClient({ searchParams }: Props) {
       title: "매크로 의심 유저입니다.",
       description: (
         <span className="whitespace-pre-line">
-          {`현재 ${riskCount}회 봇으로 감지됐습니다.\n4회 : 24시간 / 5회 : 1주 / 6회 이상 : 영구 차단됩니다.`}
+          {`현재 ${riskCount + 1}회 봇으로 감지됐습니다.\n4회 : 24시간 / 5회 : 1주 / 6회 이상 : 영구 차단됩니다.`}
         </span>
       ),
       confirmText: "확인",
@@ -92,7 +102,9 @@ export default function SuccessClient({ searchParams }: Props) {
     return (
       <main className="flex flex-col items-center justify-center py-24">
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#F93E4B]" />
-        <p className="mt-4 text-sm text-gray-500">결제를 승인하는 중입니다...</p>
+        <p className="mt-4 text-sm text-gray-500">
+          결제를 승인하는 중입니다...
+        </p>
       </main>
     );
   }
@@ -102,7 +114,9 @@ export default function SuccessClient({ searchParams }: Props) {
       <main className="flex flex-col items-center justify-center py-24 px-4">
         <div className="w-full max-w-md rounded-xl border border-[#ffe4e6] bg-[#fff5f5] p-6 text-center">
           <div className="mb-3 text-3xl">⚠️</div>
-          <h1 className="text-lg font-extrabold text-[#F93E4B]">결제 승인 실패</h1>
+          <h1 className="text-lg font-extrabold text-[#F93E4B]">
+            결제 승인 실패
+          </h1>
           <p className="mt-2 text-sm text-[#F93E4B]">{errorMsg}</p>
           <Link
             href="/payments/checkout"
@@ -141,7 +155,9 @@ export default function SuccessClient({ searchParams }: Props) {
           label: "좌석",
           value: (
             <div className="text-right">
-              {bookingInfo?.seats.map((seat, idx) => <div key={idx}>{seat}</div>) ?? "-"}
+              {bookingInfo?.seats.map((seat, idx) => (
+                <div key={idx}>{seat}</div>
+              )) ?? "-"}
             </div>
           ),
         },
@@ -154,14 +170,22 @@ export default function SuccessClient({ searchParams }: Props) {
           // 무통장 입금일 때만 계좌 정보 펼쳐짐
           expandable: isVirtualAccount ? (
             <div className="space-y-0.5">
-              <p className="text-[#23222A] font-medium font-[14px]">{"우리은행 26109854118255 (TRUVE)"}</p>
-              <p className="text-[#F11322] font-medium font-[14px]">{"2026.01.26(월) 23:59까지"}</p>
+              <p className="text-[#23222A] font-medium font-[14px]">
+                {"우리은행 26109854118255 (TRUVE)"}
+              </p>
+              <p className="text-[#F11322] font-medium font-[14px]">
+                {"2026.01.26(월) 23:59까지"}
+              </p>
             </div>
           ) : undefined,
         },
       ]}
       buttons={[
-        { label: "예매 확인하기", href: "/mypage/bookings", variant: "primary" },
+        {
+          label: "예매 확인하기",
+          href: "/mypage/bookings",
+          variant: "primary",
+        },
         { label: "홈으로 가기", href: "/", variant: "outline" },
       ]}
     />

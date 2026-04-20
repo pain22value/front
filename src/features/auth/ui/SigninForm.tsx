@@ -10,14 +10,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import SocialLogin from "./SocialLogin";
-import { formatBeRiskMockRemaining, getBeRiskMockStatus } from "@/shared/lib/beRiskMock";
 import { SigninFormValues, signinSchema } from "@/shared/schemas/authSchema";
-import { useModalStore } from "@/shared/stores/modalStore";
 
 export default function SigninForm() {
   const router = useRouter();
   const { signin } = useAuthStore();
-  const { openAlert } = useModalStore();
   const [error, setError] = useState("");
 
   const {
@@ -35,16 +32,6 @@ export default function SigninForm() {
   const isInputFilled = !!emailValue && !!passwordValue;
 
   const onSubmit = async (data: SigninFormValues) => {
-    const mockStatus = getBeRiskMockStatus(data.email);
-    if (mockStatus.isBlocked) {
-      openAlert({
-        title: "매크로 의심 유저입니다.",
-        description: `현재 계정은 ${formatBeRiskMockRemaining(mockStatus.blockedUntil)} 동안 로그인할 수 없습니다.`,
-        confirmText: "확인",
-      });
-      return;
-    }
-
     try {
       await signin(data);
       router.push("/");

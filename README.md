@@ -83,6 +83,13 @@ src/
 ├── app/                        # Next.js App Router 페이지
 │   ├── (app)/                  # 레이아웃 적용 페이지
 │   │   ├── mypage/bookings/    # 예매 내역 / 상세 / 취소
+│   │   ├── my/profile/         # 마이페이지 / 프로필
+│   │   ├── my/membership/      # 마이페이지 / 멤버십
+│   │   ├── my/favorite/        # 마이페이지 / 좋아요 목록
+│   │   ├── artists             # 아티스트 페이지
+│   │   ├── privacy-policy      # 개인정보 수집 및 이용 약관 동의
+│   │   ├── search              # 검색
+│   │   ├── terms               # 전자금융거래, 서비스 이용 약관
 │   │   └── shows/[showId]/     # 공연 상세 / 좌석 선택
 │   ├── payments/               # 결제 / 성공 / 실패
 │   ├── signin/                 # 로그인

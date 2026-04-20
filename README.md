@@ -93,21 +93,6 @@ src/
 
 ---
 
-## 환경 변수 설정
-
-`.env.local` 파일을 생성하고 아래 변수를 설정하세요:
-
-```env
-# API
-NEXT_PUBLIC_API_URL=https://api.truve.site
-API_URL=https://api.truve.site
-
-# Toss Payments
-NEXT_PUBLIC_TOSS_CLIENT_KEY=your_toss_client_key
-```
-
----
-
 ## 실행 방법
 
 ```bash
